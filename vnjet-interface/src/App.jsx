@@ -3,6 +3,7 @@ import { Authenticate } from "./pages";
 import { NormalLayout } from "./layouts";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { privateRoutes, publicRoutes } from "./routes";
+import DefaultLayout from "./layouts/DefaultLayout";
 function App() {
   // const [profile, setProfile] = React.useState('')
 
@@ -32,7 +33,21 @@ function App() {
             />
           );
         })}
-        {/* {profile.length === 0 && <Route /login />} */}
+        {privateRoutes.map((route, index) => {
+          const Layout = route.Layout || DefaultLayout;
+          const Page = route.component;
+          return (
+            <Route
+              key={index}
+              path={route.path}
+              element={
+                <Layout>
+                  <Page />
+                </Layout>
+              }
+            />
+          );
+        })}
       </Routes>
     </Router>
   );
