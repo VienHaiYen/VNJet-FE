@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 
 function DetailFlight() {
-  // const { id } = route.params;
+  const role = 0;
   const location = useLocation();
   // alert(location.state.id);
   let data = {
@@ -22,31 +22,54 @@ function DetailFlight() {
       { id: 3, number: 50, label: "Vé hạng phổ thông", price: 1000000 },
     ],
   };
-
+  const customers = [
+    {
+      id: 1,
+      name: "John",
+      cmnd: 456789,
+      birthday: "1/1/2000",
+      gender: "male",
+      email: "456@gmail.com",
+      phone: 456789123,
+      address: "456 Nguyễn Lương Bằng D4",
+      ticketType: "Vé phổ thông",
+    },
+    {
+      id: 2,
+      name: "Marry",
+      cmnd: 456789,
+      birthday: "1/1/2000",
+      gender: "female",
+      email: "477@gmail.com",
+      phone: 456789123,
+      address: "456 Nguyễn Lương Bằng D4",
+      ticketType: "Vé thương gia",
+    },
+  ];
   return (
     <>
       {/* <h3>Chi tiết chuyến bay</h3> */}
-      <h2>
+      <h2 className="mb-4">
         Mã số chuyến bay
         <span style={{ color: "red" }}>{" " + location.state.id}</span>
       </h2>
       <div className="row justify-content-start" style={{ fontSize: "1.2rem" }}>
         <div className="col-6">
-          <h5>
+          <p>
             {data.goLocation} - {data.desLocation}
-          </h5>
-          <h5>
+          </p>
+          <p>
             Trạm trung gian:
             {" " + data.beginStation} - {data.endStation}
-          </h5>
-          <h5>
+          </p>
+          <p>
             Số lượng ghế trên máy bay:
             {" " +
               data.levelArray.reduce(
                 (current, level) => current + level.number,
                 0
               )}
-          </h5>
+          </p>
           <p>
             Số ghế hạng nhất: {data.levelArray[0].number}, Giá vé:{" "}
             {data.levelArray[0].price} VND
@@ -61,12 +84,40 @@ function DetailFlight() {
           </p>
         </div>
         <div className="col-6">
-          <h5>{data.goDate}</h5>
-          <h5>
+          <p>{data.goDate}</p>
+          <p>
             {data.beginTime} - {data.endTime}
-          </h5>
+          </p>
         </div>
       </div>
+      {role == 0 && (
+        <>
+          <h3 className="mt-5">Danh sách người đặt vé</h3>
+          <table className="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Tên Khách hàng</th>
+                <th scope="col">CMND</th>
+                <th scope="col">Ngày sinh</th>
+                <th scope="col">Loại vé</th>
+                {/* <th scope="col">Handle</th> */}
+              </tr>
+            </thead>
+            <tbody>
+              {customers.map((customer, index) => (
+                <tr key={index}>
+                  <th scope="row">{index + 1}</th>
+                  <td>{customer.name}</td>
+                  <td>{customer.cmnd}</td>
+                  <td>{customer.birthday}</td>
+                  <td>{customer.ticketType}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
     </>
   );
 }

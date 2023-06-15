@@ -26,7 +26,6 @@ let data = {
   desLocation: " Ha Noi Vietnam",
   travelTime: "6",
   intermediateStation: ["Tân Sơn Nhất", "Mộc Bài"],
-  // ticketPrice: 1000000,
   levelArray: [
     { value: 1, label: "Vé hạng nhất", price: 10000000 },
     { value: 2, label: "Vé hạng thương gia", price: 8000000 },
