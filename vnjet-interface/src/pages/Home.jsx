@@ -1,6 +1,7 @@
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import FlightItem from "../components/FlightItem";
@@ -71,6 +72,8 @@ let flights = [
 ];
 
 function Home() {
+  let navigate = useNavigate();
+  const role = 0;
   const [startDate, setStartDate] = React.useState(new Date());
   const [basicModal, setBasicModal] = React.useState(false);
   const inputRef = React.useRef(null);
@@ -91,7 +94,15 @@ function Home() {
     toggleShow();
     setCurrentID(id);
   };
-
+  const handleChangeFlight = (id) => {
+    alert("Chỉnh sửa chuyến bay" + id);
+  };
+  const handleDeleteFlight = (id) => {
+    alert("Xóa chuyến bay" + id);
+  };
+  const handleShowDetail = (id) => {
+    navigate("/detail-flight", { state: { id: id } });
+  };
   const [currentID, setCurrentID] = React.useState("");
 
   const [customerInfo, setCustomerInfo] = React.useState({
@@ -203,32 +214,7 @@ function Home() {
         </MDBModalDialog>
       </MDBModal>
       <h3>Tìm kiếm chuyến đi của bạn</h3>
-      <h5>Loại</h5>
-      <div className="form-check form-check-inline mb-3">
-        <input
-          className="form-check-input"
-          type="radio"
-          name="inlineRadioOptions"
-          id="inlineRadio1"
-          value="option1"
-          // selected
-        />
-        <label className="form-check-label" htmlFor="inlineRadio1">
-          Vé 1 chiều
-        </label>
-      </div>
-      <div className="form-check form-check-inline">
-        <input
-          className="form-check-input"
-          type="radio"
-          name="inlineRadioOptions"
-          id="inlineRadio2"
-          value="option2"
-        />
-        <label className="form-check-label" htmlFor="inlineRadio2">
-          Vé khứ hồi
-        </label>
-      </div>
+
       <div className="d-flex">
         <select
           required
@@ -263,16 +249,21 @@ function Home() {
           selected={startDate}
           onChange={(date) => setStartDate(date)}
         />
-        <DatePicker
-          selected={startDate}
-          onChange={(date) => setStartDate(date)}
-        />
+
         <button type="button" className="btn btn-warning">
           <FontAwesomeIcon icon={faSearch} />
         </button>
       </div>
       {flights.map((flight, index) => (
-        <FlightItem data={flight} bookTicket={handleChooseTicket} key={index} />
+        <FlightItem
+          data={flight}
+          bookTicket={handleChooseTicket}
+          changeFlight={handleChangeFlight}
+          deleteFlight={handleDeleteFlight}
+          showDetailFlight={handleShowDetail}
+          key={index}
+          role={role}
+        />
       ))}
     </div>
   );

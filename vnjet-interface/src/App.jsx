@@ -1,5 +1,5 @@
 import "./App.css";
-import { Authenticate } from "./pages";
+// import { Authenticate } from "./pages";
 import { NormalLayout } from "./layouts";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { privateRoutes, publicRoutes } from "./routes";

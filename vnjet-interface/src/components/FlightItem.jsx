@@ -1,4 +1,14 @@
-function FlightItem({ data, bookTicket }) {
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+function FlightItem({
+  data,
+  bookTicket,
+  changeFlight,
+  deleteFlight,
+  showDetailFlight,
+  role,
+}) {
   const chooseItem = () => {
     bookTicket(data.id);
   };
@@ -19,20 +29,48 @@ function FlightItem({ data, bookTicket }) {
           <h6>{data.intermediateStation.length} trạm trung gian</h6>
           <h6>Tổng thời gian di chuyển: {data.travelTime} h</h6>
         </div>
-        <div className="border border-start h-100">
+        <div className="h-100">
           <h3>
             {new Intl.NumberFormat().format(
               data.levelArray[data.levelArray.length - 1].price
             )}{" "}
             VND
           </h3>
-          <button
-            type="button"
-            className="btn btn-warning w-100"
-            onClick={chooseItem}
-          >
-            Đặt vé
-          </button>
+          {role == 1 ? (
+            <button
+              type="button"
+              className="btn btn-warning w-100"
+              onClick={() => chooseItem(data.id)}
+            >
+              Đặt vé
+            </button>
+          ) : (
+            <>
+              <div className="d-flex">
+                <button
+                  type="button"
+                  className="btn btn-warning w-75"
+                  onClick={() => changeFlight(data.id)}
+                >
+                  Chỉnh sửa
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-dark ml-2 w-25"
+                  onClick={deleteFlight}
+                >
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
+              </div>
+              <button
+                type="button"
+                className="btn btn-primary mt-2 w-100"
+                onClick={() => showDetailFlight(data.id)}
+              >
+                Chi tiết
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

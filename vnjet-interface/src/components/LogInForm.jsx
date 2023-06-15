@@ -14,8 +14,8 @@ function LogInForm({ submit }) {
   const inputRef = useRef();
 
   return (
-    <>
-      <h3>Đăng nhập vào tài khoản</h3>
+    <div>
+      {/* <h3>Đăng nhập vào tài khoản</h3> */}
       <div className="d-flex justify-content-center content ml-5 mr-5">
         <form
           style={{ width: "400px" }}
@@ -49,7 +49,7 @@ function LogInForm({ submit }) {
           <Button submit={submit} />
         </form>
       </div>
-    </>
+    </div>
   );
 }
 

@@ -4,7 +4,8 @@ function Header() {
     { to: "/home", label: "Home" },
     { to: "/my-flight", label: "Chuyến bay của tôi" },
     { to: "/create-flight", label: "Tạo chuyến bay" },
-    { to: "/manage-seller", label: "Quản lí người bán" },
+    { to: "/manage-users", label: "Quản lí người bán" },
+    { to: "/manage-flights", label: "Quản lí chuyến bay" },
   ];
   return (
     <>
