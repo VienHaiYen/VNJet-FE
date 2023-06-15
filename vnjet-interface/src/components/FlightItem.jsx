@@ -57,7 +57,7 @@ function FlightItem({
                 <button
                   type="button"
                   className="btn btn-dark ml-2 w-25"
-                  onClick={deleteFlight}
+                  onClick={() => deleteFlight(data.id)}
                 >
                   <FontAwesomeIcon icon={faTrash} />
                 </button>

@@ -26,28 +26,28 @@
   color: #888;
 }
 
-/* .form--row {
+.create-flight .form--row {
   width: 100%;
   display: flex;
   justify-content: space-between;
   margin-bottom: 1em;
 }
 
-.form-row-item input,
-.form-row-item select {
+.create-flight .form-row-item input,
+.create-flight .form-row-item select {
   flex: 1;
   display: inline-block;
 }
-.form-row-item {
+.create-flight .form-row-item {
   flex: 1;
   display: inline-flex;
   align-items: center;
   margin-right: 2em;
   width: 100%;
 }
-.form-row-item label {
+.create-flight .form-row-item label {
   min-width: 80px;
   max-width: 150px;
   margin-right: 0.5em;
   margin-bottom: 0;
-} */
+}

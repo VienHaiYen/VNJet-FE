@@ -4,7 +4,7 @@ import {
   MyFlight,
   CreateFlight,
   ManageUsers,
-  ManageFlights,
+  ManageAirport,
   DetailFlight,
 } from "../pages";
 
@@ -15,6 +15,6 @@ export const privateRoutes = [
   { component: MyFlight, path: "/my-flight" },
   { component: CreateFlight, path: "/create-flight" },
   { component: ManageUsers, path: "/manage-users" },
-  { component: ManageFlights, path: "/manage-flights" },
+  { component: ManageAirport, path: "/manage-airport" },
   { component: DetailFlight, path: "/detail-flight" },
 ];

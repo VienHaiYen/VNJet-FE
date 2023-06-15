@@ -3,7 +3,7 @@ import Home from "./Home";
 import MyFlight from "./MyFlight";
 import CreateFlight from "./CreateFlight";
 import ManageUsers from "./ManageUsers";
-import ManageFlights from "./ManageFlights";
+import ManageAirport from "./ManageAirport";
 import DetailFlight from "./DetailFlight";
 export {
   Authenticate,
@@ -11,6 +11,6 @@ export {
   MyFlight,
   CreateFlight,
   ManageUsers,
-  ManageFlights,
+  ManageAirport,
   DetailFlight,
 };

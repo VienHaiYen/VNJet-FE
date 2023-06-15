@@ -7,14 +7,6 @@ import DefaultLayout from "./layouts/DefaultLayout";
 function App() {
   // const [profile, setProfile] = React.useState('')
 
-  const submit = () => {
-    console.log("alllas");
-  };
-
-  // React.useEffect(() => {
-  //   setProfile(localStorage.getItem('token') || '')
-  // }, [])
-
   return (
     <Router>
       <Routes>

@@ -213,7 +213,7 @@ function Home() {
           </MDBModalContent>
         </MDBModalDialog>
       </MDBModal>
-      <h3>Tìm kiếm chuyến đi của bạn</h3>
+      <h3>Tìm kiếm chuyến đi</h3>
 
       <div className="d-flex">
         <select
