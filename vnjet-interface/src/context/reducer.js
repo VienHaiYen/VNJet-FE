@@ -1,29 +1,35 @@
 export const inititalAuthenticationState = {
-  userid: JSON.parse(localStorage.getItem("userid")) || null,
   isFetching: false,
-  error: false,
+  isError: false,
+  errorDetail: "",
+  user: {},
 };
 
 const authReducer = (state = inititalAuthenticationState, action) => {
   switch (action.type) {
     case "LOGIN_START":
       return {
-        userid: null,
         isFetching: true,
-        error: false,
+        isError: false,
       };
-    case "LOGIN_SUCCESS":
+    case "LOGIN_SUCCESS": {
+      console.log("LOGIN_SUCCESS");
       return {
-        userid: action.payload,
         isFetching: false,
-        error: false,
+        isError: false,
+        user: action.payload.user,
       };
-    case "LOGIN_FAILURE":
+    }
+    case "LOGIN_FAILURE": {
+      const { error: errorDetail } = action.payload;
+      console.log(action.payload);
       return {
-        userid: null,
         isFetching: false,
-        error: true,
+        isError: true,
+        errorDetail,
       };
+    }
+
     default:
       return state;
   }

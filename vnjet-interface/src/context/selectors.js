@@ -1,3 +1,4 @@
+import authenAPI from "../components/api/Authenticate/authenAPI";
 import { LoginFailure, LoginStart, LoginSuccess } from "./actions";
 
 export default class AuthenticateSelector {
@@ -28,5 +29,17 @@ export default class AuthenticateSelector {
   }
   dispatchLoginFailure(error) {
     this.dispatch(LoginFailure(error));
+  }
+  async handleLogin(params) {
+    const { email, password } = params;
+    this.dispatchLoginStart();
+    const resp = await authenAPI.postLogin({ email, password });
+    if (resp.error) {
+      console.log("resp ", resp);
+      this.dispatchLoginFailure(resp.error);
+    } else {
+      console.log("resp ", resp);
+      this.dispatchLoginSuccess(resp);
+    }
   }
 }

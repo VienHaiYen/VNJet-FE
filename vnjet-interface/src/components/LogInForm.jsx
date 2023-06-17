@@ -1,5 +1,8 @@
 import { useState, useRef } from "react";
 import Button from "./Button";
+import authenAPI from "./api/Authenticate/authenAPI";
+import { useGlobal } from "../context/context";
+import Loading from "./Loading";
 
 const renderField = (params) => {
   const { value, setValue, name, type } = params;
@@ -19,15 +22,22 @@ const renderField = (params) => {
 
 function LogInForm(props) {
   const { submit } = props;
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { authenticate } = useGlobal();
+  const isFetching = authenticate.selectIsFetching();
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("params ", email, password);
+    authenticate.handleLogin({ email, password });
+  };
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       {renderField({
         name: "email",
-        value: username,
-        setValue: setUsername,
+        value: email,
+        setValue: setEmail,
       })}
 
       {renderField({
@@ -47,9 +57,13 @@ function LogInForm(props) {
         </label>
       </div> */}
       <div className="text-center form-group m-2">
-        <button type="submit" className="btn btn-primary">
-          Submit
-        </button>
+        {isFetching ? (
+          <Loading />
+        ) : (
+          <button type="submit" className="btn btn-primary">
+            Submit
+          </button>
+        )}
       </div>
     </form>
   );
