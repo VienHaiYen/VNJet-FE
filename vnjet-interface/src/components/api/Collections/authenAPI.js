@@ -1,6 +1,12 @@
 import axiosClient from "../axios/axiosClient";
 
 const authenAPI = {
+  postUserInfo: (params) => {
+    let url = "/userinfo";
+    return axiosClient.post(url, {
+      email: params.email,
+    });
+  },
   postLogin: (params) => {
     let url = "/auth/login";
     return axiosClient.post(url, {

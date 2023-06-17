@@ -17,14 +17,24 @@ const authReducer = (state = inititalAuthenticationState, action) => {
       };
     }
     case "LOGIN_START":
+    case "INIT_USER_START":
       return {
         ...state,
         isFetching: true,
         isError: false,
       };
+    case "INIT_USER_SUCCESS": {
+      return {
+        ...state,
+        isFetching: false,
+        isError: false,
+        user: action.user,
+      };
+    }
     case "LOGIN_SUCCESS": {
       localStorage.setItem("accessToken", action.user.accessToken);
       localStorage.setItem("refreshToken", action.user.refreshToken);
+      localStorage.setItem("useremail", action.user.email);
       return {
         ...state,
         isFetching: false,
@@ -51,7 +61,8 @@ const authReducer = (state = inititalAuthenticationState, action) => {
         errorDetail,
       };
     }
-    case "LOGIN_FAILURE": {
+    case "LOGIN_FAILURE":
+    case "INIT_USER_FAILURE": {
       const { error: errorDetail } = action.payload;
       console.log(action.payload);
       return {

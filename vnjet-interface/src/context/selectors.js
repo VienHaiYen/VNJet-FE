@@ -1,5 +1,8 @@
 import authenAPI from "../components/api/Collections/authenAPI";
 import {
+  InitUserInfoFailure,
+  InitUserInfoStart,
+  InitUserInfoSuccess,
   LoginFailure,
   LoginStart,
   LoginSuccess,
@@ -52,6 +55,17 @@ export default class AuthenticateSelector {
   dispatchRegisterSuccess(user) {
     this.dispatch(RegisterSuccess(user));
   }
+  dispatchInitUserInfoStart() {
+    this.dispatch(InitUserInfoStart());
+  }
+  dispatchInitUserInfoSuccess(user) {
+    this.dispatch(InitUserInfoSuccess(user));
+  }
+  dispatchInitUserInfoFailure(error) {
+    this.dispatch(InitUserInfoFailure(error));
+  }
+
+  // handle api
 
   async handleLogin(params) {
     const { email, password } = params;
@@ -94,6 +108,17 @@ export default class AuthenticateSelector {
       this.dispatchRegisterFailure(resp.error);
     } else {
       this.dispatchRegisterSuccess(resp);
+    }
+  }
+  async fetchInitData(params) {
+    this.dispatchInitUserInfoStart();
+    const resp = await authenAPI.postUserInfo(params);
+    console.log(resp);
+    if (resp.error) {
+      this.dispatchInitUserInfoFailure(resp.error);
+    } else {
+      // console.log(resp);
+      this.dispatchInitUserInfoSuccess(resp.data);
     }
   }
 }

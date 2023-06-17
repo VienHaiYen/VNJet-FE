@@ -23,3 +23,14 @@ export const RegisterFailure = (error) => ({
   type: "REGISTER_FAILURE",
   payload: { error },
 });
+export const InitUserInfoStart = () => ({
+  type: "INIT_USER_START",
+});
+export const InitUserInfoSuccess = (user) => ({
+  type: "INIT_USER_SUCCESS",
+  user,
+});
+export const InitUserInfoFailure = (error) => ({
+  type: "INIT_USER_FAILURE",
+  payload: { error },
+});

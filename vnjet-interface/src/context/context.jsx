@@ -16,6 +16,15 @@ export const ContextProvider = ({ children }) => {
     dispatch: authenticateDispatch,
   });
 
+  React.useEffect(() => {
+    const fetchUserData = async () => {
+      await authenticateSelector.fetchInitData({
+        email: localStorage.getItem("useremail"),
+      });
+    };
+    fetchUserData();
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
