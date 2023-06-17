@@ -10,7 +10,7 @@ const renderField = (params) => {
         onChange={(e) => setValue(e.target.value)}
         type={type || "text"}
         className="form-control"
-        placeholder="Enter email"
+        placeholder={`Enter ${name}`}
       />
     </div>
   );

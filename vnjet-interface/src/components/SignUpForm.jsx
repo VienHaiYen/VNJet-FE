@@ -10,6 +10,7 @@ function SignUpForm() {
   const isFetching = authenticate.selectIsFetching();
   const isError = authenticate.selectIsError();
   const errorDetail = authenticate.selectErrorDetail();
+  const isRegisterSuccess = authenticate.selectIsRegisterSuccess();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -34,66 +35,74 @@ function SignUpForm() {
     });
   };
 
-  return (
-    <>
+  if (isRegisterSuccess) {
+    return (
       <div>
-        <h3>Đăng kí tài khoản</h3>
+        <h3>register success, press Login btn in navigation bar</h3>
       </div>
-      <div>
-        <form onSubmit={handleSubmit}>
-          {renderField({
-            name: "email",
-            value: email,
-            setValue: setEmail,
-          })}
-
-          {renderField({
-            name: "password",
-            value: password,
-            setValue: setPassword,
-            type: "password",
-          })}
-          {renderField({
-            name: "phone",
-            value: phone,
-            setValue: setPhone,
-            type: "text",
-          })}
-          {renderField({
-            name: "full name",
-            value: fullName,
-            setValue: setfullName,
-            type: "text",
-          })}
-          {renderField({
-            name: "identification Code",
-            value: identificationCode,
-            setValue: setIdentificationCode,
-            type: "text",
-          })}
-          {renderSelections({
-            value: role,
-            setValue: setRole,
-            options: roleOptions,
-            name: "role",
-          })}
-          {isError &&
-            renderError({
-              errorDetail,
+    );
+  } else {
+    return (
+      <>
+        <div>
+          <h3>Đăng kí tài khoản</h3>
+        </div>
+        <div>
+          <form onSubmit={handleSubmit}>
+            {renderField({
+              name: "email",
+              value: email,
+              setValue: setEmail,
             })}
-          <div className="text-center form-group m-2">
-            {isFetching ? (
-              <Loading />
-            ) : (
-              <button type="submit" className="btn btn-primary">
-                Register
-              </button>
-            )}
-          </div>
-        </form>
-      </div>
-    </>
-  );
+
+            {renderField({
+              name: "password",
+              value: password,
+              setValue: setPassword,
+              type: "password",
+            })}
+            {renderField({
+              name: "phone",
+              value: phone,
+              setValue: setPhone,
+              type: "text",
+            })}
+            {renderField({
+              name: "full name",
+              value: fullName,
+              setValue: setfullName,
+              type: "text",
+            })}
+            {renderField({
+              name: "identification Code",
+              value: identificationCode,
+              setValue: setIdentificationCode,
+              type: "text",
+            })}
+            {renderSelections({
+              value: role,
+              setValue: setRole,
+              options: roleOptions,
+              name: "role",
+            })}
+            {isError &&
+              renderError({
+                errorDetail,
+              })}
+            <div className="text-center form-group m-2">
+              {isFetching ? (
+                <Loading />
+              ) : (
+                <button type="submit" className="btn btn-primary">
+                  Register
+                </button>
+              )}
+            </div>
+          </form>
+        </div>
+      </>
+    );
+  }
 }
 
 export default SignUpForm;

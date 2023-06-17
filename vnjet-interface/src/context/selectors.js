@@ -30,6 +30,9 @@ export default class AuthenticateSelector {
   selectErrorDetail() {
     return this.state.errorDetail;
   }
+  selectIsRegisterSuccess() {
+    return this.state.isRegisterSuccess;
+  }
   // dispatch actions
   dispatchLoginStart() {
     this.dispatch(LoginStart());
@@ -85,10 +88,12 @@ export default class AuthenticateSelector {
       role,
     });
 
+    console.log("resp ", resp);
+
     if (resp.error) {
-      this.dispatchLoginFailure(resp.error);
+      this.dispatchRegisterFailure(resp.error);
     } else {
-      this.dispatchLoginSuccess(resp);
+      this.dispatchRegisterSuccess(resp);
     }
   }
 }

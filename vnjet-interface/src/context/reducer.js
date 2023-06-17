@@ -3,11 +3,19 @@ export const inititalAuthenticationState = {
   isError: false,
   errorDetail: "",
   user: {},
+  isRegisterSuccess: false,
 };
 
 const authReducer = (state = inititalAuthenticationState, action) => {
   switch (action.type) {
-    case "REGISTER_START":
+    case "REGISTER_START": {
+      return {
+        ...state,
+        isRegisterSuccess: false,
+        isFetching: true,
+        isError: false,
+      };
+    }
     case "LOGIN_START":
       return {
         ...state,
@@ -24,8 +32,26 @@ const authReducer = (state = inititalAuthenticationState, action) => {
         user: action.user,
       };
     }
-    case "LOGIN_FAILURE":
+    case "REGISTER_SUCCESS": {
+      return {
+        ...state,
+        isFetching: false,
+        isError: false,
+        isRegisterSuccess: true,
+        // user: action.user,
+      };
+    }
     case "REGISTER_FAILURE": {
+      const { error: errorDetail } = action.payload;
+      console.log(action.payload);
+      return {
+        ...state,
+        isFetching: false,
+        isError: true,
+        errorDetail,
+      };
+    }
+    case "LOGIN_FAILURE": {
       const { error: errorDetail } = action.payload;
       console.log(action.payload);
       return {
