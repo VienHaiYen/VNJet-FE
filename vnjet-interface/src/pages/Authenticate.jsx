@@ -2,7 +2,6 @@ import React from "react";
 import LogInForm from "../components/LogInForm";
 import SignUpForm from "../components/SignUpForm";
 import { useGlobal } from "../context/context";
-import Loading from "../components/Loading/Loading";
 
 function Authenticate({ submit, entryType }) {
   const { authenticate } = useGlobal();

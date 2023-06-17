@@ -3,7 +3,6 @@ import { LoginFailure, LoginStart, LoginSuccess } from "./actions";
 
 export default class AuthenticateSelector {
   constructor(props) {
-    console.log("created");
     this.state = props.state;
     this.dispatch = props.dispatch;
   }
@@ -35,10 +34,8 @@ export default class AuthenticateSelector {
     this.dispatchLoginStart();
     const resp = await authenAPI.postLogin({ email, password });
     if (resp.error) {
-      console.log("resp ", resp);
       this.dispatchLoginFailure(resp.error);
     } else {
-      console.log("resp ", resp);
       this.dispatchLoginSuccess(resp);
     }
   }

@@ -46,16 +46,16 @@ function LogInForm(props) {
         setValue: setPassword,
         type: "password",
       })}
-      {/* <div className="form-group form-check">
+      <div className="form-group form-check">
         <input
           type="checkbox"
           className="form-check-input"
           id="exampleCheck1"
         />
         <label className="form-check-label" htmlFor="exampleCheck1">
-          Check me out
+          remember me
         </label>
-      </div> */}
+      </div>
       <div className="text-center form-group m-2">
         {isFetching ? (
           <Loading />
