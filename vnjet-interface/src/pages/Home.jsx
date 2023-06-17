@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import FlightItem from "../components/FlightItem";
-
+import axios from "axios";
 import {
   MDBModal,
   MDBModalDialog,
@@ -34,41 +34,41 @@ let data = {
   ],
 };
 
-let flights = [
-  {
-    id: "456EkJ",
-    beginTime: "20:00",
-    endTime: "02:00",
-    goDate: "06/07/2023",
-    goLocation: "TP.HCM Vietnam",
-    desLocation: " Ha Noi Vietnam",
-    travelTime: "6",
-    intermediateStation: ["Tân Sơn Nhất", "Mộc Bài"],
-    // ticketPrice: 1000000,
-    levelArray: [
-      { value: 1, label: "Vé hạng nhất", price: 10000000 },
-      { value: 2, label: "Vé hạng thương gia", price: 8000000 },
-      { value: 3, label: "Vé hạng phổ thông đặc biệt", price: 5000000 },
-      { value: 4, label: "Vé hạng phổ thông", price: 1000000 },
-    ],
-  },
-  {
-    id: "789456",
-    beginTime: "20:00",
-    endTime: "02:00",
-    goDate: "06/07/2023",
-    goLocation: "TP.HCM Vietnam",
-    desLocation: " Ha Noi Vietnam",
-    travelTime: "6",
-    intermediateStation: ["Tân Sơn Nhất", "Mộc Bài"],
-    // ticketPrice: 1000000,
-    levelArray: [
-      { value: 1, label: "Vé hạng nhất", price: 10000000 },
-      { value: 2, label: "Vé hạng thương gia", price: 8000000 },
-      { value: 3, label: "Vé hạng phổ thông đặc biệt", price: 5000000 },
-    ],
-  },
-];
+// let flights = [
+//   {
+//     id: "456EkJ",
+//     beginTime: "20:00",
+//     endTime: "02:00",
+//     goDate: "06/07/2023",
+//     goLocation: "TP.HCM Vietnam",
+//     desLocation: " Ha Noi Vietnam",
+//     travelTime: "6",
+//     intermediateStation: ["Tân Sơn Nhất", "Mộc Bài"],
+//     // ticketPrice: 1000000,
+//     levelArray: [
+//       { value: 1, label: "Vé hạng nhất", price: 10000000 },
+//       { value: 2, label: "Vé hạng thương gia", price: 8000000 },
+//       { value: 3, label: "Vé hạng phổ thông đặc biệt", price: 5000000 },
+//       { value: 4, label: "Vé hạng phổ thông", price: 1000000 },
+//     ],
+//   },
+//   {
+//     id: "789456",
+//     beginTime: "20:00",
+//     endTime: "02:00",
+//     goDate: "06/07/2023",
+//     goLocation: "TP.HCM Vietnam",
+//     desLocation: " Ha Noi Vietnam",
+//     travelTime: "6",
+//     intermediateStation: ["Tân Sơn Nhất", "Mộc Bài"],
+//     // ticketPrice: 1000000,
+//     levelArray: [
+//       { value: 1, label: "Vé hạng nhất", price: 10000000 },
+//       { value: 2, label: "Vé hạng thương gia", price: 8000000 },
+//       { value: 3, label: "Vé hạng phổ thông đặc biệt", price: 5000000 },
+//     ],
+//   },
+// ];
 
 function Home() {
   let navigate = useNavigate();
@@ -76,7 +76,21 @@ function Home() {
   const [startDate, setStartDate] = React.useState(new Date());
   const [basicModal, setBasicModal] = React.useState(false);
   const inputRef = React.useRef(null);
-
+  const [flights, setFlights] = React.useState([]);
+  React.useEffect(() => {
+    const fetchAllFlight = async () => {
+      const data = await axios
+        .get("http://localhost:20001/flight")
+        .then((res) => res.data);
+      return data;
+    };
+    const getFlights = async () => {
+      let data = await fetchAllFlight();
+      setFlights(data);
+      await console.log(flights);
+    };
+    getFlights();
+  }, []);
   const toggleShow = () => setBasicModal(!basicModal);
   const handleCloseDialog = () => {
     toggleShow();
