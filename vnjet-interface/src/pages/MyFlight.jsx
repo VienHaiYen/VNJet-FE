@@ -18,9 +18,10 @@ function MyFlight() {
       level: { value: 1, label: "Vé hạng nhất", price: 10000000 },
     },
   ];
+
   return (
     <>
-      <h1>Danh sách những chuyến bay hiện tại</h1>
+      <h1>Danh sách những chuyến bay đã đặt</h1>
       {flights.map((flight, index) => (
         <MyFlightItem
           data={flight}

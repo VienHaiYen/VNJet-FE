@@ -1,10 +1,11 @@
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import FlightItem from "../components/FlightItem";
-
+import axios from "axios";
 import {
   MDBModal,
   MDBModalDialog,
@@ -25,7 +26,6 @@ let data = {
   desLocation: " Ha Noi Vietnam",
   travelTime: "6",
   intermediateStation: ["Tân Sơn Nhất", "Mộc Bài"],
-  // ticketPrice: 1000000,
   levelArray: [
     { value: 1, label: "Vé hạng nhất", price: 10000000 },
     { value: 2, label: "Vé hạng thương gia", price: 8000000 },
@@ -34,47 +34,63 @@ let data = {
   ],
 };
 
-let flights = [
-  {
-    id: "456EkJ",
-    beginTime: "20:00",
-    endTime: "02:00",
-    goDate: "06/07/2023",
-    goLocation: "TP.HCM Vietnam",
-    desLocation: " Ha Noi Vietnam",
-    travelTime: "6",
-    intermediateStation: ["Tân Sơn Nhất", "Mộc Bài"],
-    // ticketPrice: 1000000,
-    levelArray: [
-      { value: 1, label: "Vé hạng nhất", price: 10000000 },
-      { value: 2, label: "Vé hạng thương gia", price: 8000000 },
-      { value: 3, label: "Vé hạng phổ thông đặc biệt", price: 5000000 },
-      { value: 4, label: "Vé hạng phổ thông", price: 1000000 },
-    ],
-  },
-  {
-    id: "789456",
-    beginTime: "20:00",
-    endTime: "02:00",
-    goDate: "06/07/2023",
-    goLocation: "TP.HCM Vietnam",
-    desLocation: " Ha Noi Vietnam",
-    travelTime: "6",
-    intermediateStation: ["Tân Sơn Nhất", "Mộc Bài"],
-    // ticketPrice: 1000000,
-    levelArray: [
-      { value: 1, label: "Vé hạng nhất", price: 10000000 },
-      { value: 2, label: "Vé hạng thương gia", price: 8000000 },
-      { value: 3, label: "Vé hạng phổ thông đặc biệt", price: 5000000 },
-    ],
-  },
-];
+// let flights = [
+//   {
+//     id: "456EkJ",
+//     beginTime: "20:00",
+//     endTime: "02:00",
+//     goDate: "06/07/2023",
+//     goLocation: "TP.HCM Vietnam",
+//     desLocation: " Ha Noi Vietnam",
+//     travelTime: "6",
+//     intermediateStation: ["Tân Sơn Nhất", "Mộc Bài"],
+//     // ticketPrice: 1000000,
+//     levelArray: [
+//       { value: 1, label: "Vé hạng nhất", price: 10000000 },
+//       { value: 2, label: "Vé hạng thương gia", price: 8000000 },
+//       { value: 3, label: "Vé hạng phổ thông đặc biệt", price: 5000000 },
+//       { value: 4, label: "Vé hạng phổ thông", price: 1000000 },
+//     ],
+//   },
+//   {
+//     id: "789456",
+//     beginTime: "20:00",
+//     endTime: "02:00",
+//     goDate: "06/07/2023",
+//     goLocation: "TP.HCM Vietnam",
+//     desLocation: " Ha Noi Vietnam",
+//     travelTime: "6",
+//     intermediateStation: ["Tân Sơn Nhất", "Mộc Bài"],
+//     // ticketPrice: 1000000,
+//     levelArray: [
+//       { value: 1, label: "Vé hạng nhất", price: 10000000 },
+//       { value: 2, label: "Vé hạng thương gia", price: 8000000 },
+//       { value: 3, label: "Vé hạng phổ thông đặc biệt", price: 5000000 },
+//     ],
+//   },
+// ];
 
 function Home() {
+  let navigate = useNavigate();
+  const role = 0;
   const [startDate, setStartDate] = React.useState(new Date());
   const [basicModal, setBasicModal] = React.useState(false);
   const inputRef = React.useRef(null);
-
+  const [flights, setFlights] = React.useState([]);
+  React.useEffect(() => {
+    const fetchAllFlight = async () => {
+      const data = await axios
+        .get("http://localhost:20001/flight")
+        .then((res) => res.data);
+      return data;
+    };
+    const getFlights = async () => {
+      let data = await fetchAllFlight();
+      setFlights(data);
+      await console.log(flights);
+    };
+    getFlights();
+  }, []);
   const toggleShow = () => setBasicModal(!basicModal);
   const handleCloseDialog = () => {
     toggleShow();
@@ -91,7 +107,15 @@ function Home() {
     toggleShow();
     setCurrentID(id);
   };
-
+  const handleChangeFlight = (id) => {
+    alert("Chỉnh sửa chuyến bay" + id);
+  };
+  const handleDeleteFlight = (id) => {
+    alert("Xóa chuyến bay" + id);
+  };
+  const handleShowDetail = (id) => {
+    navigate("/detail-flight", { state: { id: id } });
+  };
   const [currentID, setCurrentID] = React.useState("");
 
   const [customerInfo, setCustomerInfo] = React.useState({
@@ -202,33 +226,8 @@ function Home() {
           </MDBModalContent>
         </MDBModalDialog>
       </MDBModal>
-      <h3>Tìm kiếm chuyến đi của bạn</h3>
-      <h5>Loại</h5>
-      <div className="form-check form-check-inline mb-3">
-        <input
-          className="form-check-input"
-          type="radio"
-          name="inlineRadioOptions"
-          id="inlineRadio1"
-          value="option1"
-          // selected
-        />
-        <label className="form-check-label" htmlFor="inlineRadio1">
-          Vé 1 chiều
-        </label>
-      </div>
-      <div className="form-check form-check-inline">
-        <input
-          className="form-check-input"
-          type="radio"
-          name="inlineRadioOptions"
-          id="inlineRadio2"
-          value="option2"
-        />
-        <label className="form-check-label" htmlFor="inlineRadio2">
-          Vé khứ hồi
-        </label>
-      </div>
+      <h3>Tìm kiếm chuyến đi</h3>
+
       <div className="d-flex">
         <select
           required
@@ -263,16 +262,21 @@ function Home() {
           selected={startDate}
           onChange={(date) => setStartDate(date)}
         />
-        <DatePicker
-          selected={startDate}
-          onChange={(date) => setStartDate(date)}
-        />
+
         <button type="button" className="btn btn-warning">
           <FontAwesomeIcon icon={faSearch} />
         </button>
       </div>
       {flights.map((flight, index) => (
-        <FlightItem data={flight} bookTicket={handleChooseTicket} key={index} />
+        <FlightItem
+          data={flight}
+          bookTicket={handleChooseTicket}
+          changeFlight={handleChangeFlight}
+          deleteFlight={handleDeleteFlight}
+          showDetailFlight={handleShowDetail}
+          key={index}
+          role={role}
+        />
       ))}
     </div>
   );
