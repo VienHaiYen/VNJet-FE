@@ -1,7 +1,9 @@
 import axiosClient from "../axios/axiosClient";
+import refreshAPI from "./refreshAPI";
 
 const authenAPI = {
-  postUserInfo: (params) => {
+  postUserInfo: async (params) => {
+    await refreshAPI.refreshAllToken();
     let url = "/userinfo";
     return axiosClient.post(url, {
       email: params.email,

@@ -1,7 +1,9 @@
 import axiosClient from "../axios/axiosClient";
+import refreshAPI from "./refreshAPI";
 
 const testAPI = {
-  getData: () => {
+  getData: async () => {
+    await refreshAPI.refreshAllToken();
     let url = "/test";
     return axiosClient.get(url);
   },

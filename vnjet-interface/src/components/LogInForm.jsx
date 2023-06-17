@@ -12,15 +12,6 @@ function LogInForm(props) {
   const user = authenticate.selectUser();
   console.log("user ", user);
 
-  // React.useEffect(() => {
-  //   const fetchData = async () => {
-  //     console.log("fetching...");
-  //     const data = await testAPI.getData();
-  //     console.log("data  ", data);
-  //   };
-  //   fetchData();
-  // }, [isFetching]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("params ", email, password);
