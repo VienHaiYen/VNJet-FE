@@ -1,55 +1,57 @@
 import { useState, useRef } from "react";
 import Button from "./Button";
 
-function LogInForm({ submit }) {
+const renderField = (params) => {
+  const { value, setValue, name, type } = params;
+  return (
+    <div className="form-group m-2">
+      <label className="text-capitalize fw-bold">{name}</label>
+      <input
+        defaultValue={value}
+        onChange={(e) => setValue(e.target.value)}
+        type={type || "text"}
+        className="form-control"
+        placeholder="Enter email"
+      />
+    </div>
+  );
+};
+
+function LogInForm(props) {
+  const { submit } = props;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  //   const handleInput = (e) => {
-  //     e.preventDefault();
-  //     if (username.trim() === "" || password.trim() === "") return;
-  //     submit(username, password);
-  //     inputRef.current.focus();
-  //   };
-  const inputRef = useRef();
-
   return (
-    <>
-      <h3>Đăng nhập vào tài khoản</h3>
-      <div className="d-flex justify-content-center content ml-5 mr-5">
-        <form
-          style={{ width: "400px" }}
-          className="text-left"
-          // onSubmit={handleInput}
-        >
-          {/* action={'/home'} */}
-          <div className="form-group">
-            <label htmlFor="username">Mã số tài khoản</label>
-            <input
-              type="text"
-              className="form-control"
-              id="username"
-              placeholder="Enter username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              ref={inputRef}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              className="form-control"
-              id="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <Button submit={submit} />
-        </form>
+    <form>
+      {renderField({
+        name: "email",
+        value: username,
+        setValue: setUsername,
+      })}
+
+      {renderField({
+        name: "password",
+        value: password,
+        setValue: setPassword,
+        type: "password",
+      })}
+      {/* <div className="form-group form-check">
+        <input
+          type="checkbox"
+          className="form-check-input"
+          id="exampleCheck1"
+        />
+        <label className="form-check-label" htmlFor="exampleCheck1">
+          Check me out
+        </label>
+      </div> */}
+      <div className="text-center form-group m-2">
+        <button type="submit" className="btn btn-primary">
+          Submit
+        </button>
       </div>
-    </>
+    </form>
   );
 }
 

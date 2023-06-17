@@ -1,13 +1,19 @@
 import React from "react";
 import LogInForm from "../components/LogInForm";
 import SignUpForm from "../components/SignUpForm";
+import { useGlobal } from "../context/context";
+import Loading from "../components/Loading/Loading";
 
 function Authenticate({ submit, entryType }) {
-  {
-    console.log(entryType);
-  }
+  const { authenticate } = useGlobal();
+  console.log(authenticate.selectState());
+
+  React.useEffect(() => {
+    authenticate.dispatchLoginStart();
+  }, []);
+
   return (
-    <div className="p-5 justify-content-center border border-primary rounded-20">
+    <div className="d-flex justify-content-center">
       {entryType == 0 ? (
         <LogInForm submit={submit} />
       ) : (
