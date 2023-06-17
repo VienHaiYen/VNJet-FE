@@ -11,10 +11,6 @@ export const ContextProvider = ({ children }) => {
     inititalAuthenticationState
   );
 
-  React.useEffect(() => {
-    localStorage.setItem("user", JSON.stringify(authenticateState.userid));
-  }, [authenticateState.userid]);
-
   const authenticateSelector = new AuthenticateSelector({
     state: authenticateState,
     dispatch: authenticateDispatch,

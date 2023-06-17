@@ -14,6 +14,10 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.request.use(async (config) => {
   // Handle token here ...
+  config.headers = {
+    token: localStorage.getItem("accessToken"),
+    refreshtoken: localStorage.getItem("refreshToken"),
+  };
   return config;
 });
 
@@ -26,6 +30,7 @@ axiosClient.interceptors.response.use(
   },
   (error) => {
     // Handle errors
+    console.log(error.response.status);
     return error.response.data;
     // throw error.response.data;
   }

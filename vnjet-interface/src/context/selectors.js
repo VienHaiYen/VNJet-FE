@@ -1,5 +1,5 @@
-import authenAPI from "../components/api/Authenticate/authenAPI";
-import { LoginFailure, LoginStart, LoginSuccess } from "./actions";
+import authenAPI from "../components/api/Collections/authenAPI";
+import { LoginFailure, LoginStart, LoginSuccess, Logout } from "./actions";
 
 export default class AuthenticateSelector {
   constructor(props) {
@@ -10,8 +10,8 @@ export default class AuthenticateSelector {
   selectState() {
     return this.state;
   }
-  selectUserid() {
-    return this.state.userid;
+  selectUser() {
+    return this.state.user;
   }
   selectIsFetching() {
     return this.state.isFetching;
@@ -38,5 +38,9 @@ export default class AuthenticateSelector {
     } else {
       this.dispatchLoginSuccess(resp);
     }
+  }
+  async handleLogout() {
+    await authenAPI.postLogout();
+    this.dispatch(Logout());
   }
 }
