@@ -3,11 +3,8 @@ import LogInForm from "../components/LogInForm";
 import SignUpForm from "../components/SignUpForm";
 
 function Authenticate({ submit, entryType }) {
-  {
-    console.log(entryType);
-  }
   return (
-    <div className="p-5 justify-content-center border border-primary rounded-20">
+    <div className="w-50 justify-content-center">
       {entryType == 0 ? (
         <LogInForm submit={submit} />
       ) : (
