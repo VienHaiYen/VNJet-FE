@@ -21,6 +21,7 @@ function LogInForm(props) {
   //   fetchData();
   // }, [isFetching]);
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("params ", email, password);
@@ -73,6 +74,7 @@ function LogInForm(props) {
       </button>
     );
   }
+
 }
 
 export default LogInForm;

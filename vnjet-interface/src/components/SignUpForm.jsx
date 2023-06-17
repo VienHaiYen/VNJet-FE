@@ -35,6 +35,7 @@ function SignUpForm() {
     });
   };
 
+
   if (isRegisterSuccess) {
     return (
       <div>
@@ -103,6 +104,7 @@ function SignUpForm() {
       </>
     );
   }
+
 }
 
 export default SignUpForm;

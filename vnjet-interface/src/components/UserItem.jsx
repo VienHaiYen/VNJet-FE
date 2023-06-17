@@ -1,25 +1,25 @@
-function UserItem() {
+function UserItem({ user, handleDelete }) {
   return (
-    <div className="d-flex justify-content-between align-middle border p-3 m-1 rounded">
+    <div className="d-flex justify-content-between align-middle border p-3 m-1 rounded col-6">
       <div>
-        <h4>Vien Hai Yen</h4>
-        <h5>2002</h5>
+        <h4>{user.name}</h4>
+        <h6>{user.birthday}</h6>
+        <h6>{user.email}</h6>
       </div>
-      <p>User</p>
       <div className="d-flex flex-column justify-content-between">
-        <button
+        {/* <button
           type="button"
           className="btn btn-success"
           //   onClick={chooseItem}
         >
-          Thêm thông tin
-        </button>
+          Xem thông tin
+        </button> */}
         <button
           type="button"
           className="btn btn-danger mt-1"
-          //   onClick={cancle}
+          onClick={() => handleDelete(user.id)}
         >
-          Chỉnh sửa
+          Xóa tài khoản
         </button>
       </div>
     </div>

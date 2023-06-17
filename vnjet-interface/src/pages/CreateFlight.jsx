@@ -1,6 +1,6 @@
 function CreateFlight() {
   return (
-    <>
+    <div className="create-flight">
       <form className="w-75" style={{ margin: "0 auto" }}>
         <div className="form--row">
           <div className="form-row-item">
@@ -136,7 +136,7 @@ function CreateFlight() {
           Submit
         </button>
       </form>
-    </>
+    </div>
   );
 }
 
