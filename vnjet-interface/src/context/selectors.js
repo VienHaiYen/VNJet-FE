@@ -1,5 +1,13 @@
 import authenAPI from "../components/api/Collections/authenAPI";
-import { LoginFailure, LoginStart, LoginSuccess, Logout } from "./actions";
+import {
+  LoginFailure,
+  LoginStart,
+  LoginSuccess,
+  Logout,
+  RegisterFailure,
+  RegisterStart,
+  RegisterSuccess,
+} from "./actions";
 
 export default class AuthenticateSelector {
   constructor(props) {
@@ -16,8 +24,11 @@ export default class AuthenticateSelector {
   selectIsFetching() {
     return this.state.isFetching;
   }
-  selectError() {
-    return this.state.error;
+  selectIsError() {
+    return this.state.isError;
+  }
+  selectErrorDetail() {
+    return this.state.errorDetail;
   }
   // dispatch actions
   dispatchLoginStart() {
@@ -29,6 +40,16 @@ export default class AuthenticateSelector {
   dispatchLoginFailure(error) {
     this.dispatch(LoginFailure(error));
   }
+  dispatchRegisterStart() {
+    this.dispatch(RegisterStart());
+  }
+  dispatchRegisterFailure(error) {
+    this.dispatch(RegisterFailure(error));
+  }
+  dispatchRegisterSuccess(user) {
+    this.dispatch(RegisterSuccess(user));
+  }
+
   async handleLogin(params) {
     const { email, password } = params;
     this.dispatchLoginStart();
@@ -42,5 +63,32 @@ export default class AuthenticateSelector {
   async handleLogout() {
     await authenAPI.postLogout();
     this.dispatch(Logout());
+  }
+  async handleRegister(params) {
+    const { email, password, phone, fullname, identificationCode, role } =
+      params;
+    console.log("params ", {
+      email,
+      password,
+      phone,
+      fullname,
+      identificationCode,
+      role,
+    });
+    this.dispatch(RegisterStart());
+    const resp = await authenAPI.postRegister({
+      email,
+      password,
+      phone,
+      fullname,
+      identificationCode,
+      role,
+    });
+
+    if (resp.error) {
+      this.dispatchLoginFailure(resp.error);
+    } else {
+      this.dispatchLoginSuccess(resp);
+    }
   }
 }

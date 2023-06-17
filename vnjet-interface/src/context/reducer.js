@@ -7,6 +7,7 @@ export const inititalAuthenticationState = {
 
 const authReducer = (state = inititalAuthenticationState, action) => {
   switch (action.type) {
+    case "REGISTER_START":
     case "LOGIN_START":
       return {
         ...state,
@@ -23,7 +24,8 @@ const authReducer = (state = inititalAuthenticationState, action) => {
         user: action.user,
       };
     }
-    case "LOGIN_FAILURE": {
+    case "LOGIN_FAILURE":
+    case "REGISTER_FAILURE": {
       const { error: errorDetail } = action.payload;
       console.log(action.payload);
       return {

@@ -1,30 +1,12 @@
-import React, { useState, useRef } from "react";
-import Button from "./Button";
-import authenAPI from "./api/Collections/authenAPI";
+import React from "react";
 import { useGlobal } from "../context/context";
 import Loading from "./Loading";
 import testAPI from "./api/Collections/textAPI";
-
-const renderField = (params) => {
-  const { value, setValue, name, type } = params;
-  return (
-    <div className="form-group m-2">
-      <label className="text-capitalize fw-bold">{name}</label>
-      <input
-        defaultValue={value}
-        onChange={(e) => setValue(e.target.value)}
-        type={type || "text"}
-        className="form-control"
-        placeholder="Enter email"
-      />
-    </div>
-  );
-};
+import renderField from "./Form";
 
 function LogInForm(props) {
-  const { submit } = props;
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const { authenticate } = useGlobal();
   const isFetching = authenticate.selectIsFetching();
   const user = authenticate.selectUser();
