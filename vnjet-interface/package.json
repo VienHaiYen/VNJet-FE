@@ -1,4 +1,7 @@
 {
+  "engines": {
+    "node": "18.15.0"
+  },
   "name": "vnjet-interface",
   "private": true,
   "version": "0.0.0",
@@ -15,7 +18,6 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "axios": "^1.4.0",
     "bootstrap": "^5.3.0",
-
     "mdb-react-ui-kit": "^6.1.0",
     "query-string": "^8.1.0",
     "react": "^18.2.0",
