@@ -20,7 +20,7 @@ export const renderError = (params) => {
   const { errorDetail } = params;
   return (
     <div className="form-group m-2">
-      <h3 className="text-danger">{errorDetail}</h3>
+      <h5 className="text-danger text-center">{errorDetail}</h5>
     </div>
   );
 };

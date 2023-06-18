@@ -61,8 +61,14 @@ const authReducer = (state = inititalAuthenticationState, action) => {
         errorDetail,
       };
     }
-    case "LOGIN_FAILURE":
     case "INIT_USER_FAILURE": {
+      return {
+        ...state,
+        isFetching: false,
+        isError: true,
+      };
+    }
+    case "LOGIN_FAILURE": {
       const { error: errorDetail } = action.payload;
       console.log(action.payload);
       return {
