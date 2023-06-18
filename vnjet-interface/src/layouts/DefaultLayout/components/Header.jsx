@@ -1,5 +1,10 @@
-import { BrowserRouter, Route, Link } from "react-router-dom";
+import { BrowserRouter, Route, Link, useNavigate } from "react-router-dom";
+import { useGlobal } from "../../../context/context";
 function Header() {
+  const { authenticate } = useGlobal();
+  const user = authenticate.selectUser();
+  const navigate = useNavigate();
+
   const navItems = [
     { to: "/home", label: "Home" },
     { to: "/my-flight", label: "Chuyến bay của tôi" },
@@ -39,13 +44,26 @@ function Header() {
               </div>
             ))}
           </div>
-          <div className="rounded-circle" style={{ overflow: "hidden" }}>
-            <img
-              height="50px"
-              src="https://cdn.landesa.org/wp-content/uploads/default-user-image.png"
-              alt=""
-            />
-          </div>
+          {Object.keys(user).length !== 0 && (
+            <div className="d-flex align-items-center">
+              <div className="rounded-circle" style={{ overflow: "hidden" }}>
+                <img
+                  height="50px"
+                  src="https://cdn.landesa.org/wp-content/uploads/default-user-image.png"
+                  alt=""
+                />
+              </div>
+              <h3 className="p-2 text-info">{user.fullname}</h3>
+              <button
+                onClick={async (e) => {
+                  await authenticate.handleLogout();
+                  navigate("/");
+                }}
+              >
+                logout
+              </button>
+            </div>
+          )}
         </div>
       </nav>
     </>

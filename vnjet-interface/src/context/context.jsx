@@ -17,6 +17,7 @@ export const ContextProvider = ({ children }) => {
   });
 
   React.useEffect(() => {
+    console.log("called");
     const fetchUserData = async () => {
       await authenticateSelector.fetchInitData({
         email: localStorage.getItem("useremail"),

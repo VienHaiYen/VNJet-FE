@@ -71,6 +71,7 @@ export default class AuthenticateSelector {
     const { email, password } = params;
     this.dispatchLoginStart();
     const resp = await authenAPI.postLogin({ email, password });
+    console.log(resp);
     if (resp.error) {
       this.dispatchLoginFailure(resp.error);
     } else {
