@@ -1,7 +1,6 @@
 import React from "react";
 import { useGlobal } from "../context/context";
 import Loading from "./Loading";
-import testAPI from "./api/Collections/textAPI";
 import renderField from "./Form";
 
 function LogInForm(props) {
@@ -32,16 +31,6 @@ function LogInForm(props) {
           setValue: setPassword,
           type: "password",
         })}
-        <div className="form-group form-check">
-          <input
-            type="checkbox"
-            className="form-check-input"
-            id="exampleCheck1"
-          />
-          <label className="form-check-label" htmlFor="exampleCheck1">
-            remember me
-          </label>
-        </div>
         <div className="text-center form-group m-2">
           {isFetching ? (
             <Loading />
