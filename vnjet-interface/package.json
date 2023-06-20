@@ -1,4 +1,7 @@
 {
+  "engines": {
+    "node": "18.15.0"
+  },
   "name": "vnjet-interface",
   "private": true,
   "version": "0.0.0",
@@ -14,14 +17,16 @@
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "axios": "^1.4.0",
-    "bootstrap": "^5.2.3",
+    "bootstrap": "^5.3.0",
     "mdb-react-ui-kit": "^6.1.0",
+    "query-string": "^8.1.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.4",
     "react-datepicker": "^4.12.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.11.2",
     "react-time-picker": "^6.2.0"
+    "react-router-dom": "^6.13.0",
+    "react-select": "^5.7.3"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",

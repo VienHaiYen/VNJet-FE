@@ -4,7 +4,7 @@ function Header({ setEntryType }) {
   const [statusIndex, setStatusIndex] = React.useState(0);
   const status = ["Đăng nhập", "Đăng kí"];
   return (
-    <nav className="navbar navbar-light bg-info ">
+    <nav className="position-fixed w-100 top-0 navbar navbar-light bg-info ">
       <div className="container-fluid">
         <span className="navbar-brand mb-0 h1 text-white">
           {status[statusIndex]}

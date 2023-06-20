@@ -4,6 +4,8 @@ import { NormalLayout } from "./layouts";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { privateRoutes, publicRoutes } from "./routes";
 import DefaultLayout from "./layouts/DefaultLayout";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.min.js";
 function App() {
   // const [profile, setProfile] = React.useState('')
 

@@ -1,55 +1,56 @@
-import { useState, useRef } from "react";
-import Button from "./Button";
+import React from "react";
+import { useGlobal } from "../context/context";
+import Loading from "./Loading";
+import renderField from "./Form";
+// import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-function LogInForm({ submit }) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+function LogInForm(props) {
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const { authenticate } = useGlobal();
+  const isFetching = authenticate.selectIsFetching();
+  const user = authenticate.selectUser();
+  const navigate = useNavigate();
 
-  //   const handleInput = (e) => {
-  //     e.preventDefault();
-  //     if (username.trim() === "" || password.trim() === "") return;
-  //     submit(username, password);
-  //     inputRef.current.focus();
-  //   };
-  const inputRef = useRef();
+  React.useEffect(() => {
+    if (Object.keys(user).length) {
+      navigate("/my-flight");
+      // history.push("/my-flight");
+    }
+  }, [user]);
 
+  // let history = useHistory();
+  // console.log(history);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("params ", email, password);
+    await authenticate.handleLogin({ email, password });
+  };
   return (
-    <div>
-      {/* <h3>Đăng nhập vào tài khoản</h3> */}
-      <div className="d-flex justify-content-center content ml-5 mr-5">
-        <form
-          style={{ width: "400px" }}
-          className="text-left"
-          // onSubmit={handleInput}
-        >
-          {/* action={'/home'} */}
-          <div className="form-group">
-            <label htmlFor="username">Mã số tài khoản</label>
-            <input
-              type="text"
-              className="form-control"
-              id="username"
-              placeholder="Enter username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              ref={inputRef}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              className="form-control"
-              id="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <Button submit={submit} />
-        </form>
+    <form onSubmit={handleSubmit}>
+      {renderField({
+        name: "email",
+        value: email,
+        setValue: setEmail,
+      })}
+
+      {renderField({
+        name: "password",
+        value: password,
+        setValue: setPassword,
+        type: "password",
+      })}
+      <div className="text-center form-group m-2">
+        {isFetching ? (
+          <Loading />
+        ) : (
+          <button type="submit" className="btn btn-primary">
+            Submit
+          </button>
+        )}
       </div>
-    </div>
+    </form>
   );
 }
 
