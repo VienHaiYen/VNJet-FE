@@ -53,3 +53,9 @@ p {
   margin-right: 0.5em;
   margin-bottom: 0;
 }
+.home label {
+  min-width: 80px;
+  text-align: right;
+  margin-right: 10px;
+  margin-top: 8px;
+}

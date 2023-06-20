@@ -17,81 +17,59 @@ import {
 } from "mdb-react-ui-kit";
 import Dropdown from "../components/Dropdown";
 
-let data = {
-  id: "456EkJ",
-  beginTime: "20:00",
-  endTime: "02:00",
-  goDate: "06/07/2023",
-  goLocation: "TP.HCM Vietnam",
-  desLocation: " Ha Noi Vietnam",
-  travelTime: "6",
-  intermediateStation: ["Tân Sơn Nhất", "Mộc Bài"],
-  levelArray: [
-    { value: 1, label: "Vé hạng nhất", price: 10000000 },
-    { value: 2, label: "Vé hạng thương gia", price: 8000000 },
-    { value: 3, label: "Vé hạng phổ thông đặc biệt", price: 5000000 },
-    { value: 4, label: "Vé hạng phổ thông", price: 1000000 },
-  ],
-};
-
-// let flights = [
-//   {
-//     id: "456EkJ",
-//     beginTime: "20:00",
-//     endTime: "02:00",
-//     goDate: "06/07/2023",
-//     goLocation: "TP.HCM Vietnam",
-//     desLocation: " Ha Noi Vietnam",
-//     travelTime: "6",
-//     intermediateStation: ["Tân Sơn Nhất", "Mộc Bài"],
-//     // ticketPrice: 1000000,
-//     levelArray: [
-//       { value: 1, label: "Vé hạng nhất", price: 10000000 },
-//       { value: 2, label: "Vé hạng thương gia", price: 8000000 },
-//       { value: 3, label: "Vé hạng phổ thông đặc biệt", price: 5000000 },
-//       { value: 4, label: "Vé hạng phổ thông", price: 1000000 },
-//     ],
-//   },
-//   {
-//     id: "789456",
-//     beginTime: "20:00",
-//     endTime: "02:00",
-//     goDate: "06/07/2023",
-//     goLocation: "TP.HCM Vietnam",
-//     desLocation: " Ha Noi Vietnam",
-//     travelTime: "6",
-//     intermediateStation: ["Tân Sơn Nhất", "Mộc Bài"],
-//     // ticketPrice: 1000000,
-//     levelArray: [
-//       { value: 1, label: "Vé hạng nhất", price: 10000000 },
-//       { value: 2, label: "Vé hạng thương gia", price: 8000000 },
-//       { value: 3, label: "Vé hạng phổ thông đặc biệt", price: 5000000 },
-//     ],
-//   },
-// ];
-
 function Home() {
   let navigate = useNavigate();
   const role = 0;
   const [startDate, setStartDate] = React.useState(new Date());
   const [basicModal, setBasicModal] = React.useState(false);
+  const [basicModal1, setBasicModal1] = React.useState(false);
   const inputRef = React.useRef(null);
   const [flights, setFlights] = React.useState([]);
+  const [airports, setAirports] = React.useState([]);
+  const [findingState, setFindingState] = React.useState({
+    from: "",
+    to: "",
+    date: "",
+  });
+
   React.useEffect(() => {
-    const fetchAllFlight = async () => {
+    const fetchAllAirport = async () => {
       const data = await axios
-        .get("http://localhost:20001/flight")
+        .get("http://localhost:20001/airport/")
         .then((res) => res.data);
       return data;
     };
-    const getFlights = async () => {
-      let data = await fetchAllFlight();
-      setFlights(data);
-      await console.log(flights);
+    const getAirports = async () => {
+      let data = await fetchAllAirport();
+      await setAirports(data);
     };
+
     getFlights();
+    getAirports();
   }, []);
+  const fetchAllFlight = async () => {
+    const data = await axios
+      .get("http://localhost:20001/flight")
+      .then((res) => res.data);
+    return data;
+  };
+
+  const getFlights = async () => {
+    let data = await fetchAllFlight();
+    setFlights(data);
+    await console.log(flights);
+  };
+  const deleteFlight = async (id) => {
+    const data = await axios
+      .delete(`http://localhost:20001/flight/${id}`)
+      .then((res) => res.data);
+    return data;
+  };
   const toggleShow = () => setBasicModal(!basicModal);
+  const convertToCurrentName = (id) => {
+    let data = airports.filter((airport) => airport._id == id);
+    return data.length > 0 ? data[0].name : "";
+  };
   const handleCloseDialog = () => {
     toggleShow();
     console.log("clear all");
@@ -110,8 +88,16 @@ function Home() {
   const handleChangeFlight = (id) => {
     alert("Chỉnh sửa chuyến bay" + id);
   };
-  const handleDeleteFlight = (id) => {
-    alert("Xóa chuyến bay" + id);
+  const handleDeleteFlight = async (id) => {
+    // alert("Xóa chuyến bay" + id);
+    setCurrentID(id);
+    setBasicModal1(true);
+  };
+  const submitDelete = async () => {
+    await deleteFlight(currentID);
+    await getFlights();
+    setBasicModal1(false);
+    // console.log(456, currentID);
   };
   const handleShowDetail = (id) => {
     navigate("/detail-flight", { state: { id: id } });
@@ -199,14 +185,13 @@ function Home() {
                   value={customerInfo.level}
                   onChange={handleChange}
                   name="level"
-                  options={data.levelArray}
+                  // options={data.levelArray}
                 />
               </div>
               <div>
                 <h5></h5>
               </div>
             </MDBModalBody>
-
             <MDBModalFooter>
               <button
                 type="button"
@@ -226,49 +211,70 @@ function Home() {
           </MDBModalContent>
         </MDBModalDialog>
       </MDBModal>
+      <MDBModal show={basicModal1} setShow={setBasicModal1} tabIndex="-1">
+        <MDBModalDialog>
+          <MDBModalContent>
+            <MDBModalHeader>
+              <MDBModalTitle>Xóa chuyến bay</MDBModalTitle>
+            </MDBModalHeader>
+            <MDBModalBody>
+              Bạn có chắc chắn muốn xóa chuyến bay
+              {" " + convertToCurrentName(currentID)} không ?
+            </MDBModalBody>
+            <MDBModalFooter>
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
+                onClick={() => setBasicModal1(false)}
+              >
+                Đóng
+              </button>
+              <button
+                type="button"
+                className="btn btn-outline-danger"
+                onClick={submitDelete}
+              >
+                Đồng ý
+              </button>
+            </MDBModalFooter>
+          </MDBModalContent>
+        </MDBModalDialog>
+      </MDBModal>
       <h3>Tìm kiếm chuyến đi</h3>
 
-      <div className="d-flex">
-        <select
-          required
-          id="gender"
-          className="form-control mr-3"
-          // onChange={handleChange}
-          // value={info.gender}
-          name="gender"
-        >
-          <option value="" defaultValue style={{ display: "none" }}>
-            Xuất phát từ
-          </option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-        </select>
-
-        <select
-          required
-          id="gender"
-          className="form-control mr-3"
-          // onChange={handleChange}
-          // value={info.gender}
-          name="gender"
-        >
-          <option value="" defaultValue style={{ display: "none" }}>
-            Đến
-          </option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-        </select>
-        <DatePicker
-          selected={startDate}
-          onChange={(date) => setStartDate(date)}
+      <div className="home d-flex align-item-center">
+        <label>Đi từ</label>
+        <Dropdown
+          value={airports.name}
+          onChange={handleChange}
+          name="from"
+          options={airports}
         />
-
+        <label>Đến</label>
+        <Dropdown
+          value={airports.name}
+          onChange={handleChange}
+          name="to"
+          options={airports}
+        />
+        <label>Đi từ</label>
+        <input
+          required
+          id="birthday"
+          type="date"
+          className="form-control mr-5"
+          onChange={(date) => setStartDate(date)}
+          //   value={info.birthday}
+          name="birthday"
+        />
         <button type="button" className="btn btn-warning">
           <FontAwesomeIcon icon={faSearch} />
         </button>
       </div>
       {flights.map((flight, index) => (
         <FlightItem
+          from={convertToCurrentName(flight.fromAirport)}
+          to={convertToCurrentName(flight.toAirport)}
           data={flight}
           bookTicket={handleChooseTicket}
           changeFlight={handleChangeFlight}

@@ -1,4 +1,5 @@
 function Dropdown({ value, name, options, onChange }) {
+  // console.log("option:", options);
   return (
     <select
       required
@@ -8,12 +9,13 @@ function Dropdown({ value, name, options, onChange }) {
       value={value}
       name={name}
     >
-      <option value="" defaultValue style={{ display: "none" }}></option>
-      {options.map((item, index) => (
-        <option value={item.value} key={index}>
-          {item.label}
-        </option>
-      ))}
+      <option value="" defaultValue></option>
+      {options &&
+        options.map((item, index) => (
+          <option value={item._id} key={index}>
+            {item.name}
+          </option>
+        ))}
     </select>
   );
 }

@@ -513,10 +513,29 @@
   dependencies:
     tslib "^2.4.0"
 
+"@types/lodash.memoize@^4.1.7":
+  version "4.1.7"
+  resolved "https://registry.yarnpkg.com/@types/lodash.memoize/-/lodash.memoize-4.1.7.tgz#aff94ab32813c557cbc1104e127030e3d60a3b27"
+  integrity sha512-lGN7WeO4vO6sICVpf041Q7BX/9k1Y24Zo3FY0aUezr1QlKznpjzsDk3T3wvH8ofYzoK0QupN9TWcFAFZlyPwQQ==
+  dependencies:
+    "@types/lodash" "*"
+
+"@types/lodash@*":
+  version "4.14.195"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.195.tgz#bafc975b252eb6cea78882ce8a7b6bf22a6de632"
+  integrity sha512-Hwx9EUgdwf2GLarOjQp5ZH8ZmblzcbTBC2wtQWNKARBSxM9ezRIAUpeDTgoQRAFB0+8CNWXVA9+MaSOzOF3nPg==
+
 "@types/prop-types@*":
   version "15.7.5"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.5.tgz#5f19d2b85a98e9558036f6a3cacc8819420f05cf"
   integrity sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==
+
+"@types/react-dom@*":
+  version "18.2.5"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.2.5.tgz#5c5f13548bda23cd98f50ca4a59107238bfe18f3"
+  integrity sha512-sRQsOS/sCLnpQhR4DSKGTtWFE3FZjpQa86KPVbhUqdYMRZ9FEFcfAytKhR/vUG2rH1oFbOOej6cuD7MFSobDRQ==
+  dependencies:
+    "@types/react" "*"
 
 "@types/react-dom@^18.0.11":
   version "18.2.4"
@@ -569,6 +588,11 @@
     "@babel/plugin-transform-react-jsx-self" "^7.21.0"
     "@babel/plugin-transform-react-jsx-source" "^7.19.6"
     react-refresh "^0.14.0"
+
+"@wojtekmaj/date-utils@^1.1.2", "@wojtekmaj/date-utils@^1.1.3":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@wojtekmaj/date-utils/-/date-utils-1.4.1.tgz#d6be1a002173d3a43590b941008ea27b432672ae"
+  integrity sha512-Fjs0KJz0//0AmlJVFx9AQmWpmxOTw4foDo4DKoswWVVjHsna4rdu+fXwid5YHNgzv/wHi9AkZCRPmHWsf890lg==
 
 acorn-jsx@^5.3.2:
   version "5.3.2"
@@ -746,6 +770,11 @@ clsx@1.1.1:
   resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.1.1.tgz#98b3134f9abbdf23b2663491ace13c5c03a73188"
   integrity sha512-6/bPho624p3S2pMyvP5kKBPXnI3ufHLObBFCfgx+LkeR5lg2XYy2hqZqUf45ypD8COn2bhgGJSUE+l5dhNBieA==
 
+clsx@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.2.1.tgz#0ddc4a20a549b59c93a4116bb26f5294ca17dc12"
+  integrity sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==
+
 color-convert@^1.9.0:
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/color-convert/-/color-convert-1.9.3.tgz#bb71850690e1f136567de629d2d5471deda4c1e8"
@@ -837,6 +866,11 @@ dequal@^2.0.2, dequal@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/dequal/-/dequal-2.0.3.tgz#2644214f1997d39ed0ee0ece72335490a7ac67be"
   integrity sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA==
+
+detect-element-overflow@^1.3.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/detect-element-overflow/-/detect-element-overflow-1.4.1.tgz#fc2ff7eb04c03090b289abe45a447b2c78b983b6"
+  integrity sha512-6a1wXl5+KbnXhO5FWgKq+omp8km42QLWgd1UYj99SS6o/aYBuTPU/ByI9dLgPYi9aes5TAg62IRoRKpqrDb0PQ==
 
 doctrine@^2.1.0:
   version "2.1.0"
@@ -1219,6 +1253,14 @@ get-symbol-description@^1.0.0:
     call-bind "^1.0.2"
     get-intrinsic "^1.1.1"
 
+get-user-locale@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/get-user-locale/-/get-user-locale-2.2.1.tgz#e7e9f365a202458a360d74c8a3516766d38402ae"
+  integrity sha512-3814zipTZ2MvczOcppEXB3jXu+0HWwj5WmPI6//SeCnUIUaRXu7W4S54eQZTEPadlMZefE+jAlPOn+zY3tD4Qw==
+  dependencies:
+    "@types/lodash.memoize" "^4.1.7"
+    lodash.memoize "^4.1.1"
+
 glob-parent@^6.0.2:
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/glob-parent/-/glob-parent-6.0.2.tgz#6d237d99083950c79290f24c7642a3de9a28f9e3"
@@ -1541,6 +1583,11 @@ locate-path@^6.0.0:
   dependencies:
     p-locate "^5.0.0"
 
+lodash.memoize@^4.1.1:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
+  integrity sha512-t7j+NzmgnQzTAYXcsHYLgimltOV1MXHtlOWf6GjL9Kj8GK5FInw5JotxvbOs+IvV1/Dzo04/fCGfLVs7aXb4Ag==
+
 lodash.merge@^4.6.2:
   version "4.6.2"
   resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
@@ -1559,6 +1606,11 @@ lru-cache@^5.1.1:
   integrity sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==
   dependencies:
     yallist "^3.0.2"
+
+make-event-props@^1.4.2:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/make-event-props/-/make-event-props-1.6.1.tgz#1d587017c3f1f3b42719b775af93d5253656ccdd"
+  integrity sha512-JhvWq/iz1BvlmnPvLJjXv+xnMPJZuychrDC68V+yCGQJn5chcA8rLGKo5EP1XwIKVrigSXKLmbeXAGkf36wdCQ==
 
 mdb-react-ui-kit@^6.1.0:
   version "6.1.0"
@@ -1755,7 +1807,7 @@ prop-types-extra@^1.1.0:
     react-is "^16.3.2"
     warning "^4.0.0"
 
-prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
+prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -1797,6 +1849,17 @@ react-bootstrap@^2.7.4:
     uncontrollable "^7.2.1"
     warning "^4.0.3"
 
+react-clock@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/react-clock/-/react-clock-4.2.0.tgz#7161155f46be339070ba09212a24758cfbd2ed1e"
+  integrity sha512-H/700hJPu34ADDGH3fCjY6+4aTwvuVOhvpiOPrl2K67kwxa6npe2UNdO7nwayrTiGtZfgn2j2x2KRsn9TIHv1g==
+  dependencies:
+    "@types/react" "*"
+    "@wojtekmaj/date-utils" "^1.1.2"
+    clsx "^1.2.1"
+    get-user-locale "^2.2.1"
+    prop-types "^15.6.0"
+
 react-datepicker@^4.12.0:
   version "4.12.0"
   resolved "https://registry.yarnpkg.com/react-datepicker/-/react-datepicker-4.12.0.tgz#aad65d56fcaabe38aaf0c1a317f0a5264691ab5b"
@@ -1821,6 +1884,17 @@ react-fast-compare@^3.0.1:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-3.2.2.tgz#929a97a532304ce9fee4bcae44234f1ce2c21d49"
   integrity sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==
+
+react-fit@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/react-fit/-/react-fit-1.5.1.tgz#1ed69348258455920e37a6cc647a398163ce0160"
+  integrity sha512-r86m/6GuJa7j6dLYjC7kENBQRBaDMLTU0mBBoqnh42d/Iil9rmWEeOtdB2KEQEUyDQ8rZXojIx8u+gNFJ+9y1w==
+  dependencies:
+    "@types/react" "*"
+    "@types/react-dom" "*"
+    detect-element-overflow "^1.3.1"
+    prop-types "^15.6.0"
+    tiny-warning "^1.0.0"
 
 react-is@^16.13.1, react-is@^16.3.2:
   version "16.13.1"
@@ -1864,6 +1938,20 @@ react-router@6.11.2:
   integrity sha512-74z9xUSaSX07t3LM+pS6Un0T55ibUE/79CzfZpy5wsPDZaea1F8QkrsiyRnA2YQ7LwE/umaydzXZV80iDCPkMg==
   dependencies:
     "@remix-run/router" "1.6.2"
+
+react-time-picker@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/react-time-picker/-/react-time-picker-6.2.0.tgz#ab121ce3eb182a04a184f8219aaf4b43b9944291"
+  integrity sha512-MMedSF9mTcrL7tjXJSrXaKTb7bwnw/xWlvgC6mB+CPW93KZ8RH8Xek75Ntk7LhCVdFZMVcuW9kssLd+B4Jrg+Q==
+  dependencies:
+    "@wojtekmaj/date-utils" "^1.1.3"
+    clsx "^1.2.1"
+    get-user-locale "^2.2.1"
+    make-event-props "^1.4.2"
+    prop-types "^15.6.0"
+    react-clock "^4.2.0"
+    react-fit "^1.5.1"
+    update-input-width "^1.3.1"
 
 react-transition-group@^4.4.5:
   version "4.4.5"
@@ -2060,6 +2148,11 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==
 
+tiny-warning@^1.0.0:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/tiny-warning/-/tiny-warning-1.0.3.tgz#94a30db453df4c643d0fd566060d60a875d84754"
+  integrity sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA==
+
 to-fast-properties@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/to-fast-properties/-/to-fast-properties-2.0.0.tgz#dc5e698cbd079265bc73e0377681a4e4e83f616e"
@@ -2123,6 +2216,11 @@ update-browserslist-db@^1.0.10:
   dependencies:
     escalade "^3.1.1"
     picocolors "^1.0.0"
+
+update-input-width@^1.3.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/update-input-width/-/update-input-width-1.4.1.tgz#94636ef786da0a33581091c57d3a3c66d9fdcbd2"
+  integrity sha512-/FDlfTvxlEQ9+/duf5PoC1q0uYQd/nE4w7K7rVAAoW/QKKa4bdhccuPaWtfkrWEy2r08rzX6wlmCHeGL+vgJOw==
 
 uri-js@^4.2.2:
   version "4.4.1"

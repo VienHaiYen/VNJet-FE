@@ -1,9 +1,40 @@
+import axios from "axios";
+import React from "react";
 import { useLocation } from "react-router-dom";
 
 function DetailFlight() {
   const role = 0;
   const location = useLocation();
   // alert(location.state.id);
+  const [airports, setAirports] = React.useState([]);
+  const [ticketClasses, setTicketClasses] = React.useState([]);
+
+  React.useEffect(() => {
+    getAirports();
+    getTicketClasses();
+  }, []);
+  const fetchAllAirport = async () => {
+    const data = await axios
+      .get("http://localhost:20001/airport/")
+      .then((res) => res.data);
+    return data;
+  };
+  const fetchTicketClasses = async () => {
+    const data = await axios
+      .get("http://localhost:20001/ticket-class/")
+      .then((res) => res.data);
+    return data;
+  };
+
+  const getAirports = async () => {
+    let data = await fetchAllAirport();
+    await setAirports(data);
+  };
+  const getTicketClasses = async () => {
+    let data = await fetchTicketClasses();
+    await setTicketClasses(data);
+    // console.log("ticket-class", data);
+  };
   let data = {
     id: "456EkJ",
     beginTime: "20:00",

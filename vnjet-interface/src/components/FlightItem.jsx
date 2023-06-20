@@ -16,6 +16,8 @@ function getTimeFormat(_date) {
   return hour + ":" + minus;
 }
 function FlightItem({
+  from,
+  to,
   data,
   bookTicket,
   changeFlight,
@@ -27,19 +29,15 @@ function FlightItem({
     bookTicket(data._id);
   };
 
-  // React.useEffect(async () => {
-  //   // const fetchAirPort = await axios.get
-  //   const getAirPort = async () => {};
-  // }, []);
   return (
     <div className="rounded-3 border border-secondary mt-3 p-4">
       <div className="d-flex justify-content-between">
         <div>
           <span style={{ color: "red" }}>Số hiệu: {data._id}</span>
           <h4>{getTimeFormat(data.dateTime)}</h4>
-          {/* <span>
-            {data.goLocation} - {data.desLocation}
-          </span> */}
+          <h5 style={{ color: "orange" }}>
+            {from} - {to}
+          </h5>
         </div>
         <div className="d-flex flex-column justify-content-center">
           <h6>{getDateTimeFormat(data.dateTime)}</h6>
