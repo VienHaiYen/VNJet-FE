@@ -1,4 +1,5 @@
-import axios from "axios";
+import axiosClient from "../components/api/axios/axiosClient";
+
 import {
   MDBModal,
   MDBModalDialog,
@@ -23,36 +24,33 @@ function ManageAirport() {
     getAirports();
   }, []);
   const fetchAllAirport = async () => {
-    const data = await axios
-      .get("http://localhost:20001/airport/")
-      .then((res) => res.data);
+    const data = await axiosClient.get("http://localhost:20001/airport/");
     return data;
   };
   const postAirport = async () => {
-    const data = await axios
-      .post("http://localhost:20001/airport/", {
-        name: currentStation.name,
-      })
-      .then((res) => res.data);
+    const data = await axiosClient.post("http://localhost:20001/airport/", {
+      name: currentStation.name,
+    });
     return data;
   };
   const deleteAirport = async () => {
-    const data = await axios
-      .delete(`http://localhost:20001/airport/${currentID}`)
-      .then((res) => res.data);
+    const data = await axiosClient.delete(
+      `http://localhost:20001/airport/${currentID}`
+    );
     return data;
   };
 
   const editAirport = async () => {
-    const data = await axios
-      .put(`http://localhost:20001/airport/${currentID}`, {
+    const data = await axiosClient.put(
+      `http://localhost:20001/airport/${currentID}`,
+      {
         name: currentStation.name,
-      })
-      .then((res) => res.data);
+      }
+    );
     return data;
   };
 
-  const convertToCurrentName = (id) => {
+  const convertToAirportName = (id) => {
     let data = airports.filter((airport) => airport._id == id);
     return data.length > 0 ? data[0].name : "";
   };
@@ -69,7 +67,7 @@ function ManageAirport() {
   const handleEdit = (id) => {
     setCurrentID(id);
     setCurrentStation({
-      name: convertToCurrentName(id),
+      name: convertToAirportName(id),
       location: "",
     });
     setBasicModal(!basicModal);
@@ -172,7 +170,7 @@ function ManageAirport() {
             </MDBModalHeader>
             <MDBModalBody>
               Bạn có chắc chắn muốn xóa sân bay
-              {" " + convertToCurrentName(currentID)} không ?
+              {" " + convertToAirportName(currentID)} không ?
             </MDBModalBody>
             <MDBModalFooter>
               <button

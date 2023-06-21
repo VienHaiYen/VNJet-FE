@@ -19,7 +19,7 @@
   }
 }
 p {
-  line-height: 10px;
+  margin-bottom: 0 !important;
 }
 .card {
   padding: 2em;

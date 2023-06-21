@@ -6,6 +6,7 @@ import {
   ManageUsers,
   ManageAirport,
   DetailFlight,
+  Report,
 } from "../pages";
 
 export const publicRoutes = [{ component: Authenticate, path: "/" }];
@@ -17,4 +18,5 @@ export const privateRoutes = [
   { component: ManageUsers, path: "/manage-users" },
   { component: ManageAirport, path: "/manage-airport" },
   { component: DetailFlight, path: "/detail-flight" },
+  { component: Report, path: "/report" },
 ];

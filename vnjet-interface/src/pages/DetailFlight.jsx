@@ -1,28 +1,52 @@
-import axios from "axios";
+import axiosClient from "../components/api/axios/axiosClient";
 import React from "react";
 import { useLocation } from "react-router-dom";
 
 function DetailFlight() {
   const role = 0;
   const location = useLocation();
-  // alert(location.state.id);
+  const flight = location.state.flight;
   const [airports, setAirports] = React.useState([]);
   const [ticketClasses, setTicketClasses] = React.useState([]);
-
+  const [seats, setSeats] = React.useState([]);
+  const [transitions, setTransitions] = React.useState([]);
+  const [tickets, setTickets] = React.useState([]);
+  // console.log(flight);
   React.useEffect(() => {
     getAirports();
     getTicketClasses();
+    getSeats();
+    getTransitions();
+    getTicket();
   }, []);
+  const convertToAirportName = (id) => {
+    let data = airports.filter((airport) => airport._id == id);
+    return data.length > 0 ? data[0].name : "";
+  };
   const fetchAllAirport = async () => {
-    const data = await axios
-      .get("http://localhost:20001/airport/")
-      .then((res) => res.data);
+    const data = await axiosClient.get("http://localhost:20001/airport/");
     return data;
   };
   const fetchTicketClasses = async () => {
-    const data = await axios
-      .get("http://localhost:20001/ticket-class/")
-      .then((res) => res.data);
+    const data = await axiosClient.get("http://localhost:20001/ticket-class/");
+    return data;
+  };
+  const fetchSeats = async () => {
+    const data = await axiosClient.get(
+      `http://localhost:20001/flightStatistic/${flight._id}`
+    );
+    return data;
+  };
+  const fetchTransitions = async () => {
+    const data = await axiosClient.get(
+      `http://localhost:20001/transition-airport/${flight._id}`
+    );
+    console.log("lấy các trạm", data);
+    return data;
+  };
+  const fetchTicket = async () => {
+    const data = await axiosClient.get(`http://localhost:20001/ticket`);
+    console.log("lấy các trạm", data);
     return data;
   };
 
@@ -33,26 +57,37 @@ function DetailFlight() {
   const getTicketClasses = async () => {
     let data = await fetchTicketClasses();
     await setTicketClasses(data);
-    // console.log("ticket-class", data);
+    console.log("classsss", data);
   };
-  let data = {
-    id: "456EkJ",
-    beginTime: "20:00",
-    endTime: "02:00",
-    goDate: "06/07/2023",
-    goLocation: "TP.HCM Vietnam",
-    desLocation: " Ha Noi Vietnam",
-    beginStation: "Sân bay bắt đầu",
-    endStation: "Sân bay kết thúc",
-    travelTime: "6",
-    intermediateStation: ["Tân Sơn Nhất", "Mộc Bài"],
-    // ticketPrice: 1000000,
-    levelArray: [
-      { id: 1, number: 20, label: "Vé hạng nhất", price: 10000000 },
-      { id: 2, number: 20, label: "Vé hạng thương gia", price: 8000000 },
-      { id: 3, number: 50, label: "Vé hạng phổ thông", price: 1000000 },
-    ],
+  const getSeats = async () => {
+    let data = await fetchSeats();
+    await setSeats(data);
   };
+  const getTransitions = async () => {
+    let data = await fetchTransitions();
+    await setTransitions(data);
+    await console.log("tram dung", data);
+  };
+  const getTicket = async () => {
+    let data = await fetchTicket();
+    await console.log("tiket", data);
+    data.filter((ticket) => ticket.flightId === flight._id);
+    await setTickets(data);
+  };
+  function getDateTimeFormat(_date) {
+    var date = new Date(_date);
+    var dd = date.getDate() > 9 ? date.getDate() : "0" + date.getDate();
+    var mm = date.getMonth() > 9 ? date.getMonth() : "0" + date.getMonth();
+    var yyyy = date.getFullYear();
+    return dd + "/" + mm + "/" + yyyy;
+  }
+  function getTimeFormat(_date) {
+    var date = new Date(_date);
+    var hour = date.getHours() > 9 ? date.getHours() : "0" + date.getHours();
+    var minus =
+      date.getMinutes() > 9 ? date.getMinutes() : "0" + date.getMinutes();
+    return hour + ":" + minus;
+  }
   const customers = [
     {
       id: 1,
@@ -82,43 +117,87 @@ function DetailFlight() {
       {/* <h3>Chi tiết chuyến bay</h3> */}
       <h2 className="mb-4">
         Mã số chuyến bay
-        <span style={{ color: "red" }}>{" " + location.state.id}</span>
+        <span style={{ color: "red" }}>{" " + flight._id}</span>
       </h2>
       <div className="row justify-content-start" style={{ fontSize: "1.2rem" }}>
         <div className="col-6">
           <p>
-            {data.goLocation} - {data.desLocation}
+            {convertToAirportName(flight.fromAirport)} -{" "}
+            {convertToAirportName(flight.toAirport)}
           </p>
           <p>
-            Trạm trung gian:
-            {" " + data.beginStation} - {data.endStation}
+            {getDateTimeFormat(flight.dateTime) + "   "}
+            <b>{getTimeFormat(flight.dateTime)}</b>
           </p>
+          <p>Thời gian bay: {flight.flightDuration} phút</p>
+          <p>Trạm trung gian:</p>
+          <ul>
+            {transitions.length > 0 &&
+              transitions.map((transition, index) => (
+                <li key={index}>
+                  Name: {convertToAirportName(transition.airportId)}, Thời gian:{" "}
+                  {transition.transitionDuration} phút, Ghi chú:{" "}
+                  {transition.note}
+                </li>
+              ))}
+          </ul>
           <p>
             Số lượng ghế trên máy bay:
             {" " +
-              data.levelArray.reduce(
-                (current, level) => current + level.number,
-                0
-              )}
-          </p>
-          <p>
-            Số ghế hạng nhất: {data.levelArray[0].number}, Giá vé:{" "}
-            {data.levelArray[0].price} VND
-          </p>
-          <p>
-            Số ghế hạng nhất: {data.levelArray[1].number}, Giá vé:{" "}
-            {data.levelArray[1].price} VND
-          </p>
-          <p>
-            Số ghế hạng nhất: {data.levelArray[2].number}, Giá vé:{" "}
-            {data.levelArray[2].price} VND
+              seats.reduce((current, seat) => current + seat.numberOfSeat, 0)}
           </p>
         </div>
         <div className="col-6">
-          <p>{data.goDate}</p>
-          <p>
-            {data.beginTime} - {data.endTime}
-          </p>
+          {ticketClasses.length > 0 && seats.length > 0 && (
+            <div>
+              <p>
+                Vé hạng nhất:{" "}
+                {
+                  seats.filter((seat) => {
+                    return seat.classOfTicket === ticketClasses[0]._id;
+                  })[0].numberOfSeat
+                }
+                , Giá vé:{" "}
+                {
+                  seats.filter(
+                    (seat) => seat.classOfTicket === ticketClasses[0]._id
+                  )[0].price
+                }{" "}
+                VND
+              </p>
+              <p>
+                Vé hạng hai:{" "}
+                {
+                  seats.filter((seat) => {
+                    return seat.classOfTicket === ticketClasses[1]._id;
+                  })[0].numberOfSeat
+                }
+                , Giá vé:{" "}
+                {
+                  seats.filter(
+                    (seat) => seat.classOfTicket === ticketClasses[1]._id
+                  )[0].price
+                }{" "}
+                VND
+              </p>
+              <p>
+                Số vé hạng nhất còn trống:{" "}
+                {
+                  seats.filter((seat) => {
+                    return seat.classOfTicket === ticketClasses[0]._id;
+                  })[0].numberOfEmptySeat
+                }
+              </p>
+              <p>
+                Số vé hạng hai còn trống:{" "}
+                {
+                  seats.filter((seat) => {
+                    return seat.classOfTicket === ticketClasses[1]._id;
+                  })[0].numberOfEmptySeat
+                }
+              </p>
+            </div>
+          )}
         </div>
       </div>
       {role == 0 && (
@@ -136,13 +215,13 @@ function DetailFlight() {
               </tr>
             </thead>
             <tbody>
-              {customers.map((customer, index) => (
+              {tickets.map((customer, index) => (
                 <tr key={index}>
                   <th scope="row">{index + 1}</th>
-                  <td>{customer.name}</td>
-                  <td>{customer.cmnd}</td>
+                  <td>{customer.userId}</td>
+                  {/* <td>{customer.cmnd}</td>
                   <td>{customer.birthday}</td>
-                  <td>{customer.ticketType}</td>
+                  <td>{customer.ticketType}</td> */}
                 </tr>
               ))}
             </tbody>

@@ -80,7 +80,7 @@ function FlightItem({
               <button
                 type="button"
                 className="btn btn-primary mt-2 w-100"
-                onClick={() => showDetailFlight(data._id)}
+                onClick={() => showDetailFlight(data)}
               >
                 Chi tiết
               </button>

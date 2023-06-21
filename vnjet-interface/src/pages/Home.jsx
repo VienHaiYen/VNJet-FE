@@ -2,10 +2,9 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import FlightItem from "../components/FlightItem";
-import axios from "axios";
+import axiosClient from "../components/api/axios/axiosClient";
 import {
   MDBModal,
   MDBModalDialog,
@@ -34,9 +33,8 @@ function Home() {
 
   React.useEffect(() => {
     const fetchAllAirport = async () => {
-      const data = await axios
-        .get("http://localhost:20001/airport/")
-        .then((res) => res.data);
+      const data = await axiosClient.get("http://localhost:20001/airport/");
+      await console.log("sai", data);
       return data;
     };
     const getAirports = async () => {
@@ -48,9 +46,7 @@ function Home() {
     getAirports();
   }, []);
   const fetchAllFlight = async () => {
-    const data = await axios
-      .get("http://localhost:20001/flight")
-      .then((res) => res.data);
+    const data = await axiosClient.get("http://localhost:20001/flight");
     return data;
   };
 
@@ -60,9 +56,9 @@ function Home() {
     await console.log(flights);
   };
   const deleteFlight = async (id) => {
-    const data = await axios
-      .delete(`http://localhost:20001/flight/${id}`)
-      .then((res) => res.data);
+    const data = await axiosClient.delete(
+      `http://localhost:20001/flight/${id}`
+    );
     return data;
   };
   const toggleShow = () => setBasicModal(!basicModal);
@@ -99,8 +95,9 @@ function Home() {
     setBasicModal1(false);
     // console.log(456, currentID);
   };
-  const handleShowDetail = (id) => {
-    navigate("/detail-flight", { state: { id: id } });
+  const handleShowDetail = (flight) => {
+    navigate("/detail-flight", { state: { flight: flight } });
+    console.log("flight", flight);
   };
   const [currentID, setCurrentID] = React.useState("");
 

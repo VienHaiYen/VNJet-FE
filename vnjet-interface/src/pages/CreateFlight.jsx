@@ -1,6 +1,6 @@
-import axios from "axios";
 import React from "react";
 import Dropdown from "../components/Dropdown";
+import axiosClient from "../components/api/axios/axiosClient";
 
 function CreateFlight() {
   const [airports, setAirports] = React.useState([]);
@@ -31,40 +31,35 @@ function CreateFlight() {
     getTicketClasses();
   }, []);
   const fetchAllAirport = async () => {
-    const data = await axios
-      .get("http://localhost:20001/airport/")
-      .then((res) => res.data);
+    const data = await axiosClient.get("http://localhost:20001/airport/");
     return data;
   };
   const fetchTicketClasses = async () => {
-    const data = await axios
-      .get("http://localhost:20001/ticket-class/")
-      .then((res) => res.data);
+    const data = await axiosClient.get("http://localhost:20001/ticket-class/");
     return data;
   };
   const addTransitionAirport = async (flight, airport, duration, note) => {
-    const data = await axios
-      .post("http://localhost:20001/transition-airport/", {
+    const data = await axiosClient.post(
+      "http://localhost:20001/transition-airport/",
+      {
         flightId: flight,
         airportId: airport,
         transitionDuration: Number(duration),
         note: note,
-      })
-      .then((res) => res.data);
+      }
+    );
     return data;
   };
 
   const addTicketClass = async (flight, ticketClass, number, price) => {
     console.log("add ticket", flight, ticketClass._id, number, price);
-    const data = await axios
-      .put(
-        `http://localhost:20001/flightStatistic/${flight}/${ticketClass._id}`,
-        {
-          numberOfSeat: number != "" ? Number(number) : 0,
-          price: price != "" ? Number(price) : 0,
-        }
-      )
-      .then((res) => res.data);
+    const data = await axiosClient.put(
+      `http://localhost:20001/flightStatistic/${flight}/${ticketClass._id}`,
+      {
+        numberOfSeat: number != "" ? Number(number) : 0,
+        price: price != "" ? Number(price) : 0,
+      }
+    );
     console.log("sau khi them ticketclass", data);
     return data;
   };
@@ -79,7 +74,7 @@ function CreateFlight() {
       fromAirport: currentFlight.from,
       toAirport: currentFlight.to,
     });
-    const data = await axios
+    const data = await axiosClient
       .post("http://localhost:20001/flight", {
         dateTime: currentFlight.time,
         flightDuration: Number(currentFlight.duration),
@@ -90,13 +85,14 @@ function CreateFlight() {
         toAirport: currentFlight.to,
       })
       .then((res) => {
-        if (res.status === 200) {
+        console.log(res);
+        if (res._id) {
           if (
             currentFlight.transitionAirport1 != "" &&
             currentFlight.transitionTime1 != ""
           ) {
             addTransitionAirport(
-              res.data._id,
+              res._id,
               currentFlight.transitionAirport1,
               currentFlight.transitionTime1,
               currentFlight.note1
@@ -125,13 +121,13 @@ function CreateFlight() {
             );
           }
           addTicketClass(
-            res.data._id,
+            res._id,
             ticketClasses[0],
             currentFlight.number1,
             currentFlight.price1
           );
           addTicketClass(
-            res.data._id,
+            res._id,
             ticketClasses[1],
             currentFlight.number2,
             currentFlight.price2
@@ -140,7 +136,7 @@ function CreateFlight() {
         } else {
           alert("Lỗi");
         }
-        return res.data;
+        return res;
       });
     return data;
   };

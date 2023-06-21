@@ -11,6 +11,7 @@ function Header() {
     { to: "/create-flight", label: "Tạo chuyến bay" },
     { to: "/manage-users", label: "Quản lí tài khoản" },
     { to: "/manage-airport", label: "Quản lí sân bay" },
+    { to: "/Report", label: "Báo cáo" },
   ];
   return (
     <>
@@ -53,7 +54,9 @@ function Header() {
                   alt=""
                 />
               </div>
-              <h3 className="p-2 text-info">{user.fullname}</h3>
+              <h3 className="p-2 text-info" style={{ fontSize: "20px" }}>
+                {user.fullname}
+              </h3>
               <button
                 onClick={async (e) => {
                   await authenticate.handleLogout();
