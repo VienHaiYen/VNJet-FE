@@ -18,47 +18,68 @@ import Dropdown from "../components/Dropdown";
 
 function Home() {
   let navigate = useNavigate();
-  const role = 0;
+  const role = 1;
   const [startDate, setStartDate] = React.useState(new Date());
   const [basicModal, setBasicModal] = React.useState(false);
   const [basicModal1, setBasicModal1] = React.useState(false);
-  const inputRef = React.useRef(null);
+  // const inputRef = React.useRef(null);
   const [flights, setFlights] = React.useState([]);
   const [airports, setAirports] = React.useState([]);
+  const [ticketClasses, setTicketClasses] = React.useState([]);
   const [findingState, setFindingState] = React.useState({
     from: "",
     to: "",
     date: "",
   });
+  const [currentID, setCurrentID] = React.useState("");
 
+  const [customerInfo, setCustomerInfo] = React.useState({
+    ticketClass: "",
+  });
   React.useEffect(() => {
-    const fetchAllAirport = async () => {
-      const data = await axiosClient.get("http://localhost:20001/airport/");
-      await console.log("sai", data);
-      return data;
-    };
-    const getAirports = async () => {
-      let data = await fetchAllAirport();
-      await setAirports(data);
-    };
-
     getFlights();
     getAirports();
+    getTicketClasses();
   }, []);
   const fetchAllFlight = async () => {
-    const data = await axiosClient.get("http://localhost:20001/flight");
+    const data = await axiosClient.get("/flight");
     return data;
   };
-
+  const fetchAllAirport = async () => {
+    const data = await axiosClient.get("/airport/");
+    return data;
+  };
+  const fetchTicketClasses = async () => {
+    const data = await axiosClient.get("/ticket-class/");
+    return data;
+  };
+  const buyTicket = async (flighId) => {
+    const data = await axiosClient.post("/ticket/", {
+      flightId: flighId,
+      classOfTicket: customerInfo.ticketClass,
+    });
+    return data;
+  };
+  const handleBuyTicket = async () => {
+    let data = await buyTicket(currentID);
+    await console.log(data);
+  };
   const getFlights = async () => {
     let data = await fetchAllFlight();
     setFlights(data);
     await console.log(flights);
   };
+  const getAirports = async () => {
+    let data = await fetchAllAirport();
+    await setAirports(data);
+  };
+  const getTicketClasses = async () => {
+    let data = await fetchTicketClasses();
+    await setTicketClasses(data);
+    console.log("ticket-class", data);
+  };
   const deleteFlight = async (id) => {
-    const data = await axiosClient.delete(
-      `http://localhost:20001/flight/${id}`
-    );
+    const data = await axiosClient.delete(`/flight/${id}`);
     return data;
   };
   const toggleShow = () => setBasicModal(!basicModal);
@@ -99,15 +120,7 @@ function Home() {
     navigate("/detail-flight", { state: { flight: flight } });
     console.log("flight", flight);
   };
-  const [currentID, setCurrentID] = React.useState("");
 
-  const [customerInfo, setCustomerInfo] = React.useState({
-    customerName: "",
-    cmnd: "",
-    birth: "",
-    phone: "",
-    level: "",
-  });
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCustomerInfo((prevState) => ({
@@ -116,7 +129,7 @@ function Home() {
     }));
   };
   React.useEffect(() => {
-    basicModal && inputRef.current.focus();
+    // basicModal && inputRef.current.focus();
   }, [basicModal]);
   return (
     <div>
@@ -128,66 +141,15 @@ function Home() {
             </MDBModalHeader>
             <MDBModalBody>
               <div className="form-group mr-3">
-                <label htmlFor="customerName">Tên khách hàng (*)</label>
-                <input
-                  ref={inputRef}
-                  type="text"
-                  className=" form-control"
-                  id="customerName"
-                  // placeholder="Điểm miệng"
-                  value={customerInfo.customerName}
-                  name="customerName"
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="form-group mr-3">
-                <label htmlFor="cmnd">CMND/CCCD</label>
-                <input
-                  type="number"
-                  className=" form-control"
-                  id="cmnd"
-                  // placeholder="Điểm 15 phút"
-                  value={customerInfo.cmnd}
-                  name="cmnd"
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="form-group mr-3">
-                <label htmlFor="birth">Năm sinh</label>
-                <input
-                  type="number"
-                  className=" form-control"
-                  id="birth"
-                  // placeholder="Điểm 45 phút"
-                  value={customerInfo.birth}
-                  name="birth"
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="form-group mr-3">
-                <label htmlFor="phone">Số điện thoại</label>
-                <input
-                  type="number"
-                  className=" form-control"
-                  id="phone"
-                  // placeholder="Điểm Giữa học kì"
-                  value={customerInfo.phone}
-                  name="phone"
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="form-group mr-3">
-                <label htmlFor="level">Hạng vé</label>
+                <label htmlFor="level">Chọi loại vé</label>
                 <Dropdown
-                  value={customerInfo.level}
+                  value={customerInfo.ticketClass}
                   onChange={handleChange}
-                  name="level"
-                  // options={data.levelArray}
+                  name="ticketClass"
+                  options={ticketClasses}
                 />
               </div>
-              <div>
-                <h5></h5>
-              </div>
+              <div></div>
             </MDBModalBody>
             <MDBModalFooter>
               <button
@@ -200,7 +162,7 @@ function Home() {
               <button
                 type="button"
                 className="btn btn-outline-danger"
-                // onClick={handleChangePoint}
+                onClick={handleBuyTicket}
               >
                 Đồng ý
               </button>

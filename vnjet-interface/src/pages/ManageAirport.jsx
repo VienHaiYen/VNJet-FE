@@ -24,29 +24,24 @@ function ManageAirport() {
     getAirports();
   }, []);
   const fetchAllAirport = async () => {
-    const data = await axiosClient.get("http://localhost:20001/airport/");
+    const data = await axiosClient.get("/airport/");
     return data;
   };
   const postAirport = async () => {
-    const data = await axiosClient.post("http://localhost:20001/airport/", {
+    const data = await axiosClient.post("/airport/", {
       name: currentStation.name,
     });
     return data;
   };
   const deleteAirport = async () => {
-    const data = await axiosClient.delete(
-      `http://localhost:20001/airport/${currentID}`
-    );
+    const data = await axiosClient.delete(`/airport/${currentID}`);
     return data;
   };
 
   const editAirport = async () => {
-    const data = await axiosClient.put(
-      `http://localhost:20001/airport/${currentID}`,
-      {
-        name: currentStation.name,
-      }
-    );
+    const data = await axiosClient.put(`/airport/${currentID}`, {
+      name: currentStation.name,
+    });
     return data;
   };
 

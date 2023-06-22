@@ -31,30 +31,27 @@ function CreateFlight() {
     getTicketClasses();
   }, []);
   const fetchAllAirport = async () => {
-    const data = await axiosClient.get("http://localhost:20001/airport/");
+    const data = await axiosClient.get("/airport/");
     return data;
   };
   const fetchTicketClasses = async () => {
-    const data = await axiosClient.get("http://localhost:20001/ticket-class/");
+    const data = await axiosClient.get("/ticket-class/");
     return data;
   };
   const addTransitionAirport = async (flight, airport, duration, note) => {
-    const data = await axiosClient.post(
-      "http://localhost:20001/transition-airport/",
-      {
-        flightId: flight,
-        airportId: airport,
-        transitionDuration: Number(duration),
-        note: note,
-      }
-    );
+    const data = await axiosClient.post("/transition-airport/", {
+      flightId: flight,
+      airportId: airport,
+      transitionDuration: Number(duration),
+      note: note,
+    });
     return data;
   };
 
   const addTicketClass = async (flight, ticketClass, number, price) => {
     console.log("add ticket", flight, ticketClass._id, number, price);
     const data = await axiosClient.put(
-      `http://localhost:20001/flightStatistic/${flight}/${ticketClass._id}`,
+      `/flightStatistic/${flight}/${ticketClass._id}`,
       {
         numberOfSeat: number != "" ? Number(number) : 0,
         price: price != "" ? Number(price) : 0,
@@ -75,7 +72,7 @@ function CreateFlight() {
       toAirport: currentFlight.to,
     });
     const data = await axiosClient
-      .post("http://localhost:20001/flight", {
+      .post("/flight", {
         dateTime: currentFlight.time,
         flightDuration: Number(currentFlight.duration),
         numberOfEmptySeat:

@@ -24,28 +24,24 @@ function DetailFlight() {
     return data.length > 0 ? data[0].name : "";
   };
   const fetchAllAirport = async () => {
-    const data = await axiosClient.get("http://localhost:20001/airport/");
+    const data = await axiosClient.get("/airport/");
     return data;
   };
   const fetchTicketClasses = async () => {
-    const data = await axiosClient.get("http://localhost:20001/ticket-class/");
+    const data = await axiosClient.get("/ticket-class/");
     return data;
   };
   const fetchSeats = async () => {
-    const data = await axiosClient.get(
-      `http://localhost:20001/flightStatistic/${flight._id}`
-    );
+    const data = await axiosClient.get(`/flightStatistic/${flight._id}`);
     return data;
   };
   const fetchTransitions = async () => {
-    const data = await axiosClient.get(
-      `http://localhost:20001/transition-airport/${flight._id}`
-    );
+    const data = await axiosClient.get(`/transition-airport/${flight._id}`);
     console.log("lấy các trạm", data);
     return data;
   };
   const fetchTicket = async () => {
-    const data = await axiosClient.get(`http://localhost:20001/ticket`);
+    const data = await axiosClient.get(`/ticket`);
     console.log("lấy các trạm", data);
     return data;
   };
@@ -88,30 +84,6 @@ function DetailFlight() {
       date.getMinutes() > 9 ? date.getMinutes() : "0" + date.getMinutes();
     return hour + ":" + minus;
   }
-  const customers = [
-    {
-      id: 1,
-      name: "John",
-      cmnd: 456789,
-      birthday: "1/1/2000",
-      gender: "male",
-      email: "456@gmail.com",
-      phone: 456789123,
-      address: "456 Nguyễn Lương Bằng D4",
-      ticketType: "Vé phổ thông",
-    },
-    {
-      id: 2,
-      name: "Marry",
-      cmnd: 456789,
-      birthday: "1/1/2000",
-      gender: "female",
-      email: "477@gmail.com",
-      phone: 456789123,
-      address: "456 Nguyễn Lương Bằng D4",
-      ticketType: "Vé thương gia",
-    },
-  ];
   return (
     <>
       {/* <h3>Chi tiết chuyến bay</h3> */}
@@ -130,8 +102,8 @@ function DetailFlight() {
             <b>{getTimeFormat(flight.dateTime)}</b>
           </p>
           <p>Thời gian bay: {flight.flightDuration} phút</p>
-          <p>Trạm trung gian:</p>
           <ul>
+            <p>Trạm trung gian:</p>
             {transitions.length > 0 &&
               transitions.map((transition, index) => (
                 <li key={index}>
@@ -165,21 +137,19 @@ function DetailFlight() {
                 }{" "}
                 VND
               </p>
-              <p>
+              {/* <p>
                 Vé hạng hai:{" "}
-                {
+                {seats.length > 0 &&
                   seats.filter((seat) => {
                     return seat.classOfTicket === ticketClasses[1]._id;
-                  })[0].numberOfSeat
-                }
+                  })[0].numberOfSeat}
                 , Giá vé:{" "}
-                {
+                {seats.length > 0 &&
                   seats.filter(
                     (seat) => seat.classOfTicket === ticketClasses[1]._id
-                  )[0].price
-                }{" "}
+                  )[0].price}{" "}
                 VND
-              </p>
+              </p> */}
               <p>
                 Số vé hạng nhất còn trống:{" "}
                 {
@@ -188,19 +158,19 @@ function DetailFlight() {
                   })[0].numberOfEmptySeat
                 }
               </p>
-              <p>
+              {/* <p>
                 Số vé hạng hai còn trống:{" "}
                 {
                   seats.filter((seat) => {
                     return seat.classOfTicket === ticketClasses[1]._id;
                   })[0].numberOfEmptySeat
                 }
-              </p>
+              </p> */}
             </div>
           )}
         </div>
       </div>
-      {role == 0 && (
+      {/* {role == 0 && (
         <>
           <h3 className="mt-5">Danh sách người đặt vé</h3>
           <table className="table">
@@ -211,7 +181,6 @@ function DetailFlight() {
                 <th scope="col">CMND</th>
                 <th scope="col">Ngày sinh</th>
                 <th scope="col">Loại vé</th>
-                {/* <th scope="col">Handle</th> */}
               </tr>
             </thead>
             <tbody>
@@ -219,15 +188,15 @@ function DetailFlight() {
                 <tr key={index}>
                   <th scope="row">{index + 1}</th>
                   <td>{customer.userId}</td>
-                  {/* <td>{customer.cmnd}</td>
+                  <td>{customer.cmnd}</td>
                   <td>{customer.birthday}</td>
-                  <td>{customer.ticketType}</td> */}
+                  <td>{customer.ticketType}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </>
-      )}
+      )} */}
     </>
   );
 }
