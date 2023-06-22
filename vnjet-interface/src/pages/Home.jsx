@@ -18,13 +18,16 @@ import Dropdown from "../components/Dropdown";
 
 function Home() {
   let navigate = useNavigate();
-  const role = 0;
+  const role = 1;
+  const [currentID, setCurrentID] = React.useState("");
   const [showBookingTicket, setShowBookingTicket] = React.useState(false);
   const [showDelete, setShowDelete] = React.useState(false);
   const [showEdit, setShowEdit] = React.useState(false);
   const [flights, setFlights] = React.useState([]);
   const [airports, setAirports] = React.useState([]);
   const [ticketClasses, setTicketClasses] = React.useState([]);
+  const [seats, setSeats] = React.useState([]);
+
   const [findingState, setFindingState] = React.useState({
     from: "",
     to: "",
@@ -36,7 +39,6 @@ function Home() {
     fromAirport: "",
     toAirport: "",
   });
-  const [currentID, setCurrentID] = React.useState("");
 
   const [customerInfo, setCustomerInfo] = React.useState({
     ticketClass: "",
@@ -46,6 +48,9 @@ function Home() {
     getAirports();
     getTicketClasses();
   }, []);
+  React.useEffect(() => {
+    getSeats();
+  }, [currentID]);
   const fetchAllFlight = async () => {
     const data = await axiosClient.get("/flight");
     return data;
@@ -89,6 +94,10 @@ function Home() {
 
     return data;
   };
+  const fetchSeats = async () => {
+    const data = await axiosClient.get(`/flightStatistic/${currentID}`);
+    return data;
+  };
   const handleSearchFlight = async () => {
     let data = await searchFlight();
     setFlights(data);
@@ -96,6 +105,7 @@ function Home() {
   const handleBuyTicket = async () => {
     let data = await buyTicket(currentID);
     await console.log(data);
+    setShowBookingTicket(false);
   };
   const getFlights = async () => {
     let data = await fetchAllFlight();
@@ -114,6 +124,11 @@ function Home() {
   const deleteFlight = async (id) => {
     const data = await axiosClient.delete(`/flight/${id}`);
     return data;
+  };
+  const getSeats = async () => {
+    let data = await fetchSeats();
+    await setSeats(data);
+    await console.log(seats);
   };
   const toggleShow = () => setShowBookingTicket(!showBookingTicket);
   const convertToCurrentName = (id) => {
@@ -162,6 +177,7 @@ function Home() {
       ...prevState,
       [name]: value,
     }));
+    console.log(customerInfo);
   };
   const handleChangeEditState = (e) => {
     const { name, value } = e.target;
@@ -198,12 +214,26 @@ function Home() {
             <MDBModalBody>
               <div className="form-group mr-3">
                 <label htmlFor="level">Chọi loại vé</label>
-                <Dropdown
-                  value={customerInfo.ticketClass}
-                  onChange={handleChangeCustomerInfo}
+                <select
+                  className="form-select"
                   name="ticketClass"
-                  options={ticketClasses}
-                />
+                  onChange={handleChangeCustomerInfo}
+                  value={customerInfo.ticketClass}
+                >
+                  <option selected value=""></option>
+                  {console.log("current seat", seats)}
+                  {Array.isArray(seats) &&
+                    seats.length > 0 &&
+                    seats.map((seat, index) => {
+                      return seat.numberOfEmptySeat > 0 ? (
+                        <option value={seat.classOfTicket} key={index}>
+                          {seat.nameOfTicketClass} - {seat.price} VND
+                        </option>
+                      ) : (
+                        ""
+                      );
+                    })}
+                </select>
               </div>
               <div></div>
             </MDBModalBody>
@@ -359,7 +389,7 @@ function Home() {
           <FlightItem
             from={convertToCurrentName(flight.fromAirport)}
             to={convertToCurrentName(flight.toAirport)}
-            data={flight}
+            flight={flight}
             bookTicket={handleChooseTicket}
             changeFlight={handleEditFlight}
             deleteFlight={handleDeleteFlight}

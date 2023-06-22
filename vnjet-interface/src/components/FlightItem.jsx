@@ -1,5 +1,7 @@
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axiosClient from "../components/api/axios/axiosClient";
+import React from "react";
 
 function getDateTimeFormat(_date) {
   var date = new Date(_date);
@@ -18,37 +20,73 @@ function getTimeFormat(_date) {
 function FlightItem({
   from,
   to,
-  data,
+  flight,
   bookTicket,
   changeFlight,
   deleteFlight,
   showDetailFlight,
   role,
 }) {
-  const chooseItem = () => {
-    bookTicket(data._id);
+  const [airports, setAirports] = React.useState([]);
+  const [transitions, setTransitions] = React.useState([]);
+  const convertToAirportName = (id) => {
+    let data = airports.filter((airport) => airport._id == id);
+    return data.length > 0 ? data[0].name : "";
   };
-
+  React.useEffect(() => {
+    getAirports();
+    getTransitions();
+  }, []);
+  const fetchTransitions = async () => {
+    console.log(456, flight._id);
+    const data = await axiosClient.get(`/transition-airport/${flight._id}`);
+    await console.log("lấy các trạm", data);
+    return data;
+  };
+  const fetchAllAirport = async () => {
+    const data = await axiosClient.get("/airport/");
+    return data;
+  };
+  const getTransitions = async () => {
+    let data = await fetchTransitions();
+    await setTransitions(data);
+    await console.log("tram dung", data);
+  };
+  const getAirports = async () => {
+    let data = await fetchAllAirport();
+    await setAirports(data);
+  };
   return (
     <div className="rounded-3 border border-secondary mt-3 p-4">
       <div className="d-flex justify-content-between">
         <div>
-          <span style={{ color: "red" }}>Số hiệu: {data._id}</span>
-          <h4>{getTimeFormat(data.dateTime)}</h4>
+          <span style={{ color: "red" }}>Số hiệu: {flight._id}</span>
+          <h4>{getTimeFormat(flight.dateTime)}</h4>
           <h5 style={{ color: "orange" }}>
             {from} - {to}
           </h5>
+          <ul>
+            {transitions.length > 0 && <p>Trạm trung gian:</p>}
+            {transitions.length > 0 &&
+              transitions.map((transition, index) => (
+                <li key={index}>
+                  Name: {convertToAirportName(transition.airportId)}, Thời gian:{" "}
+                  {transition.transitionDuration} phút, Ghi chú:{" "}
+                  {transition.note}
+                </li>
+              ))}
+          </ul>
         </div>
         <div className="d-flex flex-column justify-content-center">
-          <h6>{getDateTimeFormat(data.dateTime)}</h6>
-          <h6>Tổng thời gian di chuyển: {data.flightDuration} phút</h6>
+          <h6>{getDateTimeFormat(flight.dateTime)}</h6>
+          <h6>Tổng thời gian di chuyển: {flight.flightDuration} phút</h6>
         </div>
         <div className="h-100">
           {role == 1 ? (
             <button
               type="button"
               className="btn btn-warning w-100"
-              onClick={() => chooseItem(data._id)}
+              onClick={() => bookTicket(flight._id)}
             >
               Đặt vé
             </button>
@@ -58,14 +96,14 @@ function FlightItem({
                 <button
                   type="button"
                   className="btn btn-warning w-75"
-                  onClick={() => changeFlight(data._id)}
+                  onClick={() => changeFlight(flight._id)}
                 >
                   Chỉnh sửa
                 </button>
                 <button
                   type="button"
                   className="btn btn-dark ml-2 w-25"
-                  onClick={() => deleteFlight(data._id)}
+                  onClick={() => deleteFlight(flight._id)}
                 >
                   <FontAwesomeIcon icon={faTrash} />
                 </button>
@@ -73,7 +111,7 @@ function FlightItem({
               <button
                 type="button"
                 className="btn btn-primary mt-2 w-100"
-                onClick={() => showDetailFlight(data)}
+                onClick={() => showDetailFlight(flight)}
               >
                 Chi tiết
               </button>
