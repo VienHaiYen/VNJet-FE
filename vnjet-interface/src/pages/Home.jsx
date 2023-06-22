@@ -18,7 +18,7 @@ import Dropdown from "../components/Dropdown";
 
 function Home() {
   let navigate = useNavigate();
-  const role = 1;
+  const role = 0;
   const [startDate, setStartDate] = React.useState(new Date());
   const [basicModal, setBasicModal] = React.useState(false);
   const [basicModal1, setBasicModal1] = React.useState(false);
@@ -31,6 +31,7 @@ function Home() {
     to: "",
     date: "",
   });
+
   const [currentID, setCurrentID] = React.useState("");
 
   const [customerInfo, setCustomerInfo] = React.useState({
@@ -59,6 +60,24 @@ function Home() {
       classOfTicket: customerInfo.ticketClass,
     });
     return data;
+  };
+  const searchFlight = async () => {
+    let tmp = findingState.date == "" ? "" : new Date(findingState.date);
+    const data = await axiosClient.get(
+      `/flight/${findingState.from != "" ? findingState.from : "undefined"}/${
+        findingState.to != "" ? findingState.to : "undefined"
+      }/${
+        tmp != ""
+          ? tmp.toISOString().replace("00:00:00.000Z", "00:00:00.000+00:00")
+          : "undefined"
+      }`
+    );
+    return data;
+  };
+  const handleSearchFlight = async () => {
+    let data = await searchFlight();
+    // console.log(data);
+    setFlights(data);
   };
   const handleBuyTicket = async () => {
     let data = await buyTicket(currentID);
@@ -91,11 +110,7 @@ function Home() {
     toggleShow();
     console.log("clear all");
     setCustomerInfo({
-      customerName: "",
-      cmnd: "",
-      birth: "",
-      phone: "",
-      level: "",
+      ticketClass: "",
     });
   };
   const handleChooseTicket = (id) => {
@@ -121,12 +136,21 @@ function Home() {
     console.log("flight", flight);
   };
 
-  const handleChange = (e) => {
+  const handleChangeCustomerInfo = (e) => {
     const { name, value } = e.target;
     setCustomerInfo((prevState) => ({
       ...prevState,
       [name]: value,
     }));
+  };
+  const handleChangeFindingStae = (e) => {
+    const { name, value } = e.target;
+    setFindingState((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+    console.log(findingState);
+    console.log(findingState.date);
   };
   React.useEffect(() => {
     // basicModal && inputRef.current.focus();
@@ -144,7 +168,7 @@ function Home() {
                 <label htmlFor="level">Chọi loại vé</label>
                 <Dropdown
                   value={customerInfo.ticketClass}
-                  onChange={handleChange}
+                  onChange={handleChangeCustomerInfo}
                   name="ticketClass"
                   options={ticketClasses}
                 />
@@ -204,45 +228,50 @@ function Home() {
       <div className="home d-flex align-item-center">
         <label>Đi từ</label>
         <Dropdown
-          value={airports.name}
-          onChange={handleChange}
+          value={findingState.from}
+          onChange={handleChangeFindingStae}
           name="from"
           options={airports}
         />
         <label>Đến</label>
         <Dropdown
-          value={airports.name}
-          onChange={handleChange}
+          value={findingState.to}
+          onChange={handleChangeFindingStae}
           name="to"
           options={airports}
         />
         <label>Đi từ</label>
         <input
           required
-          id="birthday"
+          id="date"
           type="date"
           className="form-control mr-5"
-          onChange={(date) => setStartDate(date)}
-          //   value={info.birthday}
-          name="birthday"
+          onChange={handleChangeFindingStae}
+          name="date"
+          value={findingState.date}
         />
-        <button type="button" className="btn btn-warning">
+        <button
+          type="button"
+          className="btn btn-warning"
+          onClick={handleSearchFlight}
+        >
           <FontAwesomeIcon icon={faSearch} />
         </button>
       </div>
-      {flights.map((flight, index) => (
-        <FlightItem
-          from={convertToCurrentName(flight.fromAirport)}
-          to={convertToCurrentName(flight.toAirport)}
-          data={flight}
-          bookTicket={handleChooseTicket}
-          changeFlight={handleChangeFlight}
-          deleteFlight={handleDeleteFlight}
-          showDetailFlight={handleShowDetail}
-          key={index}
-          role={role}
-        />
-      ))}
+      {flights &&
+        flights.map((flight, index) => (
+          <FlightItem
+            from={convertToCurrentName(flight.fromAirport)}
+            to={convertToCurrentName(flight.toAirport)}
+            data={flight}
+            bookTicket={handleChooseTicket}
+            changeFlight={handleChangeFlight}
+            deleteFlight={handleDeleteFlight}
+            showDetailFlight={handleShowDetail}
+            key={index}
+            role={role}
+          />
+        ))}
     </div>
   );
 }

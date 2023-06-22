@@ -30,7 +30,7 @@ axiosClient.interceptors.response.use(
   },
   (error) => {
     // Handle errors
-    console.log(error.response.status);
+    console.log(error);
     return error.response.data;
     // throw error.response.data;
   }

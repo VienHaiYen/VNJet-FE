@@ -100,7 +100,7 @@ function CreateFlight() {
             currentFlight.transitionTime2 != ""
           ) {
             addTransitionAirport(
-              res.data._id,
+              res._id,
               currentFlight.transitionAirport2,
               currentFlight.transitionTime2,
               currentFlight.note2
@@ -111,7 +111,7 @@ function CreateFlight() {
             currentFlight.transitionTime3 != ""
           ) {
             addTransitionAirport(
-              res.data._id,
+              res._id,
               currentFlight.transitionAirport3,
               currentFlight.transitionTime3,
               currentFlight.note3

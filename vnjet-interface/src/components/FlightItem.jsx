@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 function getDateTimeFormat(_date) {
   var date = new Date(_date);
   var dd = date.getDate() > 9 ? date.getDate() : "0" + date.getDate();
-  var mm = date.getMonth() > 9 ? date.getMonth() : "0" + date.getMonth();
+  var mm = date.getMonth() > 9 ? date.getMonth() : "0" + (date.getMonth() + 1);
   var yyyy = date.getFullYear();
   return dd + "/" + mm + "/" + yyyy;
 }
