@@ -41,16 +41,9 @@ function FlightItem({
         </div>
         <div className="d-flex flex-column justify-content-center">
           <h6>{getDateTimeFormat(data.dateTime)}</h6>
-          {/* <h6>{data.intermediateStation.length} trạm trung gian</h6> */}
           <h6>Tổng thời gian di chuyển: {data.flightDuration} phút</h6>
         </div>
         <div className="h-100">
-          {/* <h3>
-            {new Intl.NumberFormat().format(
-              data.levelArray[data.levelArray.length - 1].price
-            )}{" "}
-            VND
-          </h3> */}
           {role == 1 ? (
             <button
               type="button"

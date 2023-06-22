@@ -19,10 +19,9 @@ import Dropdown from "../components/Dropdown";
 function Home() {
   let navigate = useNavigate();
   const role = 0;
-  const [startDate, setStartDate] = React.useState(new Date());
-  const [basicModal, setBasicModal] = React.useState(false);
-  const [basicModal1, setBasicModal1] = React.useState(false);
-  // const inputRef = React.useRef(null);
+  const [showBookingTicket, setShowBookingTicket] = React.useState(false);
+  const [showDelete, setShowDelete] = React.useState(false);
+  const [showEdit, setShowEdit] = React.useState(false);
   const [flights, setFlights] = React.useState([]);
   const [airports, setAirports] = React.useState([]);
   const [ticketClasses, setTicketClasses] = React.useState([]);
@@ -31,7 +30,12 @@ function Home() {
     to: "",
     date: "",
   });
-
+  const [editState, setEditState] = React.useState({
+    dateTime: "",
+    flightDuration: "",
+    fromAirport: "",
+    toAirport: "",
+  });
   const [currentID, setCurrentID] = React.useState("");
 
   const [customerInfo, setCustomerInfo] = React.useState({
@@ -54,9 +58,9 @@ function Home() {
     const data = await axiosClient.get("/ticket-class/");
     return data;
   };
-  const buyTicket = async (flighId) => {
+  const buyTicket = async (flightId) => {
     const data = await axiosClient.post("/ticket/", {
-      flightId: flighId,
+      flightId: flightId,
       classOfTicket: customerInfo.ticketClass,
     });
     return data;
@@ -74,9 +78,19 @@ function Home() {
     );
     return data;
   };
+  const editFlight = async (flightId, editState) => {
+    // console.log("editstate", editState);
+    const data = await axiosClient.put(`/flight/${flightId}`, {
+      dateTime: editState.dateTime,
+      flightDuration: Number(editState.flightDuration),
+      fromAirport: editState.fromAirport,
+      toAirport: editState.toAirport,
+    });
+
+    return data;
+  };
   const handleSearchFlight = async () => {
     let data = await searchFlight();
-    // console.log(data);
     setFlights(data);
   };
   const handleBuyTicket = async () => {
@@ -101,14 +115,13 @@ function Home() {
     const data = await axiosClient.delete(`/flight/${id}`);
     return data;
   };
-  const toggleShow = () => setBasicModal(!basicModal);
+  const toggleShow = () => setShowBookingTicket(!showBookingTicket);
   const convertToCurrentName = (id) => {
     let data = airports.filter((airport) => airport._id == id);
     return data.length > 0 ? data[0].name : "";
   };
   const handleCloseDialog = () => {
     toggleShow();
-    console.log("clear all");
     setCustomerInfo({
       ticketClass: "",
     });
@@ -117,23 +130,30 @@ function Home() {
     toggleShow();
     setCurrentID(id);
   };
-  const handleChangeFlight = (id) => {
-    alert("Chỉnh sửa chuyến bay" + id);
+  const handleEditFlight = (id) => {
+    setCurrentID(id);
+    setShowEdit(true);
   };
   const handleDeleteFlight = async (id) => {
-    // alert("Xóa chuyến bay" + id);
     setCurrentID(id);
-    setBasicModal1(true);
+    setShowDelete(true);
   };
   const submitDelete = async () => {
     await deleteFlight(currentID);
     await getFlights();
-    setBasicModal1(false);
-    // console.log(456, currentID);
+    setShowDelete(false);
+  };
+  const submitEdit = async () => {
+    let data = await editFlight(currentID, editState);
+    await console.log(456, data);
+    if (data.error) {
+      alert(data.error);
+    }
+    await setShowEdit(false);
   };
   const handleShowDetail = (flight) => {
     navigate("/detail-flight", { state: { flight: flight } });
-    console.log("flight", flight);
+    // console.log("flight", flight);
   };
 
   const handleChangeCustomerInfo = (e) => {
@@ -143,7 +163,15 @@ function Home() {
       [name]: value,
     }));
   };
-  const handleChangeFindingStae = (e) => {
+  const handleChangeEditState = (e) => {
+    const { name, value } = e.target;
+    setEditState((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+    console.log(editState);
+  };
+  const handleChangeFindingState = (e) => {
     const { name, value } = e.target;
     setFindingState((prevState) => ({
       ...prevState,
@@ -154,10 +182,14 @@ function Home() {
   };
   React.useEffect(() => {
     // basicModal && inputRef.current.focus();
-  }, [basicModal]);
+  }, [showBookingTicket]);
   return (
     <div>
-      <MDBModal show={basicModal} setShow={setBasicModal} tabIndex="-1">
+      <MDBModal
+        show={showBookingTicket}
+        setShow={setShowBookingTicket}
+        tabIndex="-1"
+      >
         <MDBModalDialog>
           <MDBModalContent>
             <MDBModalHeader>
@@ -194,7 +226,8 @@ function Home() {
           </MDBModalContent>
         </MDBModalDialog>
       </MDBModal>
-      <MDBModal show={basicModal1} setShow={setBasicModal1} tabIndex="-1">
+
+      <MDBModal show={showDelete} setShow={setShowDelete} tabIndex="-1">
         <MDBModalDialog>
           <MDBModalContent>
             <MDBModalHeader>
@@ -208,7 +241,7 @@ function Home() {
               <button
                 type="button"
                 className="btn btn-outline-secondary"
-                onClick={() => setBasicModal1(false)}
+                onClick={() => setShowDelete(false)}
               >
                 Đóng
               </button>
@@ -223,20 +256,83 @@ function Home() {
           </MDBModalContent>
         </MDBModalDialog>
       </MDBModal>
+
+      <MDBModal show={showEdit} setShow={setShowEdit} tabIndex="-1">
+        <MDBModalDialog>
+          <MDBModalContent>
+            <MDBModalHeader>
+              <MDBModalTitle>Chỉnh sửa chuyến bay</MDBModalTitle>
+            </MDBModalHeader>
+            <MDBModalBody>
+              <form>
+                <label htmlFor="from">Đi từ</label>
+                <Dropdown
+                  value={editState.fromAirport}
+                  onChange={handleChangeEditState}
+                  name="fromAirport"
+                  options={airports}
+                />
+
+                <label htmlFor="to">Đi đến</label>
+                <Dropdown
+                  value={editState.toAirport}
+                  onChange={handleChangeEditState}
+                  name="toAirport"
+                  options={airports}
+                />
+                <label htmlFor="dateTime">Thời gian</label>
+                <input
+                  type="datetime-local"
+                  id="dateTime"
+                  className="form-control"
+                  value={editState.dateTime}
+                  name="dateTime"
+                  onChange={handleChangeEditState}
+                />
+                <label htmlFor="flightDuration">Trong khoảng</label>
+                <input
+                  type="number"
+                  id="flightDuration"
+                  className="form-control"
+                  value={editState.flightDuration}
+                  name="flightDuration"
+                  onChange={handleChangeEditState}
+                />
+              </form>
+            </MDBModalBody>
+            <MDBModalFooter>
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
+                onClick={() => setShowEdit(false)}
+              >
+                Đóng
+              </button>
+              <button
+                type="button"
+                className="btn btn-outline-danger"
+                onClick={submitEdit}
+              >
+                Hoàn thành
+              </button>
+            </MDBModalFooter>
+          </MDBModalContent>
+        </MDBModalDialog>
+      </MDBModal>
       <h3>Tìm kiếm chuyến đi</h3>
 
       <div className="home d-flex align-item-center">
         <label>Đi từ</label>
         <Dropdown
           value={findingState.from}
-          onChange={handleChangeFindingStae}
+          onChange={handleChangeFindingState}
           name="from"
           options={airports}
         />
         <label>Đến</label>
         <Dropdown
           value={findingState.to}
-          onChange={handleChangeFindingStae}
+          onChange={handleChangeFindingState}
           name="to"
           options={airports}
         />
@@ -246,7 +342,7 @@ function Home() {
           id="date"
           type="date"
           className="form-control mr-5"
-          onChange={handleChangeFindingStae}
+          onChange={handleChangeFindingState}
           name="date"
           value={findingState.date}
         />
@@ -265,7 +361,7 @@ function Home() {
             to={convertToCurrentName(flight.toAirport)}
             data={flight}
             bookTicket={handleChooseTicket}
-            changeFlight={handleChangeFlight}
+            changeFlight={handleEditFlight}
             deleteFlight={handleDeleteFlight}
             showDetailFlight={handleShowDetail}
             key={index}
