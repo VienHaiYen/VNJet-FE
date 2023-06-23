@@ -1,10 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Dropdown from "../components/Dropdown";
 import axiosClient from "../components/api/axios/axiosClient";
 
 function CreateFlight() {
   const [airports, setAirports] = React.useState([]);
   const [ticketClasses, setTicketClasses] = React.useState([]);
+  // let [levelArray, setLevelArray] = React.useState([]);
+  // let levelArray = [];
+  let levelArray = React.useMemo(() => {
+    let results = [];
+    for (let index = 0; index < 10; index++) {
+      results.push({
+        name: "",
+        id: "",
+        number: "",
+        price: "",
+      });
+    }
+    return results;
+  }, []);
+  useEffect(() => {
+    console.log(levelArray);
+  }, [levelArray]);
   const [currentFlight, setCurrentFlight] = React.useState({
     from: "",
     to: "",
@@ -25,7 +42,9 @@ function CreateFlight() {
     note2: "",
     note3: "",
   });
-
+  const fakesubmit = () => {
+    console.log(levelArray);
+  };
   React.useEffect(() => {
     getAirports();
     getTicketClasses();
@@ -45,19 +64,19 @@ function CreateFlight() {
       transitionDuration: Number(duration),
       note: note,
     });
+    console.log("fly", flight, airport, duration, note);
     return data;
   };
 
-  const addTicketClass = async (flight, ticketClass, number, price) => {
-    console.log("add ticket", flight, ticketClass._id, number, price);
+  const addTicketClass = async (flight, ticketClassId, number, price) => {
+    console.log("add ticket", flight, ticketClassId, number, price);
     const data = await axiosClient.put(
-      `/flightStatistic/${flight}/${ticketClass._id}`,
+      `/flightStatistic/${flight}/${ticketClassId}`,
       {
         numberOfSeat: number != "" ? Number(number) : 0,
         price: price != "" ? Number(price) : 0,
       }
     );
-    console.log("sau khi them ticketclass", data);
     return data;
   };
 
@@ -81,54 +100,66 @@ function CreateFlight() {
         fromAirport: currentFlight.from,
         toAirport: currentFlight.to,
       })
-      .then((res) => {
+      .then(async (res) => {
         console.log(res);
         if (res._id) {
           if (
             currentFlight.transitionAirport1 != "" &&
             currentFlight.transitionTime1 != ""
           ) {
-            addTransitionAirport(
+            let data = await addTransitionAirport(
               res._id,
               currentFlight.transitionAirport1,
               currentFlight.transitionTime1,
               currentFlight.note1
             );
+            console.log("tram dung", data);
           }
           if (
             currentFlight.transitionAirport2 != "" &&
             currentFlight.transitionTime2 != ""
           ) {
-            addTransitionAirport(
+            let data = await addTransitionAirport(
               res._id,
               currentFlight.transitionAirport2,
               currentFlight.transitionTime2,
               currentFlight.note2
             );
+            console.log("tram dung", data);
           }
           if (
             currentFlight.transitionAirport3 != "" &&
             currentFlight.transitionTime3 != ""
           ) {
-            addTransitionAirport(
+            let data = await addTransitionAirport(
               res._id,
               currentFlight.transitionAirport3,
               currentFlight.transitionTime3,
               currentFlight.note3
             );
+            console.log("tram dung", data);
           }
-          addTicketClass(
-            res._id,
-            ticketClasses[0],
-            currentFlight.number1,
-            currentFlight.price1
-          );
-          addTicketClass(
-            res._id,
-            ticketClasses[1],
-            currentFlight.number2,
-            currentFlight.price2
-          );
+          for (let index = 0; index < ticketClasses.length; index++) {
+            let data = await addTicketClass(
+              res._id,
+              levelArray[index].id,
+              levelArray[index].number,
+              levelArray[index].price
+            );
+            await console.log(
+              data,
+              res._id,
+              levelArray[index].id,
+              levelArray[index].number,
+              levelArray[index].price
+            );
+          }
+          // addTicketClass(
+          //   res._id,
+          //   ticketClasses[1],
+          //   currentFlight.number2,
+          //   currentFlight.price2
+          // );
           alert("Đã thêm chuyến bay");
         } else {
           alert("Lỗi");
@@ -146,10 +177,10 @@ function CreateFlight() {
     let data = await fetchAllAirport();
     await setAirports(data);
   };
+
   const getTicketClasses = async () => {
     let data = await fetchTicketClasses();
     await setTicketClasses(data);
-    // console.log("ticket-class", data);
   };
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -157,9 +188,8 @@ function CreateFlight() {
       ...prevState,
       [name]: value,
     }));
-    // console.log(currentFlight);
+    console.log(currentFlight);
   };
-
   return (
     <div className="create-flight">
       <form className="w-75" style={{ margin: "0 auto" }}>
@@ -209,59 +239,45 @@ function CreateFlight() {
             />
           </div>
         </div>
-        <div className="form--row">
-          <div className="form-row-item">
-            <label htmlFor="_1"> Số lượng hạng vé hạng nhất </label>
-            <input
-              required
-              id="_1"
-              type="number"
-              className="form-control"
-              onChange={handleChange}
-              value={currentFlight.number1}
-              name="number1"
-            />
-          </div>
-          <div className="form-row-item">
-            <label htmlFor="_p1"> Giá vé </label>
-            <input
-              required
-              id="_p1"
-              type="number"
-              className="form-control"
-              onChange={handleChange}
-              value={currentFlight.price1}
-              name="price1"
-            />
-          </div>
-        </div>
+        {ticketClasses.length > 0 &&
+          levelArray.length > 0 &&
+          ticketClasses.map((ticketClass, index) => {
+            levelArray[index].name = ticketClass.name;
+            levelArray[index].id = ticketClass._id;
+            return (
+              <div className="form--row" key={index}>
+                <div className="form-row-item">
+                  <label htmlFor="_1"> Số lượng vé {ticketClass.name} </label>
+                  <input
+                    required
+                    id="_1"
+                    type="number"
+                    className="form-control"
+                    onChange={(e) => {
+                      console.log(456, levelArray);
+                      levelArray[index].number = e.target.value;
+                    }}
+                  />
+                </div>
+                <div className="form-row-item">
+                  <label htmlFor="_p1"> Giá vé </label>
+                  <input
+                    required
+                    id="_p1"
+                    type="number"
+                    className="form-control"
+                    onChange={(e) => {
+                      console.log(456, levelArray);
+                      levelArray[index].price = e.target.value;
+                    }}
+                    // value={levelArray[index].number}
+                    name="price1"
+                  />
+                </div>
+              </div>
+            );
+          })}
 
-        <div className="form--row">
-          <div className="form-row-item">
-            <label htmlFor="_2"> Số lượng hạng vé hạng hai </label>
-            <input
-              required
-              id="_2"
-              type="number"
-              className="form-control"
-              onChange={handleChange}
-              value={currentFlight.number2}
-              name="number2"
-            />
-          </div>
-          <div className="form-row-item">
-            <label htmlFor="_p2"> Giá vé </label>
-            <input
-              required
-              id="_p2"
-              type="number"
-              className="form-control"
-              onChange={handleChange}
-              value={currentFlight.price2}
-              name="price2"
-            />
-          </div>
-        </div>
         <div className="form--row">
           <label className="mr-3 ">Trạm dừng 1</label>
           <div className="form-row-item">
@@ -386,6 +402,7 @@ function CreateFlight() {
           type="submit"
           className="btn btn-warning"
           onClick={handleCreateFlight}
+          // onClick={fakesubmit}
         >
           Submit
         </button>

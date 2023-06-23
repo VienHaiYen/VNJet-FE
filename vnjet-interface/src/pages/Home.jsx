@@ -18,7 +18,7 @@ import Dropdown from "../components/Dropdown";
 
 function Home() {
   let navigate = useNavigate();
-  const role = 1;
+  const role = 0;
   const [currentID, setCurrentID] = React.useState("");
   const [showBookingTicket, setShowBookingTicket] = React.useState(false);
   const [showDelete, setShowDelete] = React.useState(false);
@@ -128,7 +128,7 @@ function Home() {
   const getSeats = async () => {
     let data = await fetchSeats();
     await setSeats(data);
-    await console.log(seats);
+    // await console.log(seats);
   };
   const toggleShow = () => setShowBookingTicket(!showBookingTicket);
   const convertToCurrentName = (id) => {
@@ -160,7 +160,7 @@ function Home() {
   };
   const submitEdit = async () => {
     let data = await editFlight(currentID, editState);
-    await console.log(456, data);
+    // await console.log(456, data);
     if (data.error) {
       alert(data.error);
     }
@@ -177,7 +177,7 @@ function Home() {
       ...prevState,
       [name]: value,
     }));
-    console.log(customerInfo);
+    // console.log(customerInfo);
   };
   const handleChangeEditState = (e) => {
     const { name, value } = e.target;
@@ -213,15 +213,14 @@ function Home() {
             </MDBModalHeader>
             <MDBModalBody>
               <div className="form-group mr-3">
-                <label htmlFor="level">Chọi loại vé</label>
+                <label htmlFor="level">Chọn loại vé</label>
                 <select
                   className="form-select"
                   name="ticketClass"
                   onChange={handleChangeCustomerInfo}
                   value={customerInfo.ticketClass}
                 >
-                  <option selected value=""></option>
-                  {console.log("current seat", seats)}
+                  <option defaultValue value=""></option>
                   {Array.isArray(seats) &&
                     seats.length > 0 &&
                     seats.map((seat, index) => {

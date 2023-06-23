@@ -58,6 +58,7 @@ function DetailFlight() {
   const getSeats = async () => {
     let data = await fetchSeats();
     await setSeats(data);
+    await console.log("seats", seats);
   };
   const getTransitions = async () => {
     let data = await fetchTransitions();
@@ -113,11 +114,6 @@ function DetailFlight() {
                 </li>
               ))}
           </ul>
-          <p>
-            Số lượng ghế trên máy bay:
-            {" " +
-              seats.reduce((current, seat) => current + seat.numberOfSeat, 0)}
-          </p>
         </div>
         <div className="col-6">
           {ticketClasses.length > 0 && seats.length > 0 && (
@@ -137,66 +133,24 @@ function DetailFlight() {
                 }{" "}
                 VND
               </p>
-              {/* <p>
-                Vé hạng hai:{" "}
-                {seats.length > 0 &&
-                  seats.filter((seat) => {
-                    return seat.classOfTicket === ticketClasses[1]._id;
-                  })[0].numberOfSeat}
-                , Giá vé:{" "}
-                {seats.length > 0 &&
-                  seats.filter(
-                    (seat) => seat.classOfTicket === ticketClasses[1]._id
-                  )[0].price}{" "}
-                VND
-              </p> */}
+              {seats.map((seat, index) => (
+                <div key={index}>
+                  Vé {seat.nameOfTicketClass}: {seat.numberOfEmptySeat}/
+                  {seat.numberOfSeat} Vé trống , Giá vé: {seat.price} VND
+                </div>
+              ))}
               <p>
-                Số vé hạng nhất còn trống:{" "}
-                {
-                  seats.filter((seat) => {
-                    return seat.classOfTicket === ticketClasses[0]._id;
-                  })[0].numberOfEmptySeat
-                }
+                Số lượng ghế trên máy bay:
+                {" " +
+                  seats.reduce(
+                    (current, seat) => current + seat.numberOfSeat,
+                    0
+                  )}
               </p>
-              {/* <p>
-                Số vé hạng hai còn trống:{" "}
-                {
-                  seats.filter((seat) => {
-                    return seat.classOfTicket === ticketClasses[1]._id;
-                  })[0].numberOfEmptySeat
-                }
-              </p> */}
             </div>
           )}
         </div>
       </div>
-      {/* {role == 0 && (
-        <>
-          <h3 className="mt-5">Danh sách người đặt vé</h3>
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Tên Khách hàng</th>
-                <th scope="col">CMND</th>
-                <th scope="col">Ngày sinh</th>
-                <th scope="col">Loại vé</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tickets.map((customer, index) => (
-                <tr key={index}>
-                  <th scope="row">{index + 1}</th>
-                  <td>{customer.userId}</td>
-                  <td>{customer.cmnd}</td>
-                  <td>{customer.birthday}</td>
-                  <td>{customer.ticketType}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </>
-      )} */}
     </>
   );
 }

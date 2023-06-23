@@ -30,7 +30,6 @@ function MyFlightItem({ from, to, flight, ticket, deleteTicket }) {
   }, []);
   const fetchTransitions = async () => {
     const data = await axiosClient.get(`/transition-airport/${flight._id}`);
-    console.log("lấy các trạm", data);
     return data;
   };
   const fetchAllAirport = async () => {
@@ -40,7 +39,7 @@ function MyFlightItem({ from, to, flight, ticket, deleteTicket }) {
   const getTransitions = async () => {
     let data = await fetchTransitions();
     await setTransitions(data);
-    await console.log("tram dung", data);
+    // await console.log("tram dung", data);
   };
   const getAirports = async () => {
     let data = await fetchAllAirport();
