@@ -1,6 +1,9 @@
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import HTMLString from "react-html-string";
+import Pagination from "react-bootstrap/Pagination";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import FlightItem from "../components/FlightItem";
@@ -25,9 +28,11 @@ function Home() {
   const [showEdit, setShowEdit] = React.useState(false);
   const [flights, setFlights] = React.useState([]);
   const [airports, setAirports] = React.useState([]);
-  const [ticketClasses, setTicketClasses] = React.useState([]);
+  // const [ticketClasses, setTicketClasses] = React.useState([]);
   const [seats, setSeats] = React.useState([]);
-
+  const [page, setPage] = React.useState(1);
+  const [flightMetaData, setFlightMetaData] = React.useState(1);
+  const [pageNum, setPageNum] = React.useState([]);
   const [findingState, setFindingState] = React.useState({
     from: "",
     to: "",
@@ -44,25 +49,26 @@ function Home() {
     ticketClass: "",
   });
   React.useEffect(() => {
-    getFlights();
+    getFlights(1);
     getAirports();
-    getTicketClasses();
+    // getTicketClasses();
   }, []);
   React.useEffect(() => {
     getSeats();
   }, [currentID]);
-  const fetchAllFlight = async () => {
-    const data = await axiosClient.get("/flight");
+  const fetchFlights = async (id) => {
+    const data = await axiosClient.get(`/flight?page=${id}`).then((res) => {
+      setFlightMetaData(res.metadata);
+      console.log("total page ", flightMetaData.totalPages);
+      return res.results;
+    });
     return data;
   };
   const fetchAllAirport = async () => {
     const data = await axiosClient.get("/airport/");
     return data;
   };
-  const fetchTicketClasses = async () => {
-    const data = await axiosClient.get("/ticket-class/");
-    return data;
-  };
+
   const buyTicket = async (flightId) => {
     const data = await axiosClient.post("/ticket/", {
       flightId: flightId,
@@ -107,21 +113,17 @@ function Home() {
     await console.log(data);
     setShowBookingTicket(false);
   };
-  const getFlights = async () => {
-    let data = await fetchAllFlight();
-    setFlights(data);
-    await console.log(flights);
+  const getFlights = async (id) => {
+    let data = await fetchFlights(id);
+    await setFlights(data);
+    // await console.log(44, flights);
   };
   const getAirports = async () => {
     let data = await fetchAllAirport();
     await setAirports(data);
-    await console.log(airports);
+    // await console.log(airports);
   };
-  const getTicketClasses = async () => {
-    let data = await fetchTicketClasses();
-    await setTicketClasses(data);
-    console.log("ticket-class", data);
-  };
+
   const deleteFlight = async (id) => {
     const data = await axiosClient.delete(`/flight/${id}`);
     return data;
@@ -156,7 +158,7 @@ function Home() {
   };
   const submitDelete = async () => {
     await deleteFlight(currentID);
-    await getFlights();
+    await getFlights(page);
     setShowDelete(false);
   };
   const submitEdit = async () => {
@@ -197,9 +199,48 @@ function Home() {
     console.log(findingState);
     console.log(findingState.date);
   };
-  React.useEffect(() => {
-    // basicModal && inputRef.current.focus();
-  }, [showBookingTicket]);
+
+  // const initPagination = () => {
+  //   let str = "";
+  //   for (let index = 0; index < flightMetaData.totalPages; index++) {
+  //     str =
+  //       str +
+  //       `<li className="page-item page-link" onClick={()=>setPage(${index + 1}}>
+  //             ${index + 1}
+  //         </li>`;
+  //   }
+  //   return str;
+  // };
+  // let items = [];
+  useEffect(() => {
+    // console.log("753585562");
+    getFlights(page);
+    console.log("page", page);
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, [page]);
+  useEffect(() => {
+    console.log(7554556566565, flightMetaData.totalPages);
+    // if (flightMetaData.totalPages > 0) {
+    setPageNum([]);
+    for (let number = 1; number <= flightMetaData.totalPages; number++) {
+      setPageNum((...prev) => [
+        ...prev,
+        <Pagination.Item
+          key={number}
+          // active={number === page}
+          onClick={() => {
+            setPage(number);
+            // alert(number);
+          }}
+        >
+          {number}
+        </Pagination.Item>,
+      ]);
+    }
+    // }
+    // setPageNum(items);
+    console.log(33, pageNum);
+  }, [flightMetaData]);
   return (
     <div>
       <MDBModal
@@ -389,7 +430,7 @@ function Home() {
           <span className="sr-only">Loading...</span>
         </div>
       )}
-      {flights &&
+      {flights.length > 0 &&
         flights.map((flight, index) => (
           <FlightItem
             from={convertToCurrentName(flight.fromAirport)}
@@ -403,6 +444,14 @@ function Home() {
             role={role}
           />
         ))}
+      {/* <nav aria-label="Page navigation example">
+        <ul className="pagination justify-content-center">
+          {flightMetaData.totalPages > 0 && (
+            <HTMLString html={initPagination()} />
+          )}
+        </ul>
+      </nav> */}
+      {pageNum.length > 0 && <Pagination>{pageNum}</Pagination>}
     </div>
   );
 }

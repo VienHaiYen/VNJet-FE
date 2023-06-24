@@ -1,12 +1,41 @@
-import React from "react";
+import React, { useEffect } from "react";
 import axiosClient from "../components/api/axios/axiosClient";
 import { useNavigate } from "react-router-dom";
 
 function Report() {
   let navigate = useNavigate();
   const [reports, setReport] = React.useState([]);
+  const [currentFlightId, setCurrentFlightId] = React.useState();
+  const [currentFlight, setCurrentFlight] = React.useState("");
+  useEffect(() => {
+    setCurrentFlight("");
+    setCurrentFlight("");
+    getFlight(currentFlightId);
+    // navigateToDetail(currentFlightId);
+    // setCurrentFlightId("");
+  }, [currentFlightId]);
+
+  useEffect(() => {
+    if (
+      currentFlight != "" &&
+      typeof currentFlight === "object" &&
+      !currentFlight.error
+    )
+      navigateToDetail(currentFlight);
+    console.log(7777, currentFlight);
+  }, [currentFlight]);
+
+  const navigateToDetail = (flight) => {
+    navigate("/detail-flight", {
+      state: { flight: flight },
+    });
+  };
   const fetchAllRoprtFlight = async () => {
     const data = axiosClient.get("/report");
+    return data;
+  };
+  const fetchFlight = async (id) => {
+    const data = await axiosClient.get(`/flight/${id}`);
     return data;
   };
   const getAllRoprtFlight = async () => {
@@ -14,7 +43,11 @@ function Report() {
     await setReport(data);
     await console.log(reports);
   };
-
+  const getFlight = async (id) => {
+    let data = await fetchFlight(id);
+    await setCurrentFlight(data);
+    await console.log(currentFlight);
+  };
   React.useEffect(() => {
     getAllRoprtFlight();
   }, []);
@@ -51,17 +84,13 @@ function Report() {
                 <td>{report.numberOfTicket}</td>
                 <td>{report.percentage}</td>
                 <td>
-                  {/* <button
+                  <button
                     type="button"
                     className="btn btn-primary mt-2 w-100"
-                    onClick={() =>
-                      navigate("/detail-flight", {
-                        state: { flight: report.flightId },
-                      })
-                    }
+                    onClick={() => setCurrentFlightId(report.flightId)}
                   >
                     Chi tiết
-                  </button> */}
+                  </button>
                 </td>
               </tr>
             ))}

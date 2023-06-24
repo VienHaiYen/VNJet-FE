@@ -10,14 +10,12 @@ function DetailFlight() {
   const [ticketClasses, setTicketClasses] = React.useState([]);
   const [seats, setSeats] = React.useState([]);
   const [transitions, setTransitions] = React.useState([]);
-  const [tickets, setTickets] = React.useState([]);
   // console.log(flight);
   React.useEffect(() => {
     getAirports();
     getTicketClasses();
     getSeats();
     getTransitions();
-    getTicket();
   }, []);
   const convertToAirportName = (id) => {
     let data = airports.filter((airport) => airport._id == id);
@@ -37,11 +35,6 @@ function DetailFlight() {
   };
   const fetchTransitions = async () => {
     const data = await axiosClient.get(`/transition-airport/${flight._id}`);
-    console.log("lấy các trạm", data);
-    return data;
-  };
-  const fetchTicket = async () => {
-    const data = await axiosClient.get(`/ticket`);
     console.log("lấy các trạm", data);
     return data;
   };
@@ -65,12 +58,7 @@ function DetailFlight() {
     await setTransitions(data);
     // await console.log("tram dung", data);
   };
-  const getTicket = async () => {
-    let data = await fetchTicket();
-    await console.log("tiket", data);
-    data.filter((ticket) => ticket.flightId === flight._id);
-    await setTickets(data);
-  };
+
   function getDateTimeFormat(_date) {
     var date = new Date(_date);
     var dd = date.getDate() > 9 ? date.getDate() : "0" + date.getDate();
