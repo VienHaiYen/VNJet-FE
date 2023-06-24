@@ -50,7 +50,7 @@ function FlightItem({
   const getTransitions = async () => {
     let data = await fetchTransitions();
     await setTransitions(data);
-    await console.log("tram dung", data);
+    // await console.log("tram dung", data);
   };
   const getAirports = async () => {
     let data = await fetchAllAirport();

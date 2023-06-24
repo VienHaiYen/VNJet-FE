@@ -11,7 +11,8 @@ function Header() {
     { to: "/create-flight", label: "Tạo chuyến bay" },
     { to: "/manage-users", label: "Quản lí tài khoản" },
     { to: "/manage-airport", label: "Quản lí sân bay" },
-    { to: "/Report", label: "Báo cáo" },
+    { to: "/report", label: "Báo cáo" },
+    { to: "/rule", label: "Quy định" },
   ];
   return (
     <>

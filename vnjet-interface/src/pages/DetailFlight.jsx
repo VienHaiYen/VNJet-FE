@@ -63,7 +63,7 @@ function DetailFlight() {
   const getTransitions = async () => {
     let data = await fetchTransitions();
     await setTransitions(data);
-    await console.log("tram dung", data);
+    // await console.log("tram dung", data);
   };
   const getTicket = async () => {
     let data = await fetchTicket();

@@ -113,7 +113,7 @@ function CreateFlight() {
               currentFlight.transitionTime1,
               currentFlight.note1
             );
-            console.log("tram dung", data);
+            // console.log("tram dung", data);
           }
           if (
             currentFlight.transitionAirport2 != "" &&
@@ -125,7 +125,7 @@ function CreateFlight() {
               currentFlight.transitionTime2,
               currentFlight.note2
             );
-            console.log("tram dung", data);
+            // console.log("tram dung", data);
           }
           if (
             currentFlight.transitionAirport3 != "" &&

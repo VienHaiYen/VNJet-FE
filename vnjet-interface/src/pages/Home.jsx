@@ -115,6 +115,7 @@ function Home() {
   const getAirports = async () => {
     let data = await fetchAllAirport();
     await setAirports(data);
+    await console.log(airports);
   };
   const getTicketClasses = async () => {
     let data = await fetchTicketClasses();
@@ -383,6 +384,11 @@ function Home() {
           <FontAwesomeIcon icon={faSearch} />
         </button>
       </div>
+      {flights.length < 1 && (
+        <div className="spinner-border text-primary " role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      )}
       {flights &&
         flights.map((flight, index) => (
           <FlightItem
