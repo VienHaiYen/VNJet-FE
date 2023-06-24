@@ -8,8 +8,8 @@ function Header() {
   const navItems = [
     { to: "/home", label: "Home" },
     { to: "/my-flight", label: "Chuyến bay của tôi" },
-    { to: "/create-flight", label: "Tạo chuyến bay" },
-    { to: "/manage-users", label: "Quản lí tài khoản" },
+    { to: "/create-flight", label: "Tạo chuyến bay" }, //admin
+    { to: "/manage-users", label: "Quản lí tài khoản" }, //admin
     { to: "/manage-airport", label: "Quản lí sân bay" },
     { to: "/report", label: "Báo cáo" },
     { to: "/rule", label: "Quy định" },

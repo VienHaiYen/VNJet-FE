@@ -1,5 +1,4 @@
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import HTMLString from "react-html-string";
 import Pagination from "react-bootstrap/Pagination";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -21,7 +20,7 @@ import Dropdown from "../components/Dropdown";
 
 function Home() {
   let navigate = useNavigate();
-  const role = 0;
+  const role = 1;
   const [currentID, setCurrentID] = React.useState("");
   const [showBookingTicket, setShowBookingTicket] = React.useState(false);
   const [showDelete, setShowDelete] = React.useState(false);
@@ -51,7 +50,6 @@ function Home() {
   React.useEffect(() => {
     getFlights(1);
     getAirports();
-    // getTicketClasses();
   }, []);
   React.useEffect(() => {
     getSeats();

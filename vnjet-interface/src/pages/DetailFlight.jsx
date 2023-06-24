@@ -82,10 +82,10 @@ function DetailFlight() {
       </h2>
       <div className="row justify-content-start" style={{ fontSize: "1.2rem" }}>
         <div className="col-6">
-          <p>
+          <h3>
             {convertToAirportName(flight.fromAirport)} -{" "}
             {convertToAirportName(flight.toAirport)}
-          </p>
+          </h3>
           <p>
             {getDateTimeFormat(flight.dateTime) + "   "}
             <b>{getTimeFormat(flight.dateTime)}</b>
