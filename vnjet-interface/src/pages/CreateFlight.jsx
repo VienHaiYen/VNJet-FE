@@ -57,6 +57,11 @@ function CreateFlight() {
     const data = await axiosClient.get("/ticket-class/");
     return data;
   };
+  const deleteFlight = async (id) => {
+    const data = await axiosClient.delete(`/flight/${id}`);
+    alert(data);
+    return data;
+  };
   const addTransitionAirport = async (flight, airport, duration, note) => {
     const data = await axiosClient.post("/transition-airport/", {
       flightId: flight,
@@ -65,19 +70,29 @@ function CreateFlight() {
       note: note,
     });
     console.log("fly", flight, airport, duration, note);
+    if (data.error) {
+      alert(data.error);
+      deleteFlight(flight);
+    }
     return data;
   };
 
   const addTicketClass = async (flight, ticketClassId, number, price) => {
     console.log("add ticket", flight, ticketClassId, number, price);
-    const data = await axiosClient.put(
-      `/flightStatistic/${flight}/${ticketClassId}`,
-      {
-        numberOfSeat: number != "" ? Number(number) : 0,
-        price: price != "" ? Number(price) : 0,
+    if (number && price) {
+      const data = await axiosClient.put(
+        `/flightStatistic/${flight}/${ticketClassId}`,
+        {
+          numberOfSeat: number != "" ? Number(number) : 0,
+          price: price != "" ? Number(price) : 0,
+        }
+      );
+      if (data.error) {
+        alert(data.error);
+        deleteFlight(flight);
       }
-    );
-    return data;
+      return data;
+    }
   };
 
   const postFlight = async () => {
@@ -102,12 +117,15 @@ function CreateFlight() {
       })
       .then(async (res) => {
         console.log(res);
-        if (res._id) {
+        if (res.error) {
+          alert(res.error);
+        } else if (res._id) {
+          alert("Đã thêm chuyến bay");
           if (
             currentFlight.transitionAirport1 != "" &&
             currentFlight.transitionTime1 != ""
           ) {
-            let data = await addTransitionAirport(
+            await addTransitionAirport(
               res._id,
               currentFlight.transitionAirport1,
               currentFlight.transitionTime1,
@@ -119,7 +137,7 @@ function CreateFlight() {
             currentFlight.transitionAirport2 != "" &&
             currentFlight.transitionTime2 != ""
           ) {
-            let data = await addTransitionAirport(
+            await addTransitionAirport(
               res._id,
               currentFlight.transitionAirport2,
               currentFlight.transitionTime2,
@@ -131,13 +149,13 @@ function CreateFlight() {
             currentFlight.transitionAirport3 != "" &&
             currentFlight.transitionTime3 != ""
           ) {
-            let data = await addTransitionAirport(
+            await addTransitionAirport(
               res._id,
               currentFlight.transitionAirport3,
               currentFlight.transitionTime3,
               currentFlight.note3
             );
-            console.log("tram dung", data);
+            // console.log("tram dung", data);
           }
           for (let index = 0; index < ticketClasses.length; index++) {
             let data = await addTicketClass(
@@ -154,15 +172,6 @@ function CreateFlight() {
               levelArray[index].price
             );
           }
-          // addTicketClass(
-          //   res._id,
-          //   ticketClasses[1],
-          //   currentFlight.number2,
-          //   currentFlight.price2
-          // );
-          alert("Đã thêm chuyến bay");
-        } else {
-          alert("Lỗi");
         }
         return res;
       });

@@ -40,7 +40,7 @@ function FlightItem({
   const fetchTransitions = async () => {
     console.log(456, flight._id);
     const data = await axiosClient.get(`/transition-airport/${flight._id}`);
-    await console.log("lấy các trạm", data);
+    await console.log("lấy các trạm", flight._id, data);
     return data;
   };
   const fetchAllAirport = async () => {
