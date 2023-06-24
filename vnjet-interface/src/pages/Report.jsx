@@ -54,10 +54,8 @@ function Report() {
   return (
     <>
       <h3>Báo cáo của từng chuyến bay</h3>
-      {reports ? (
-        ""
-      ) : (
-        <div className="spinner-border text-primary" role="status">
+      {reports.length < 1 && (
+        <div className="spinner-border text-primary " role="status">
           <span className="sr-only">Loading...</span>
         </div>
       )}

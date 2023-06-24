@@ -233,6 +233,11 @@ function ManageAirport() {
       <button className="btn btn-danger m-2" onClick={handleAddAirport}>
         Thêm
       </button>
+      {airports.length < 1 && (
+        <div className="spinner-border text-primary " role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      )}
       <table className="table">
         <thead>
           <tr>

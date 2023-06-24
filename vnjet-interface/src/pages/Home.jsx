@@ -27,7 +27,6 @@ function Home() {
   const [showEdit, setShowEdit] = React.useState(false);
   const [flights, setFlights] = React.useState([]);
   const [airports, setAirports] = React.useState([]);
-  // const [ticketClasses, setTicketClasses] = React.useState([]);
   const [seats, setSeats] = React.useState([]);
   const [page, setPage] = React.useState(1);
   const [flightMetaData, setFlightMetaData] = React.useState(1);
@@ -217,8 +216,6 @@ function Home() {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, [page]);
   useEffect(() => {
-    console.log(7554556566565, flightMetaData.totalPages);
-    // if (flightMetaData.totalPages > 0) {
     setPageNum([]);
     for (let number = 1; number <= flightMetaData.totalPages; number++) {
       setPageNum((...prev) => [
@@ -235,8 +232,6 @@ function Home() {
         </Pagination.Item>,
       ]);
     }
-    // }
-    // setPageNum(items);
     console.log(33, pageNum);
   }, [flightMetaData]);
   return (
@@ -442,13 +437,6 @@ function Home() {
             role={role}
           />
         ))}
-      {/* <nav aria-label="Page navigation example">
-        <ul className="pagination justify-content-center">
-          {flightMetaData.totalPages > 0 && (
-            <HTMLString html={initPagination()} />
-          )}
-        </ul>
-      </nav> */}
       {pageNum.length > 0 && <Pagination>{pageNum}</Pagination>}
     </div>
   );

@@ -77,6 +77,11 @@ function Rule() {
   return (
     <>
       <h3>Rule page</h3>
+      {rules.length < 1 && (
+        <div className="spinner-border text-primary " role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      )}
       <div className="form--row d-flex">
         <div className="form-row-item col-6 m-2">
           <label htmlFor="">
