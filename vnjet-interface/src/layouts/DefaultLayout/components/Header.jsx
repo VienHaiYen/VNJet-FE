@@ -1,19 +1,10 @@
+// import React, { useEffect } from "react";
 import { BrowserRouter, Route, Link, useNavigate } from "react-router-dom";
 import { useGlobal } from "../../../context/context";
-function Header() {
+function Header({ nav }) {
+  const navigate = useNavigate();
   const { authenticate } = useGlobal();
   const user = authenticate.selectUser();
-  const navigate = useNavigate();
-
-  const navItems = [
-    { to: "/home", label: "Home" },
-    { to: "/my-flight", label: "Chuyến bay của tôi" },
-    { to: "/create-flight", label: "Tạo chuyến bay" }, //admin
-    { to: "/manage-users", label: "Quản lí tài khoản" }, //admin
-    { to: "/manage-airport", label: "Quản lí sân bay" },
-    { to: "/report", label: "Báo cáo" },
-    { to: "/rule", label: "Quy định" },
-  ];
   return (
     <>
       <nav
@@ -38,7 +29,7 @@ function Header() {
             VNJet
           </a>
           <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-            {navItems.map((item, index) => (
+            {nav.map((item, index) => (
               <div className="navbar-nav" key={index}>
                 <Link to={item.to} className="nav-link text-dark font-italic">
                   {item.label}

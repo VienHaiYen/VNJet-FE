@@ -243,7 +243,6 @@ function ManageAirport() {
           <tr>
             <th scope="col">#</th>
             <th scope="col">Tên sân bay</th>
-            <th scope="col">Vị trí</th>
             <th scope="col"></th>
           </tr>
         </thead>
@@ -252,7 +251,6 @@ function ManageAirport() {
             <tr key={index}>
               <th scope="row">{index + 1}</th>
               <td>{airport.name}</td>
-              <td>{airport.location}</td>
               <td>
                 <button
                   className="btn btn-primary m-2"

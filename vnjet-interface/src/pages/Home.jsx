@@ -80,15 +80,20 @@ function Home() {
   };
   const searchFlight = async () => {
     let tmp = findingState.date == "" ? "" : new Date(findingState.date);
-    const data = await axiosClient.get(
-      `/flight/${findingState.from != "" ? findingState.from : "undefined"}/${
-        findingState.to != "" ? findingState.to : "undefined"
-      }/${
-        tmp != ""
-          ? tmp.toISOString().replace("00:00:00.000Z", "00:00:00.000+07:00")
-          : "undefined"
-      }`
-    );
+    const data = await axiosClient
+      .get(
+        `/flight/${findingState.from != "" ? findingState.from : "undefined"}/${
+          findingState.to != "" ? findingState.to : "undefined"
+        }/${
+          tmp != ""
+            ? tmp.toISOString().replace("00:00:00.000Z", "00:00:00.000+07:00")
+            : "undefined"
+        }`
+      )
+      .then((res) => {
+        setFlightMetaData(res.metadata);
+        return res.results;
+      });
     return data;
   };
   const editFlight = async (flightId, editState) => {
@@ -109,6 +114,7 @@ function Home() {
   const handleSearchFlight = async () => {
     let data = await searchFlight();
     setFlights(data);
+    await console.log("kq tra ve", data);
   };
   const handleBuyTicket = async () => {
     let data = await buyTicket(currentID);
@@ -198,7 +204,7 @@ function Home() {
       ...prevState,
       [name]: value,
     }));
-    // console.log(findingState);
+    console.log(findingState);
     // console.log(findingState.date);
   };
 

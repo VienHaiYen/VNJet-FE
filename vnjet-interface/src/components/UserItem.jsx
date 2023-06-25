@@ -9,13 +9,6 @@ function UserItem({ user, handleDelete }) {
         <h6>{user.role}</h6>
       </div>
       <div className="d-flex flex-column justify-content-between">
-        {/* <button
-          type="button"
-          className="btn btn-success"
-          //   onClick={chooseItem}
-        >
-          Xem thông tin
-        </button> */}
         <button
           type="button"
           className="btn btn-danger mt-1"

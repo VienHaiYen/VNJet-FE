@@ -31,44 +31,24 @@ function ManageUsers() {
     await console.log(44, data);
   };
   const fetchUsers = async (id) => {
-    const data = await axiosClient({
-      method: "GET",
-      url: `/?page=${id}`,
-    }).then((res) => {
+    const data = await axiosClient.get(`/user?page=${id}`).then((res) => {
       setFlightMetaData(res.metadata);
       return res.results;
     });
     return data;
   };
-  // const deleteUser = async (id) => {
-  //   const data = await axiosClient.delete("/", {
-  //     _id: id,
-  //   });
-  //   return data;
-  // };
-  // const deleteUser = async (id) => {
-  //   const data = await axiosClient({
-  //     method:"DELETE",
-  //     url:'/',
-  //     body:{
-  //       _id:
-  //     }
-  //   });
-  //   return data;
-  // };
+
   const deleteUser = async (id) => {
-    let data = await axiosClient.delete("/", {
-      body: {
-        _id: id,
-      },
+    let data = await axiosClient.post("/user/delete", {
+      _id: id,
     });
     return data;
   };
 
   const submitDelete = async (id) => {
     let data = await deleteUser(id);
-    await console.log(data);
-    await getUsers();
+    await console.log("àter delte", data);
+    await getUsers(page);
     setShowDelete(false);
   };
   React.useEffect(() => {
@@ -134,9 +114,10 @@ function ManageUsers() {
         </MDBModalDialog>
       </MDBModal>
       {users.length < 1 && (
-        <div className="spinner-border text-primary " role="status">
+        <>
+          <div className="spinner-border text-primary " role="status"></div>
           <span className="sr-only">Loading...</span>
-        </div>
+        </>
       )}
       <div className="d-flex flex-column flex-wrap align-items-center">
         {users &&

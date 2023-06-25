@@ -15,7 +15,7 @@ function LogInForm(props) {
 
   React.useEffect(() => {
     if (Object.keys(user).length) {
-      navigate("/my-flight");
+      navigate("/home");
       // history.push("/my-flight");
     }
   }, [user]);
