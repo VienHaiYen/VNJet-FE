@@ -4,7 +4,7 @@ import refreshAPI from "./refreshAPI";
 const authenAPI = {
   postUserInfo: async (params) => {
     await refreshAPI.refreshAllToken();
-    let url = "/userinfo";
+    let url = "/user/userinfo";
     return axiosClient.post(url, {
       email: params.email,
     });

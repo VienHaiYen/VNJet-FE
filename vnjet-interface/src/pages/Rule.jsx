@@ -118,6 +118,20 @@ function Rule() {
           </label>
         </div>
       </div>
+      <div className="form--row d-flex">
+        <div className="form-row-item col-6 m-2">
+          <label htmlFor="">
+            Thời gian chậm nhất để đặt vé:{" "}
+            <b>Trước {rules.latestBookingTime} tiếng</b>
+          </label>
+        </div>
+        <div className="form-row-item col-6 m-2">
+          <label htmlFor="">
+            Thời gian chậm nhất để hủy vé:{" "}
+            <b>Trước {rules.latestCancellationTime} tiếng</b>
+          </label>
+        </div>
+      </div>
       <br></br>
       <select
         className="form-select mb-3"
@@ -136,6 +150,10 @@ function Rule() {
         <option value="maxPauseTime">Thời gian dừng tối đa</option>
         <option value="minPauseTime">Thời gian dừng tối thiểu</option>
         <option value="maxTransitions">Số trạm dừng tối đa</option>
+        <option value="latestBookingTime">Thời gian trễ nhất đặt vé</option>
+        <option value="latestCancellationTime">
+          Thời gian trễ nhất hủy vé
+        </option>
         <option value="quantityClasses">Hạng vé</option>
       </select>
       <div className="">
@@ -160,14 +178,6 @@ function Rule() {
         {ruleName == "quantityClasses" && (
           <>
             <div className="d-flex mb-3">
-              {/* <input
-                style={{ maxWidth: "600px" }}
-                className="form-control"
-                onChange={(e) => setAddedTicketClassName(e.target.value)}
-                value={addedTicketClassName}
-                type="text"
-                placeholder="Nhập tên hạng vé muốn thêm"
-              /> */}
               <input
                 style={{ maxWidth: "600px" }}
                 className="form-control"

@@ -17,8 +17,13 @@ import {
   MDBModalFooter,
 } from "mdb-react-ui-kit";
 import Dropdown from "../components/Dropdown";
+import { useGlobal } from "../context/context";
 
 function Home() {
+  console.log("re-render");
+  const { authenticate } = useGlobal();
+  const user = authenticate.selectUser();
+  console.log(user);
   let navigate = useNavigate();
   const role = 0;
   const [currentID, setCurrentID] = React.useState("");
@@ -56,7 +61,7 @@ function Home() {
   const fetchFlights = async (id) => {
     const data = await axiosClient.get(`/flight?page=${id}`).then((res) => {
       setFlightMetaData(res.metadata);
-      console.log("total page ", flightMetaData.totalPages);
+      // console.log("total page ", flightMetaData.totalPages);
       return res.results;
     });
     return data;
@@ -107,7 +112,7 @@ function Home() {
   };
   const handleBuyTicket = async () => {
     let data = await buyTicket(currentID);
-    await console.log(data);
+    // await console.log(data);
     setShowBookingTicket(false);
   };
   const getFlights = async (id) => {
@@ -193,8 +198,8 @@ function Home() {
       ...prevState,
       [name]: value,
     }));
-    console.log(findingState);
-    console.log(findingState.date);
+    // console.log(findingState);
+    // console.log(findingState.date);
   };
 
   // const initPagination = () => {
