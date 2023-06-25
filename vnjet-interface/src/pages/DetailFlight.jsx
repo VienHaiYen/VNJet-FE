@@ -114,11 +114,11 @@ function DetailFlight() {
                   })[0].numberOfSeat
                 }
                 , Giá vé:{" "}
-                {
+                {new Intl.NumberFormat().format(
                   seats.filter(
                     (seat) => seat.classOfTicket === ticketClasses[0]._id
                   )[0].price
-                }{" "}
+                )}{" "}
                 VND
               </p>
               {seats.map((seat, index) => (

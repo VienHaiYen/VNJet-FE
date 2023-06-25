@@ -20,7 +20,7 @@ import Dropdown from "../components/Dropdown";
 
 function Home() {
   let navigate = useNavigate();
-  const role = 1;
+  const role = 0;
   const [currentID, setCurrentID] = React.useState("");
   const [showBookingTicket, setShowBookingTicket] = React.useState(false);
   const [showDelete, setShowDelete] = React.useState(false);
@@ -80,7 +80,7 @@ function Home() {
         findingState.to != "" ? findingState.to : "undefined"
       }/${
         tmp != ""
-          ? tmp.toISOString().replace("00:00:00.000Z", "00:00:00.000+00:00")
+          ? tmp.toISOString().replace("00:00:00.000Z", "00:00:00.000+07:00")
           : "undefined"
       }`
     );

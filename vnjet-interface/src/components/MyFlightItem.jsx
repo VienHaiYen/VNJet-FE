@@ -68,9 +68,8 @@ function MyFlightItem({ from, to, flight, ticket, deleteTicket }) {
         </div>
         <div className="d-flex flex-column justify-content-center col-5">
           <h6>{getDateTimeFormat(flight.dateTime)}</h6>
-          {/* <h6>{data.intermediateStation.length} trạm trung gian</h6> */}
           <h6>Tổng thời gian di chuyển: {flight.flightDuration} phút</h6>
-          <h6>Giá vé {ticket.price} VND</h6>
+          <h6>Giá vé {new Intl.NumberFormat().format(ticket.price)} VND</h6>
         </div>
         <div className="h-100">
           <>

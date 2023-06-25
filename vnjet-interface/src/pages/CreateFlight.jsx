@@ -264,7 +264,6 @@ function CreateFlight() {
                       console.log(456, levelArray);
                       levelArray[index].number = e.target.value;
                     }}
-                    value={levelArray[index].number}
                   />
                 </div>
                 <div className="form-row-item">
@@ -278,7 +277,6 @@ function CreateFlight() {
                       console.log(456, levelArray);
                       levelArray[index].price = e.target.value;
                     }}
-                    value={levelArray[index].price}
                     name="price1"
                   />
                 </div>
