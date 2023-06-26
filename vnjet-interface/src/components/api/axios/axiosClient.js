@@ -3,7 +3,7 @@ import queryString from "query-string";
 
 const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_API_ENDPOINT,
-  timeout: 5000,
+  timeout: 20000,
   headers: {
     "content-type": "application/json",
   },

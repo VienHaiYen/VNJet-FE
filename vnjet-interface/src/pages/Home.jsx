@@ -23,9 +23,9 @@ function Home() {
   console.log("re-render");
   const { authenticate } = useGlobal();
   const user = authenticate.selectUser();
-  console.log(user);
+  // console.log(user);
   let navigate = useNavigate();
-  const role = 0;
+  const role = user.role == "admin" ? 0 : 1;
   const [currentID, setCurrentID] = React.useState("");
   const [showBookingTicket, setShowBookingTicket] = React.useState(false);
   const [showDelete, setShowDelete] = React.useState(false);
@@ -60,9 +60,12 @@ function Home() {
   }, [currentID]);
   const fetchFlights = async (id) => {
     const data = await axiosClient.get(`/flight?page=${id}`).then((res) => {
-      setFlightMetaData(res.metadata);
-      // console.log("total page ", flightMetaData.totalPages);
-      return res.results;
+      if (res.error) {
+        alert(res.error);
+      } else {
+        setFlightMetaData(res.metadata);
+        return res.results;
+      }
     });
     return data;
   };
@@ -72,11 +75,19 @@ function Home() {
   };
 
   const buyTicket = async (flightId) => {
-    const data = await axiosClient.post("/ticket/", {
-      flightId: flightId,
-      classOfTicket: customerInfo.ticketClass,
-    });
-    return data;
+    await axiosClient
+      .post("/ticket/", {
+        flightId: flightId,
+        classOfTicket: customerInfo.ticketClass,
+      })
+      .then((res) => {
+        if (res.error) {
+          alert(res.error);
+        } else {
+          alert("Đặt vé thành công !");
+          return res;
+        }
+      });
   };
   const searchFlight = async () => {
     let tmp = findingState.date == "" ? "" : new Date(findingState.date);
@@ -97,7 +108,6 @@ function Home() {
     return data;
   };
   const editFlight = async (flightId, editState) => {
-    // console.log("editstate", editState);
     const data = await axiosClient.put(`/flight/${flightId}`, {
       dateTime: editState.dateTime,
       flightDuration: Number(editState.flightDuration),
@@ -117,8 +127,7 @@ function Home() {
     await console.log("kq tra ve", data);
   };
   const handleBuyTicket = async () => {
-    let data = await buyTicket(currentID);
-    // await console.log(data);
+    await buyTicket(currentID);
     setShowBookingTicket(false);
   };
   const getFlights = async (id) => {
@@ -171,11 +180,13 @@ function Home() {
   };
   const submitEdit = async () => {
     let data = await editFlight(currentID, editState);
-    // await console.log(456, data);
     if (data.error) {
       alert(data.error);
+    } else {
+      alert("Thay đổi xong !");
+      setShowEdit(false);
+      getFlights(page);
     }
-    await setShowEdit(false);
   };
   const handleShowDetail = (flight) => {
     navigate("/detail-flight", { state: { flight: flight } });
@@ -208,20 +219,7 @@ function Home() {
     // console.log(findingState.date);
   };
 
-  // const initPagination = () => {
-  //   let str = "";
-  //   for (let index = 0; index < flightMetaData.totalPages; index++) {
-  //     str =
-  //       str +
-  //       `<li className="page-item page-link" onClick={()=>setPage(${index + 1}}>
-  //             ${index + 1}
-  //         </li>`;
-  //   }
-  //   return str;
-  // };
-  // let items = [];
   useEffect(() => {
-    // console.log("753585562");
     getFlights(page);
     console.log("page", page);
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -429,12 +427,13 @@ function Home() {
           <FontAwesomeIcon icon={faSearch} />
         </button>
       </div>
-      {flights.length < 1 && (
+      {flights && flights.length < 1 && (
         <div className="spinner-border text-primary " role="status">
           <span className="sr-only">Loading...</span>
         </div>
       )}
-      {flights.length > 0 &&
+      {flights &&
+        flights.length > 0 &&
         flights.map((flight, index) => (
           <FlightItem
             from={convertToCurrentName(flight.fromAirport)}

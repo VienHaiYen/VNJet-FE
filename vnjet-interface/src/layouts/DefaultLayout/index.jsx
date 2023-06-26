@@ -2,9 +2,9 @@ import React from "react";
 import Header from "./components/Header";
 import { useGlobal } from "../../context/context";
 function DefaultLayout({ children }) {
+  const [nav, setNav] = React.useState([]);
   const { authenticate } = useGlobal();
   const user = authenticate.selectUser();
-  const [nav, setNav] = React.useState([]);
   React.useEffect(() => {
     if (user.role === "customer") {
       setNav([
@@ -12,7 +12,7 @@ function DefaultLayout({ children }) {
         { to: "/my-flight", label: "Chuyến bay của tôi" },
         { to: "/rule", label: "Quy định" },
       ]);
-    } else if (user.role == "admin") {
+    } else if (user.role === "admin") {
       setNav([
         { to: "/home", label: "Home" },
         { to: "/create-flight", label: "Tạo chuyến bay" }, //admin
@@ -23,7 +23,7 @@ function DefaultLayout({ children }) {
         { to: "/rule", label: "Quy định" },
       ]);
     }
-  }, []);
+  }, [user.role]);
   return (
     <div className="p-5 mt-5">
       <Header nav={nav} />

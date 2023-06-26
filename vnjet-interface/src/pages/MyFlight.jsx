@@ -1,23 +1,22 @@
 import axiosClient from "../components/api/axios/axiosClient";
+import Pagination from "react-bootstrap/Pagination";
 import React from "react";
 import MyFlightItem from "../components/MyFlightItem";
 import FlightItem from "../components/FlightItem";
 function MyFlight() {
-  const role = 1;
-  const [basicModal, setBasicModal] = React.useState(false);
+  // const [basicModal, setBasicModal] = React.useState(false);
   const [flights, setFlights] = React.useState([]);
   const [tickets, setTickets] = React.useState([]);
-  const [airports, setAirports] = React.useState([]);
   const [ticketClasses, setTicketClasses] = React.useState([]);
 
-  const [currentID, setCurrentID] = React.useState("");
+  // const [currentID, setCurrentID] = React.useState("");
 
-  const [customerInfo, setCustomerInfo] = React.useState({
-    ticketClass: "",
-  });
+  const [page, setPage] = React.useState(1);
+  const [flightMetaData, setFlightMetaData] = React.useState();
+  const [pageNum, setPageNum] = React.useState([]);
   React.useEffect(() => {
-    getMyTickets();
-    getAirports();
+    getMyTickets(page);
+    // getAirports();
     getTicketClasses();
     getFlights();
   }, []);
@@ -25,71 +24,86 @@ function MyFlight() {
     const data = await axiosClient.get("/flight");
     return data;
   };
-  const fetchAllMyTicket = async () => {
-    const data = await axiosClient.get("/ticket");
+  const fetchAllMyTicket = async (id) => {
+    const data = await axiosClient.get(`/ticket?page=${id}`).then((res) => {
+      setFlightMetaData(res.metadata);
+      return res.results;
+    });
     return data;
   };
-  const fetchAllAirport = async () => {
-    const data = await axiosClient.get("/airport/");
-    return data;
-  };
+
   const fetchTicketClasses = async () => {
     const data = await axiosClient.get("/ticket-class/");
     return data;
   };
+
   const getFlights = async () => {
-    let data = await fetchAllFlight();
-    await setFlights(data);
-    await console.log(flights);
+    await fetchAllFlight().then((res) => {
+      setFlights(res);
+      console.log(res);
+    });
   };
-  const getMyTickets = async () => {
-    let data = await fetchAllMyTicket();
-    await setTickets(data);
-    await console.log("tickets", tickets);
-  };
-  const getAirports = async () => {
-    let data = await fetchAllAirport();
-    await setAirports(data);
+  const getMyTickets = async (id) => {
+    await fetchAllMyTicket(id).then((data) => {
+      setTickets(data);
+      console.log(data);
+    });
   };
   const getTicketClasses = async () => {
-    let data = await fetchTicketClasses();
-    await setTicketClasses(data);
-    await console.log("ticket-class", data);
+    await fetchTicketClasses().then((res) => {
+      setTicketClasses(res);
+      console.log("ticket-class", res);
+    });
   };
   const deleteFlight = async (id) => {
     const data = await axiosClient.delete(`/ticket/${id}`);
     return data;
   };
-  const toggleShow = () => setBasicModal(!basicModal);
-  const convertToCurrentName = (id) => {
-    let data = airports.filter((airport) => airport._id == id);
-    return data.length > 0 ? data[0].name : "";
-  };
+  // const toggleShow = () => setBasicModal(!basicModal);
 
   const handleDeleteTicket = async (id) => {
-    let data = await deleteFlight(id);
+    const data = await deleteFlight(id);
     await console.log(data);
-    await getMyTickets();
+    await getMyTickets(page);
   };
-
+  React.useEffect(() => {
+    if (flightMetaData) {
+      setPageNum([]);
+      for (let number = 1; number <= flightMetaData.totalPages; number++) {
+        setPageNum((...prev) => [
+          ...prev,
+          <Pagination.Item
+            key={number}
+            // active={number === page}
+            onClick={() => {
+              setPage(number);
+              // alert(number);
+            }}
+          >
+            {number}
+          </Pagination.Item>,
+        ]);
+      }
+      console.log(33, pageNum);
+    }
+  }, [flightMetaData]);
   return (
     <div>
-      {tickets.length > 0 &&
+      {tickets &&
+        tickets.length > 0 &&
         tickets.map((ticket, index) => {
-          let data = flights.filter(
-            (flight) => flight._id == ticket.flightId
-          )[0];
           return (
             <MyFlightItem
-              from={convertToCurrentName(data.fromAirport)}
-              to={convertToCurrentName(data.toAirport)}
-              flight={data}
+              // from={convertToCurrentName(data.fromAirport)}
+              // to={convertToCurrentName(data.toAirport)}
+              // flight={data}
               ticket={ticket}
               deleteTicket={handleDeleteTicket}
               key={index}
             />
           );
         })}
+      {pageNum && pageNum.length > 0 && <Pagination>{pageNum}</Pagination>}
     </div>
   );
 }

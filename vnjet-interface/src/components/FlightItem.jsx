@@ -40,7 +40,6 @@ function FlightItem({
   const fetchTransitions = async () => {
     // console.log(456, flight._id);
     const data = await axiosClient.get(`/transition-airport/${flight._id}`);
-    await console.log("lấy các trạm", flight._id, data);
     return data;
   };
   const fetchAllAirport = async () => {
@@ -59,7 +58,7 @@ function FlightItem({
   return (
     <div className="rounded-3 border border-secondary mt-3 p-4">
       <div className="d-flex justify-content-between">
-        <div>
+        <div className="5">
           <span style={{ color: "red" }}>Số hiệu: {flight._id}</span>
           <h4>{getTimeFormat(flight.dateTime)}</h4>
           <h5 style={{ color: "orange" }}>
@@ -77,7 +76,7 @@ function FlightItem({
               ))}
           </ul>
         </div>
-        <div className="d-flex flex-column justify-content-center">
+        <div className="d-flex flex-column justify-content-center col-5">
           <h6>{getDateTimeFormat(flight.dateTime)}</h6>
           <h6>Tổng thời gian di chuyển: {flight.flightDuration} phút</h6>
         </div>

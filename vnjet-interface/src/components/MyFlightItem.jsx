@@ -17,14 +17,35 @@ function getTimeFormat(_date) {
     date.getMinutes() > 9 ? date.getMinutes() : "0" + date.getMinutes();
   return hour + ":" + minus;
 }
-function MyFlightItem({ from, to, flight, ticket, deleteTicket }) {
+
+function MyFlightItem({ ticket, deleteTicket }) {
   const [airports, setAirports] = React.useState([]);
   const [transitions, setTransitions] = React.useState([]);
+  const [flight, setFlight] = React.useState([]);
   const convertToAirportName = (id) => {
-    let data = airports.filter((airport) => airport._id == id);
+    if (airports) {
+      let data = airports.filter((airport) => airport._id == id);
+      return data.length > 0 ? data[0].name : "";
+    }
+  };
+  const convertToCurrentName = (id) => {
+    const data = airports.filter((airport) => airport._id == id);
     return data.length > 0 ? data[0].name : "";
   };
+  const fetchFlight = async (id) => {
+    await axiosClient.get(`/flight/${id}`).then((res) => {
+      setFlight(res);
+      console.log("flight", res);
+    });
+  };
+  const fetchAllAirport = async () => {
+    const data = await axiosClient.get("/airport/");
+    return data;
+  };
+
   React.useEffect(() => {
+    getAirports();
+    fetchFlight(ticket.flightId);
     getAirports();
     getTransitions();
   }, []);
@@ -32,18 +53,16 @@ function MyFlightItem({ from, to, flight, ticket, deleteTicket }) {
     const data = await axiosClient.get(`/transition-airport/${flight._id}`);
     return data;
   };
-  const fetchAllAirport = async () => {
-    const data = await axiosClient.get("/airport/");
-    return data;
-  };
+
   const getTransitions = async () => {
     let data = await fetchTransitions();
     await setTransitions(data);
-    // await console.log("tram dung", data);
   };
   const getAirports = async () => {
-    let data = await fetchAllAirport();
-    await setAirports(data);
+    await fetchAllAirport().then((res) => {
+      setAirports(res);
+      console.log(res);
+    });
   };
   return (
     <div className="rounded-3 border border-secondary mt-3 p-4">
@@ -52,7 +71,8 @@ function MyFlightItem({ from, to, flight, ticket, deleteTicket }) {
           <span style={{ color: "red" }}>Số hiệu: {flight._id}</span>
           <h4>{getTimeFormat(flight.dateTime)}</h4>
           <h5 style={{ color: "orange" }}>
-            {from} - {to}
+            {convertToCurrentName(flight.fromAirport)} -{" "}
+            {convertToCurrentName(flight.toAirport)}
           </h5>
           <ul>
             {transitions.length > 0 && <p>Trạm trung gian:</p>}
