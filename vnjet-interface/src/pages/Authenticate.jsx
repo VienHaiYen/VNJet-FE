@@ -4,8 +4,8 @@ import SignUpForm from "../components/SignUpForm";
 
 function Authenticate({ submit, entryType }) {
   return (
-    <div className="w-100 h-100 d-flex justify-content-center align-items-center">
-      <div className="w-25">
+    <div className="mt-5 w-100 h-100 d-flex justify-content-center align-items-center">
+      <div className="mt-5 w-25">
         {entryType == 0 ? (
           <LogInForm submit={submit} />
         ) : (
