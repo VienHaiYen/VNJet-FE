@@ -3,6 +3,7 @@ import queryString from "query-string";
 
 const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_API_ENDPOINT,
+  timeout: 5000,
   headers: {
     "content-type": "application/json",
   },
@@ -31,7 +32,10 @@ axiosClient.interceptors.response.use(
   (error) => {
     // Handle errors
     console.log(error);
-    return error.response.data;
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { error: error.message };
     // throw error.response.data;
   }
 );

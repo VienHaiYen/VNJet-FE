@@ -1,11 +1,10 @@
-import React from "react";
+import { BeatLoader } from "react-spinners";
 import "./style.css";
-const Loading = () => {
-  return (
-    <div className="spinner-container">
-      <div className="loading-spinner"></div>
-    </div>
-  );
+import { CSSProperties } from "react";
+
+const Loading = (props) => {
+  const { loading } = props;
+  return <BeatLoader loading={loading} color="#36d7b7" />;
 };
 
 export default Loading;

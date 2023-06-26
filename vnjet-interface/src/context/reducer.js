@@ -70,7 +70,7 @@ const authReducer = (state = inititalAuthenticationState, action) => {
     }
     case "LOGIN_FAILURE": {
       const { error: errorDetail } = action.payload;
-      console.log(action.payload);
+      console.log(errorDetail);
       return {
         ...state,
         isFetching: false,
