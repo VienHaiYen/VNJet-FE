@@ -23,7 +23,7 @@ export const ContextProvider = ({ children }) => {
         email: localStorage.getItem("useremail"),
       });
     };
-    fetchUserData();
+    localStorage.getItem("useremail") && fetchUserData();
   }, []);
 
   return (
