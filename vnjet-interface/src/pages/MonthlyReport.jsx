@@ -4,16 +4,13 @@ import { useNavigate } from "react-router-dom";
 
 function MonthLyReport() {
   let navigate = useNavigate();
-  const [reports, setReport] = React.useState([]);
+  const [yearReports, setYearReport] = React.useState([]);
   const [currentFlightId, setCurrentFlightId] = React.useState();
   const [year, setYear] = React.useState();
   const [currentFlight, setCurrentFlight] = React.useState("");
   useEffect(() => {
     setCurrentFlight("");
-    setCurrentFlight("");
     getFlight(currentFlightId);
-    // navigateToDetail(currentFlightId);
-    // setCurrentFlightId("");
   }, [currentFlightId]);
 
   useEffect(() => {
@@ -41,8 +38,8 @@ function MonthLyReport() {
   };
   const getAllRoprtFlight = async () => {
     const data = await fetchAllRoprtFlight();
-    await setReport(data);
-    await console.log(reports);
+    await setYearReport(data);
+    await console.log(yearReports);
   };
   const getFlight = async (id) => {
     let data = await fetchFlight(id);
@@ -68,7 +65,7 @@ function MonthLyReport() {
           <button className="btn btn-warning">Submit</button>
         </div>
       </form>
-      {reports.length < 1 && (
+      {yearReports.length < 1 && (
         <div className="spinner-border text-primary " role="status">
           <span className="sr-only">Loading...</span>
         </div>
@@ -78,16 +75,15 @@ function MonthLyReport() {
           <tr>
             <th scope="col">#</th>
             <th scope="col">Thời gian</th>
-            <th scope="col">Mã Chuyến bay</th>
+            <th scope="col">Số lượng chuyến bay</th>
             <th scope="col">Số lượng vé</th>
             <th scope="col">Số lượng đã bán</th>
             <th scope="col">Phần trăm doanh thu đạt được</th>
-            <th scope="col">Chi tiết</th>
           </tr>
         </thead>
         <tbody>
-          {reports.length > 0 &&
-            reports.map((report, index) => (
+          {yearReports.length > 0 &&
+            yearReports.map((report, index) => (
               <tr key={index}>
                 <th scope="row">{index}</th>
                 <td>{report.dateTime}</td>
@@ -95,15 +91,6 @@ function MonthLyReport() {
                 <td>{report.numberOfSeat}</td>
                 <td>{report.numberOfTicket}</td>
                 <td>{report.percentage}</td>
-                <td>
-                  <button
-                    type="button"
-                    className="btn btn-primary mt-2 w-100"
-                    onClick={() => setCurrentFlightId(report.flightId)}
-                  >
-                    Chi tiết
-                  </button>
-                </td>
               </tr>
             ))}
         </tbody>
