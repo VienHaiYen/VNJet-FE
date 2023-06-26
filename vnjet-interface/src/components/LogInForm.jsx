@@ -1,7 +1,7 @@
 import React from "react";
 import { useGlobal } from "../context/context";
 import Loading from "./Loading";
-import renderField from "./Form";
+import renderField, { renderError } from "./Form";
 // import { useHistory } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
@@ -11,6 +11,8 @@ function LogInForm(props) {
   const { authenticate } = useGlobal();
   const isFetching = authenticate.selectIsFetching();
   const user = authenticate.selectUser();
+  const isError = authenticate.selectIsError();
+  const errorDetail = authenticate.selectErrorDetail();
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -41,9 +43,13 @@ function LogInForm(props) {
         setValue: setPassword,
         type: "password",
       })}
+      {isError &&
+        renderError({
+          errorDetail,
+        })}
       <div className="text-center form-group m-2">
         {isFetching ? (
-          <Loading />
+          <Loading loading={isFetching} />
         ) : (
           <button type="submit" className="btn btn-primary">
             Submit

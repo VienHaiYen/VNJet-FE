@@ -35,7 +35,6 @@ function SignUpForm() {
     });
   };
 
-
   if (isRegisterSuccess) {
     return (
       <div>
@@ -92,7 +91,7 @@ function SignUpForm() {
               })}
             <div className="text-center form-group m-2">
               {isFetching ? (
-                <Loading />
+                <Loading loading={isFetching} />
               ) : (
                 <button type="submit" className="btn btn-primary">
                   Register
@@ -104,7 +103,6 @@ function SignUpForm() {
       </>
     );
   }
-
 }
 
 export default SignUpForm;
