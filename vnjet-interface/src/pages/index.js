@@ -6,6 +6,7 @@ import ManageUsers from "./ManageUsers";
 import ManageAirport from "./ManageAirport";
 import DetailFlight from "./DetailFlight";
 import Report from "./Report";
+import MonthlyReport from "./MonthlyReport";
 import Rule from "./Rule";
 export {
   Authenticate,
@@ -17,4 +18,5 @@ export {
   DetailFlight,
   Report,
   Rule,
+  MonthlyReport,
 };

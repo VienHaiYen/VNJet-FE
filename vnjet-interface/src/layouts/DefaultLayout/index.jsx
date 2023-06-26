@@ -19,10 +19,11 @@ function DefaultLayout({ children }) {
         { to: "/manage-users", label: "Quản lí tài khoản" }, //admin
         { to: "/manage-airport", label: "Quản lí sân bay" },
         { to: "/report", label: "Báo cáo" },
+        { to: "/monthly-report", label: "Báo cáo tháng" },
         { to: "/rule", label: "Quy định" },
       ]);
     }
-  });
+  }, []);
   return (
     <div className="p-5 mt-5">
       <Header nav={nav} />
