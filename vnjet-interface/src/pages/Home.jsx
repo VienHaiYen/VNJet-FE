@@ -20,11 +20,10 @@ import Dropdown from "../components/Dropdown";
 import { useGlobal } from "../context/context";
 
 function Home() {
-  console.log("re-render");
   const { authenticate } = useGlobal();
   const user = authenticate.selectUser();
   // console.log(user);
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const role = user.role == "admin" ? 0 : 1;
   const [currentID, setCurrentID] = React.useState("");
   const [showBookingTicket, setShowBookingTicket] = React.useState(false);

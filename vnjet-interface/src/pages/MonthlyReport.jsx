@@ -1,28 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import axiosClient from "../components/api/axios/axiosClient";
-import { useNavigate } from "react-router-dom";
 
 function MonthLyReport() {
-  let navigate = useNavigate();
   const [yearReports, setYearReport] = React.useState();
   const [year, setYear] = React.useState();
-  const [currentFlight, setCurrentFlight] = React.useState("");
-
-  useEffect(() => {
-    if (
-      currentFlight != "" &&
-      typeof currentFlight === "object" &&
-      !currentFlight.error
-    )
-      navigateToDetail(currentFlight);
-    console.log(7777, currentFlight);
-  }, [currentFlight]);
-
-  const navigateToDetail = (flight) => {
-    navigate("/detail-flight", {
-      state: { flight: flight },
-    });
-  };
   const fetchYearReport = async (_year) => {
     console.log("year", _year);
     const data = axiosClient.get(`/report/${_year}`);
@@ -75,12 +56,12 @@ function MonthLyReport() {
             Object.keys(yearReports).map((key, index) => (
               <tr key={index}>
                 <th scope="row">{index + 1}</th>
-                <td>{key}</td>
+                <td>Tháng {key}</td>
                 <td>{yearReports[key].numberOfFlight}</td>
                 <td>{yearReports[key].numberOfTicket}</td>
                 <td>{yearReports[key].numberOfSeat}</td>
                 <td>{yearReports[key].percentage}</td>
-                <td>{yearReports[key].revenue}</td>
+                <td>{yearReports[key].revenue} VND</td>
               </tr>
             ))}
         </tbody>

@@ -1,5 +1,6 @@
 import axiosClient from "../components/api/axios/axiosClient";
 import React from "react";
+import { useGlobal } from "../context/context";
 
 function Rule() {
   const [ticketClasses, setTicketClasses] = React.useState([]);
@@ -7,6 +8,8 @@ function Rule() {
   const [ruleName, setRuleName] = React.useState();
   const [inputValue, setInputValue] = React.useState("");
   const [addedTicketClassName, setAddedTicketClassName] = React.useState("");
+  const { authenticate } = useGlobal();
+  const user = authenticate.selectUser();
   const fetchRules = async () => {
     const data = await axiosClient.get("/terms");
     return data;
@@ -134,85 +137,95 @@ function Rule() {
         </div>
       </div>
       <br></br>
-      <select
-        className="form-select mb-3"
-        style={{ width: "300px" }}
-        aria-label="Default select example"
-        onChange={(e) => {
-          setRuleName(e.target.value);
-          console.log(ruleName);
-        }}
-      >
-        <option value="maxTransitions" disabled defaultValue>
-          Nhập thay đổi
-        </option>
-        <option value="quantityAirports"> Số lượng sân bay cao nhất</option>
-        <option value="minTimeFlight">Thời gian bay tối thiểu (phút)</option>
-        <option value="maxPauseTime">Thời gian dừng tối đa (phút)</option>
-        <option value="minPauseTime">Thời gian dừng tối thiểu (phút)</option>
-        <option value="maxTransitions">Số trạm dừng tối đa (trạm)</option>
-        <option value="latestBookingTime">
-          Thời gian trễ nhất đặt vé (giờ)
-        </option>
-        <option value="latestCancellationTime">
-          Thời gian trễ nhất hủy vé
-        </option>
-        <option value="quantityClasses">Hạng vé</option>
-      </select>
-      <div className="">
-        {ruleName != "quantityClasses" && (
-          <>
-            <input
-              style={{ maxWidth: "600px" }}
-              className="form-control"
-              onChange={(e) => setInputValue(e.target.value)}
-              value={inputValue}
-              type="number"
-              placeholder="Nhập thay đổi"
-            />
-            <button
-              className="btn btn-warning mt-3"
-              onClick={handleChangeProperty}
-            >
-              Thay đổi
-            </button>
-          </>
-        )}
-        {ruleName == "quantityClasses" && (
-          <>
-            <div className="d-flex mb-3">
-              <input
-                style={{ maxWidth: "600px" }}
-                className="form-control"
-                onChange={(e) => setAddedTicketClassName(e.target.value)}
-                value={addedTicketClassName}
-                type="text"
-                placeholder="Nhập tên hạng vé muốn thêm"
-              />
-              <button
-                className="btn btn-warning ml-3"
-                onClick={handleAddedTicketClass}
-              >
-                Thêm
-              </button>
-            </div>
-            {ticketClasses.length > 0 &&
-              ticketClasses.map((ticketClass, index) => (
-                <div key={index} className="ml-5">
-                  <li>
-                    {ticketClass.name + "    "}
-                    <button
-                      onClick={() => handleDeleteTicketClass(ticketClass._id)}
-                      style={{ marginLeft: "3rem" }}
-                    >
-                      {"   "} χ
-                    </button>
-                  </li>
+      {user.role === "admin" && (
+        <>
+          <select
+            className="form-select mb-3"
+            style={{ width: "300px" }}
+            aria-label="Default select example"
+            onChange={(e) => {
+              setRuleName(e.target.value);
+              console.log(ruleName);
+            }}
+          >
+            <option value="maxTransitions" disabled defaultValue>
+              Nhập thay đổi
+            </option>
+            <option value="quantityAirports"> Số lượng sân bay cao nhất</option>
+            <option value="minTimeFlight">
+              Thời gian bay tối thiểu (phút)
+            </option>
+            <option value="maxPauseTime">Thời gian dừng tối đa (phút)</option>
+            <option value="minPauseTime">
+              Thời gian dừng tối thiểu (phút)
+            </option>
+            <option value="maxTransitions">Số trạm dừng tối đa (trạm)</option>
+            <option value="latestBookingTime">
+              Thời gian trễ nhất đặt vé (giờ)
+            </option>
+            <option value="latestCancellationTime">
+              Thời gian trễ nhất hủy vé
+            </option>
+            <option value="quantityClasses">Hạng vé</option>
+          </select>
+          <div className="">
+            {ruleName != "quantityClasses" && (
+              <>
+                <input
+                  style={{ maxWidth: "600px" }}
+                  className="form-control"
+                  onChange={(e) => setInputValue(e.target.value)}
+                  value={inputValue}
+                  type="number"
+                  placeholder="Nhập thay đổi"
+                />
+                <button
+                  className="btn btn-warning mt-3"
+                  onClick={handleChangeProperty}
+                >
+                  Thay đổi
+                </button>
+              </>
+            )}
+            {ruleName == "quantityClasses" && (
+              <>
+                <div className="d-flex mb-3">
+                  <input
+                    style={{ maxWidth: "600px" }}
+                    className="form-control"
+                    onChange={(e) => setAddedTicketClassName(e.target.value)}
+                    value={addedTicketClassName}
+                    type="text"
+                    placeholder="Nhập tên hạng vé muốn thêm"
+                  />
+                  <button
+                    className="btn btn-warning ml-3"
+                    onClick={handleAddedTicketClass}
+                  >
+                    Thêm
+                  </button>
                 </div>
-              ))}
-          </>
-        )}
-      </div>
+                {ticketClasses.length > 0 &&
+                  ticketClasses.map((ticketClass, index) => (
+                    <div key={index} className="ml-5">
+                      <li>
+                        {ticketClass.name + "    "}
+                        <button
+                          onClick={() =>
+                            handleDeleteTicketClass(ticketClass._id)
+                          }
+                          style={{ marginLeft: "3rem" }}
+                        >
+                          {"   "} χ
+                        </button>
+                      </li>
+                    </div>
+                  ))}
+              </>
+            )}
+          </div>
+        </>
+      )}
     </>
   );
 }
