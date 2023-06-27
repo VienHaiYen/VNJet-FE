@@ -18,7 +18,7 @@ function SignUpForm() {
   const [fullName, setfullName] = useState("");
   const [identificationCode, setIdentificationCode] = useState("");
   const roleOptions = [
-    { value: "admin", label: "Admin" },
+    // { value: "admin", label: "Admin" },
     { value: "customer", label: "Customer" },
   ];
   const [role, setRole] = React.useState(roleOptions[0]);
