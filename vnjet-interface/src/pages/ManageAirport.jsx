@@ -234,9 +234,10 @@ function ManageAirport() {
         Thêm
       </button>
       {airports.length < 1 && (
-        <div className="spinner-border text-primary " role="status">
+        <>
+          <div className="spinner-border text-primary " role="status"></div>
           <span className="sr-only">Loading...</span>
-        </div>
+        </>
       )}
       <table className="table">
         <thead>

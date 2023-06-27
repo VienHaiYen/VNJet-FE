@@ -76,11 +76,12 @@ function Rule() {
   }, []);
   return (
     <>
-      <h3>Rule page</h3>
+      <h3>Thay đổi quy định</h3>
       {rules.length < 1 && (
-        <div className="spinner-border text-primary " role="status">
+        <>
+          <div className="spinner-border text-primary " role="status"></div>
           <span className="sr-only">Loading...</span>
-        </div>
+        </>
       )}
       <div className="form--row d-flex">
         <div className="form-row-item col-6 m-2">
@@ -142,15 +143,17 @@ function Rule() {
           console.log(ruleName);
         }}
       >
-        <option value="maxTransitions" disabled selected>
+        <option value="maxTransitions" disabled defaultValue>
           Nhập thay đổi
         </option>
         <option value="quantityAirports"> Số lượng sân bay cao nhất</option>
-        <option value="minTimeFlight">Thời gian bay tối thiểu</option>
-        <option value="maxPauseTime">Thời gian dừng tối đa</option>
-        <option value="minPauseTime">Thời gian dừng tối thiểu</option>
-        <option value="maxTransitions">Số trạm dừng tối đa</option>
-        <option value="latestBookingTime">Thời gian trễ nhất đặt vé</option>
+        <option value="minTimeFlight">Thời gian bay tối thiểu (phút)</option>
+        <option value="maxPauseTime">Thời gian dừng tối đa (phút)</option>
+        <option value="minPauseTime">Thời gian dừng tối thiểu (phút)</option>
+        <option value="maxTransitions">Số trạm dừng tối đa (trạm)</option>
+        <option value="latestBookingTime">
+          Thời gian trễ nhất đặt vé (giờ)
+        </option>
         <option value="latestCancellationTime">
           Thời gian trễ nhất hủy vé
         </option>

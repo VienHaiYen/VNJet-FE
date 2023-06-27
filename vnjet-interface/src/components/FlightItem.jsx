@@ -58,7 +58,7 @@ function FlightItem({
   return (
     <div className="rounded-3 border border-secondary mt-3 p-4">
       <div className="d-flex justify-content-between">
-        <div className="5">
+        <div className="col-5">
           <span style={{ color: "red" }}>Số hiệu: {flight._id}</span>
           <h4>{getTimeFormat(flight.dateTime)}</h4>
           <h5 style={{ color: "orange" }}>
@@ -76,11 +76,11 @@ function FlightItem({
               ))}
           </ul>
         </div>
-        <div className="d-flex flex-column justify-content-center col-5">
+        <div className="d-flex flex-column justify-content-center col-4">
           <h6>{getDateTimeFormat(flight.dateTime)}</h6>
           <h6>Tổng thời gian di chuyển: {flight.flightDuration} phút</h6>
         </div>
-        <div className="h-100">
+        <div className="h-100 col-2">
           {role == 1 ? (
             <button
               type="button"
@@ -91,17 +91,18 @@ function FlightItem({
             </button>
           ) : (
             <>
-              <div className="d-flex">
+              <div className="d-flex justify-content-between">
                 <button
                   type="button"
-                  className="btn btn-warning w-75"
+                  className="btn btn-warning"
                   onClick={() => changeFlight(flight._id)}
+                  style={{ width: "70%" }}
                 >
                   Chỉnh sửa
                 </button>
                 <button
                   type="button"
-                  className="btn btn-dark ml-2 w-25"
+                  className="btn btn-danger w-25"
                   onClick={() => deleteFlight(flight._id)}
                 >
                   <FontAwesomeIcon icon={faTrash} />

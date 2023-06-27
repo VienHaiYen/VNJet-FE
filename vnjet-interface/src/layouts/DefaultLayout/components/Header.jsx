@@ -46,7 +46,7 @@ function Header({ nav }) {
                   alt=""
                 />
               </div>
-              <h3 className="p-2 text-info" style={{ fontSize: "20px" }}>
+              <h3 className="p-2 text-dark" style={{ fontSize: "20px" }}>
                 {user.fullname}
               </h3>
               <button
@@ -54,8 +54,9 @@ function Header({ nav }) {
                   await authenticate.handleLogout();
                   navigate("/");
                 }}
+                className="btn btn-danger"
               >
-                logout
+                Log out
               </button>
             </div>
           )}

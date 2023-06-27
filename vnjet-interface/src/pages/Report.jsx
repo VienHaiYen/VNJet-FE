@@ -55,9 +55,10 @@ function Report() {
     <>
       <h3>Báo cáo của từng chuyến bay</h3>
       {reports.length < 1 && (
-        <div className="spinner-border text-primary " role="status">
+        <>
+          <div className="spinner-border text-primary " role="status"></div>
           <span className="sr-only">Loading...</span>
-        </div>
+        </>
       )}
       <table className="table">
         <thead>

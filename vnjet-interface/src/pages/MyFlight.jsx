@@ -57,6 +57,9 @@ function MyFlight() {
   };
   const deleteFlight = async (id) => {
     const data = await axiosClient.delete(`/ticket/${id}`);
+    if (!data.error) {
+      alert("Đã xóa chuyến bay ra khỏi danh sách của bạn !");
+    }
     return data;
   };
   // const toggleShow = () => setBasicModal(!basicModal);
