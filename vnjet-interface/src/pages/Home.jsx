@@ -55,7 +55,9 @@ function Home() {
     getAirports();
   }, []);
   React.useEffect(() => {
-    getSeats();
+    if (currentID) {
+      getSeats();
+    }
   }, [currentID]);
   const fetchFlights = async (id) => {
     const data = await axiosClient.get(`/flight?page=${id}`).then((res) => {
@@ -426,18 +428,18 @@ function Home() {
           <FontAwesomeIcon icon={faSearch} />
         </button>
       </div>
-      {flights && flights.length < 1 && (
+      {/* {flights && flights.length < 1 && (
         <div className="spinner-border text-primary " role="status">
           <span className="sr-only">Loading...</span>
         </div>
-      )}
+      )} */}
       {flights &&
         flights.length > 0 &&
         flights.map((flight, index) => (
           <FlightItem
-            from={convertToCurrentName(flight.fromAirport)}
-            to={convertToCurrentName(flight.toAirport)}
-            flight={flight}
+            // from={convertToCurrentName(flight.fromAirport)}
+            // to={convertToCurrentName(flight.toAirport)}
+            flightId={flight._id}
             bookTicket={handleChooseTicket}
             changeFlight={handleEditFlight}
             deleteFlight={handleDeleteFlight}
@@ -446,7 +448,9 @@ function Home() {
             role={role}
           />
         ))}
-      {pageNum.length > 0 && <Pagination>{pageNum}</Pagination>}
+      {pageNum.length > 0 && (
+        <Pagination className="mt-3">{pageNum}</Pagination>
+      )}
     </div>
   );
 }

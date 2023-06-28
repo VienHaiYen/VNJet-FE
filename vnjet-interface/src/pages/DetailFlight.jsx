@@ -104,39 +104,31 @@ function DetailFlight() {
           </ul>
         </div>
         <div className="col-6">
-          {ticketClasses.length > 0 && seats.length > 0 && (
-            <div>
-              <p>
-                Vé hạng nhất:{" "}
-                {
-                  seats.filter((seat) => {
-                    return seat.classOfTicket === ticketClasses[0]._id;
-                  })[0].numberOfSeat
-                }
-                , Giá vé:{" "}
-                {new Intl.NumberFormat().format(
-                  seats.filter(
-                    (seat) => seat.classOfTicket === ticketClasses[0]._id
-                  )[0].price
-                )}{" "}
-                VND
-              </p>
-              {seats.map((seat, index) => (
-                <div key={index}>
-                  Vé {seat.nameOfTicketClass}: {seat.numberOfEmptySeat}/
-                  {seat.numberOfSeat} Vé trống , Giá vé: {seat.price} VND
-                </div>
-              ))}
-              <p>
-                Số lượng ghế trên máy bay:
-                {" " +
-                  seats.reduce(
-                    (current, seat) => current + seat.numberOfSeat,
-                    0
-                  )}
-              </p>
-            </div>
-          )}
+          <table className="table">
+            <thead>
+              <tr>
+                <th scope="col">Tên vé</th>
+                <th scope="col">Số lượng chỗ ngồi</th>
+                <th scope="col">Số lượng vé trống</th>
+                <th scope="col">Giá</th>
+              </tr>
+            </thead>
+            <tbody>
+              {ticketClasses.length > 0 &&
+                seats.length > 0 &&
+                seats.map(
+                  (seat, index) =>
+                    seat.numberOfSeat !== 0 && (
+                      <tr key={index}>
+                        <td>{seat.nameOfTicketClass}</td>
+                        <td>{seat.numberOfSeat}</td>
+                        <td>{seat.numberOfEmptySeat}</td>
+                        <td>{seat.price} VND</td>
+                      </tr>
+                    )
+                )}
+            </tbody>
+          </table>
         </div>
       </div>
     </>

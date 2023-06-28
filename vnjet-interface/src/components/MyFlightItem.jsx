@@ -21,7 +21,7 @@ function getTimeFormat(_date) {
 function MyFlightItem({ ticket, deleteTicket }) {
   const [airports, setAirports] = React.useState([]);
   const [transitions, setTransitions] = React.useState([]);
-  const [flight, setFlight] = React.useState([]);
+  const [flight, setFlight] = React.useState();
   const convertToAirportName = (id) => {
     if (airports) {
       let data = airports.filter((airport) => airport._id == id);

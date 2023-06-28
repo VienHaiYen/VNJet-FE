@@ -60,3 +60,6 @@ p {
   margin-right: 10px;
   margin-top: 8px;
 }
+.hover:hover {
+  background-color: #dedede61;
+}

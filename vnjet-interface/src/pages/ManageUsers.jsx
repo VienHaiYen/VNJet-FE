@@ -47,7 +47,6 @@ function ManageUsers() {
 
   const submitDelete = async (id) => {
     let data = await deleteUser(id);
-    await console.log("àter delte", data);
     await getUsers(page);
     setShowDelete(false);
   };

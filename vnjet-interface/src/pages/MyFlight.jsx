@@ -62,7 +62,6 @@ function MyFlight() {
     }
     return data;
   };
-  // const toggleShow = () => setBasicModal(!basicModal);
 
   const handleDeleteTicket = async (id) => {
     const data = await deleteFlight(id);
