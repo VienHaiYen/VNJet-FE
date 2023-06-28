@@ -26,9 +26,12 @@ function Home() {
   const navigate = useNavigate();
   const role = user.role == "admin" ? 0 : 1;
   const [currentID, setCurrentID] = React.useState("");
+
   const [showBookingTicket, setShowBookingTicket] = React.useState(false);
   const [showDelete, setShowDelete] = React.useState(false);
   const [showEdit, setShowEdit] = React.useState(false);
+  const [showDetail, setShowDetail] = React.useState(false);
+
   const [flights, setFlights] = React.useState([]);
   const [airports, setAirports] = React.useState([]);
   const [seats, setSeats] = React.useState([]);
@@ -50,15 +53,8 @@ function Home() {
   const [customerInfo, setCustomerInfo] = React.useState({
     ticketClass: "",
   });
-  React.useEffect(() => {
-    getFlights(1);
-    getAirports();
-  }, []);
-  React.useEffect(() => {
-    if (currentID) {
-      getSeats();
-    }
-  }, [currentID]);
+  const [currentDetail, setCurrentDetail] = React.useState();
+
   const fetchFlights = async (id) => {
     const data = await axiosClient.get(`/flight?page=${id}`).then((res) => {
       if (res.error) {
@@ -189,9 +185,13 @@ function Home() {
       getFlights(page);
     }
   };
-  const handleShowDetail = (flight) => {
-    navigate("/detail-flight", { state: { flight: flight } });
+  const handleShowDetail = (curr) => {
+    // navigate("/detail-flight", { state: { flight: flight } });
     // console.log("flight", flight);
+    setCurrentID(curr.id);
+    setCurrentDetail(curr);
+    setShowDetail(true);
+    console.log(currentDetail);
   };
 
   const handleChangeCustomerInfo = (e) => {
@@ -200,7 +200,6 @@ function Home() {
       ...prevState,
       [name]: value,
     }));
-    // console.log(customerInfo);
   };
   const handleChangeEditState = (e) => {
     const { name, value } = e.target;
@@ -219,7 +218,19 @@ function Home() {
     console.log(findingState);
     // console.log(findingState.date);
   };
-
+  const convertToAirportName = (id) => {
+    let data = airports.filter((airport) => airport._id == id);
+    return data.length > 0 ? data[0].name : "";
+  };
+  React.useEffect(() => {
+    getFlights(1);
+    getAirports();
+  }, []);
+  React.useEffect(() => {
+    if (currentID) {
+      getSeats();
+    }
+  }, [currentID]);
   useEffect(() => {
     getFlights(page);
     console.log("page", page);
@@ -246,6 +257,7 @@ function Home() {
   }, [flightMetaData]);
   return (
     <div>
+      {/* ĐẶT VÉ CHUYẾN BAY */}
       <MDBModal
         show={showBookingTicket}
         setShow={setShowBookingTicket}
@@ -301,6 +313,7 @@ function Home() {
         </MDBModalDialog>
       </MDBModal>
 
+      {/* XÓA CHUYẾN BAY */}
       <MDBModal show={showDelete} setShow={setShowDelete} tabIndex="-1">
         <MDBModalDialog>
           <MDBModalContent>
@@ -331,6 +344,7 @@ function Home() {
         </MDBModalDialog>
       </MDBModal>
 
+      {/* CHỈNH SỬA CHUYẾN BAY */}
       <MDBModal show={showEdit} setShow={setShowEdit} tabIndex="-1">
         <MDBModalDialog>
           <MDBModalContent>
@@ -393,8 +407,85 @@ function Home() {
           </MDBModalContent>
         </MDBModalDialog>
       </MDBModal>
-      <h3>Tìm kiếm chuyến đi</h3>
 
+      {/* THÔNG TIN CHUYẾN BAY */}
+      <MDBModal show={showDetail} setShow={setShowDetail} tabIndex="-1">
+        <MDBModalDialog>
+          <MDBModalContent>
+            <MDBModalHeader>
+              <MDBModalTitle>Thông tin chuyến bay</MDBModalTitle>
+            </MDBModalHeader>
+            {currentDetail && (
+              <MDBModalBody>
+                <h6>
+                  Mã số chuyến bay
+                  <span style={{ color: "red" }}>{" " + currentDetail.id}</span>
+                </h6>
+                <h6>
+                  Sân bay bắt đầu:
+                  <span style={{ color: "red" }}>
+                    {" " + currentDetail.from}
+                  </span>
+                </h6>
+                <h6>
+                  Sân bay kết thúc:
+                  <span style={{ color: "red" }}>{" " + currentDetail.to}</span>
+                </h6>
+                <h6>
+                  Thời điểm đi:
+                  <span style={{ color: "red" }}>
+                    {" " + currentDetail.dateTime}, {currentDetail.date}
+                  </span>
+                </h6>
+                <h6>
+                  {currentDetail.transition.length > 0 && (
+                    <b>Trạm trung gian:</b>
+                  )}
+                  {currentDetail.transition.length > 0 &&
+                    currentDetail.transition.map((transition, index) => (
+                      <li key={index} style={{ listStyleType: "circle" }}>
+                        {convertToAirportName(transition.airportId)}, Thời gian:{" "}
+                        {transition.transitionDuration} phút, Ghi chú:{" "}
+                        {transition.note}
+                      </li>
+                    ))}
+                </h6>
+                <h6>
+                  {currentDetail.seats.length > 0 && <b>Chỗ ngồi: </b>}
+                  {currentDetail.seats.length > 0 &&
+                    currentDetail.seats.map(
+                      (seat, index) =>
+                        seat.numberOfSeat !== 0 && (
+                          <li key={index} style={{ listStyleType: "circle" }}>
+                            {seat.nameOfTicketClass}: {seat.numberOfEmptySeat}/
+                            {seat.numberOfSeat} vé trống, Giá tiền: {seat.price}{" "}
+                            VND
+                          </li>
+                        )
+                    )}
+                  {currentDetail.seats.length > 0 &&
+                    currentDetail.seats.filter((crr) => crr.numberOfSeat !== 0)
+                      .length === 0 && (
+                      <span style={{ color: "red" }}>
+                        Không có vé cho chuyến bay này
+                      </span>
+                    )}
+                </h6>
+              </MDBModalBody>
+            )}
+            <MDBModalFooter>
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
+                onClick={() => setShowDetail(false)}
+              >
+                Đóng
+              </button>
+            </MDBModalFooter>
+          </MDBModalContent>
+        </MDBModalDialog>
+      </MDBModal>
+      <h3>Tìm kiếm chuyến đi</h3>
       <div className="home d-flex align-item-center">
         <label>Đi từ</label>
         <Dropdown
@@ -428,17 +519,11 @@ function Home() {
           <FontAwesomeIcon icon={faSearch} />
         </button>
       </div>
-      {/* {flights && flights.length < 1 && (
-        <div className="spinner-border text-primary " role="status">
-          <span className="sr-only">Loading...</span>
-        </div>
-      )} */}
+
       {flights &&
         flights.length > 0 &&
         flights.map((flight, index) => (
           <FlightItem
-            // from={convertToCurrentName(flight.fromAirport)}
-            // to={convertToCurrentName(flight.toAirport)}
             flightId={flight._id}
             bookTicket={handleChooseTicket}
             changeFlight={handleEditFlight}

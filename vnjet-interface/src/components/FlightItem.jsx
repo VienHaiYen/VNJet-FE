@@ -28,7 +28,8 @@ function FlightItem({
   const [airports, setAirports] = React.useState([]);
   const [transitions, setTransitions] = React.useState([]);
   const [flight, setFlight] = React.useState();
-  const [endTime, setEndTime] = React.useState();
+  const [ticketClasses, setTicketClasses] = React.useState([]);
+  const [seats, setSeats] = React.useState([]);
   const convertToAirportName = (id) => {
     let data = airports.filter((airport) => airport._id == id);
     return data.length > 0 ? data[0].name : "";
@@ -41,6 +42,7 @@ function FlightItem({
     fetchFlight(flightId);
     getAirports();
     getTransitions();
+    getSeats(flightId);
   }, []);
   const fetchTransitions = async () => {
     const data = await axiosClient.get(`/transition-airport/${flightId}`);
@@ -53,23 +55,46 @@ function FlightItem({
   const fetchFlight = async (id) => {
     await axiosClient.get(`/flight/${id}`).then((res) => {
       setFlight(res);
-      console.log("flight", res);
+      // console.log("flight", res);
     });
+  };
+
+  const fetchSeats = async (flightId) => {
+    const data = await axiosClient.get(`/flightStatistic/${flightId}`);
+    return data;
+  };
+
+  const getSeats = async (id) => {
+    let data = await fetchSeats(id);
+    await setSeats(data);
+    // await console.log("seats", seats);
   };
   const getTransitions = async () => {
     let data = await fetchTransitions();
     await setTransitions(data);
-    // await console.log("tram dung", data);
   };
   const getAirports = async () => {
     let data = await fetchAllAirport();
     await setAirports(data);
   };
+
   return (
     <>
       <div
         className="rounded-3 border border-secondary mt-3 p-4 hover"
-        onClick={() => showDetailFlight(flight)}
+        // onClick={() => showDetailFlight(flight)}
+        onClick={() =>
+          showDetailFlight({
+            id: flightId,
+            from: convertToCurrentName(flight.fromAirport),
+            to: convertToCurrentName(flight.toAirport),
+            date: getDateTimeFormat(flight.dateTime),
+            dateTime: getTimeFormat(flight.dateTime),
+            duration: flight.flightDuration,
+            transition: transitions,
+            seats: seats,
+          })
+        }
       >
         {!flight && (
           <div className="spinner-border text-primary " role="status">
@@ -112,7 +137,10 @@ function FlightItem({
                   <button
                     type="button"
                     className="btn btn-warning w-100"
-                    onClick={() => bookTicket(flight._id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      bookTicket(flight._id);
+                    }}
                   >
                     <h5>Đặt vé</h5>
                   </button>
@@ -121,14 +149,20 @@ function FlightItem({
                     <button
                       type="button"
                       className="btn btn-warning w-100"
-                      onClick={() => changeFlight(flight._id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        changeFlight(flight._id);
+                      }}
                     >
                       <FontAwesomeIcon icon={faPen} /> Chỉnh sửa
                     </button>
                     <button
                       type="button"
                       className="btn btn-danger mt-2 w-100"
-                      onClick={() => deleteFlight(flight._id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteFlight(flight._id);
+                      }}
                     >
                       <FontAwesomeIcon icon={faTrash} /> Xóa chuyến bay
                     </button>
