@@ -5,7 +5,7 @@ import axiosClient from "../components/api/axios/axiosClient";
 function CreateFlight() {
   const [airports, setAirports] = React.useState([]);
   const [ticketClasses, setTicketClasses] = React.useState([]);
-  // let [levelArray, setLevelArray] = React.useState([]);
+  const [rules, setRules] = React.useState([]);
   // let levelArray = [];
   let levelArray = React.useMemo(() => {
     let results = [];

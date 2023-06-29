@@ -10,6 +10,7 @@ import {
   MDBModalFooter,
 } from "mdb-react-ui-kit";
 import React from "react";
+import Spinner from "../components/Spinner";
 function ManageAirport() {
   const [basicModal, setBasicModal] = React.useState(false);
   const [basicModal1, setBasicModal1] = React.useState(false);
@@ -233,12 +234,8 @@ function ManageAirport() {
       <button className="btn btn-danger m-2" onClick={handleAddAirport}>
         Thêm
       </button>
-      {airports.length < 1 && (
-        <>
-          <div className="spinner-border text-primary " role="status"></div>
-          <span className="sr-only">Loading...</span>
-        </>
-      )}
+      <br />
+      {airports.length < 1 && <Spinner />}
       <table className="table">
         <thead>
           <tr>

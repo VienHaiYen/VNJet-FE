@@ -66,43 +66,45 @@ function MyFlightItem({ ticket, deleteTicket }) {
   };
   return (
     <div className="rounded-3 border border-secondary mt-3 p-4">
-      <div className="d-flex justify-content-between">
-        <div className="col-6">
-          <span style={{ color: "red" }}>Số hiệu: {flight._id}</span>
-          <h4>{getTimeFormat(flight.dateTime)}</h4>
-          <h5 style={{ color: "orange" }}>
-            {convertToCurrentName(flight.fromAirport)} -{" "}
-            {convertToCurrentName(flight.toAirport)}
-          </h5>
-          <ul>
-            {transitions.length > 0 && <p>Trạm trung gian:</p>}
-            {transitions.length > 0 &&
-              transitions.map((transition, index) => (
-                <li key={index}>
-                  Name: {convertToAirportName(transition.airportId)}, Thời gian:{" "}
-                  {transition.transitionDuration} phút, Ghi chú:{" "}
-                  {transition.note}
-                </li>
-              ))}
-          </ul>
+      {flight && (
+        <div className="d-flex justify-content-between">
+          <div className="col-6">
+            <span style={{ color: "red" }}>Số hiệu: {flight._id}</span>
+            <h4>{getTimeFormat(flight.dateTime)}</h4>
+            <h5 style={{ color: "orange" }}>
+              {convertToCurrentName(flight.fromAirport)} -{" "}
+              {convertToCurrentName(flight.toAirport)}
+            </h5>
+            <ul>
+              {transitions.length > 0 && <p>Trạm trung gian:</p>}
+              {transitions.length > 0 &&
+                transitions.map((transition, index) => (
+                  <li key={index}>
+                    Name: {convertToAirportName(transition.airportId)}, Thời
+                    gian: {transition.transitionDuration} phút, Ghi chú:{" "}
+                    {transition.note}
+                  </li>
+                ))}
+            </ul>
+          </div>
+          <div className="d-flex flex-column justify-content-center col-5">
+            <h6>{getDateTimeFormat(flight.dateTime)}</h6>
+            <h6>Tổng thời gian di chuyển: {flight.flightDuration} phút</h6>
+            <h6>Giá vé {new Intl.NumberFormat().format(ticket.price)} VND</h6>
+          </div>
+          <div className="h-100">
+            <>
+              <button
+                type="button"
+                className="btn btn-dark"
+                onClick={() => deleteTicket(ticket._id)}
+              >
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
+            </>
+          </div>
         </div>
-        <div className="d-flex flex-column justify-content-center col-5">
-          <h6>{getDateTimeFormat(flight.dateTime)}</h6>
-          <h6>Tổng thời gian di chuyển: {flight.flightDuration} phút</h6>
-          <h6>Giá vé {new Intl.NumberFormat().format(ticket.price)} VND</h6>
-        </div>
-        <div className="h-100">
-          <>
-            <button
-              type="button"
-              className="btn btn-dark"
-              onClick={() => deleteTicket(ticket._id)}
-            >
-              <FontAwesomeIcon icon={faTrash} />
-            </button>
-          </>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import axiosClient from "../components/api/axios/axiosClient";
 import React from "react";
 import { useGlobal } from "../context/context";
+import Spinner from "../components/Spinner";
 
 function Rule() {
   const [ticketClasses, setTicketClasses] = React.useState([]);
@@ -80,12 +81,7 @@ function Rule() {
   return (
     <>
       <h3>Thay đổi quy định</h3>
-      {rules.length < 1 && (
-        <>
-          <div className="spinner-border text-primary " role="status"></div>
-          <span className="sr-only">Loading...</span>
-        </>
-      )}
+      {rules.length < 1 && <Spinner />}
       <div className="form--row d-flex">
         <div className="form-row-item col-6 m-2">
           <label htmlFor="">

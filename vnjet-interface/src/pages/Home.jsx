@@ -2,11 +2,13 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import Pagination from "react-bootstrap/Pagination";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+// import { useNavigate } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import FlightItem from "../components/FlightItem";
 import axiosClient from "../components/api/axios/axiosClient";
+import { GET } from "../modules";
+import { UTIL } from "../utils";
 import {
   MDBModal,
   MDBModalDialog,
@@ -23,7 +25,7 @@ function Home() {
   const { authenticate } = useGlobal();
   const user = authenticate.selectUser();
   // console.log(user);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const role = user.role == "admin" ? 0 : 1;
   const [currentID, setCurrentID] = React.useState("");
 
@@ -55,26 +57,10 @@ function Home() {
   });
   const [currentDetail, setCurrentDetail] = React.useState();
 
-  const fetchFlights = async (id) => {
-    const data = await axiosClient.get(`/flight?page=${id}`).then((res) => {
-      if (res.error) {
-        alert(res.error);
-      } else {
-        setFlightMetaData(res.metadata);
-        return res.results;
-      }
-    });
-    return data;
-  };
-  const fetchAllAirport = async () => {
-    const data = await axiosClient.get("/airport/");
-    return data;
-  };
-
-  const buyTicket = async (flightId) => {
+  const handleBuyTicket = async () => {
     await axiosClient
       .post("/ticket/", {
-        flightId: flightId,
+        flightId: currentID,
         classOfTicket: customerInfo.ticketClass,
       })
       .then((res) => {
@@ -82,11 +68,12 @@ function Home() {
           alert(res.error);
         } else {
           alert("Đặt vé thành công !");
-          return res;
+          setShowBookingTicket(false);
         }
       });
   };
-  const searchFlight = async () => {
+
+  const handleSearchFlight = async () => {
     let tmp = findingState.date == "" ? "" : new Date(findingState.date);
     const data = await axiosClient
       .get(
@@ -99,11 +86,19 @@ function Home() {
         }`
       )
       .then((res) => {
-        setFlightMetaData(res.metadata);
-        return res.results;
+        // return ;
+
+        if (res.error) {
+          alert(res.error);
+        } else {
+          setFlightMetaData(res.metadata);
+          setFlights(res.results);
+          console.log("kq tra ve", data);
+        }
       });
     return data;
   };
+
   const editFlight = async (flightId, editState) => {
     const data = await axiosClient.put(`/flight/${flightId}`, {
       dateTime: editState.dateTime,
@@ -114,52 +109,40 @@ function Home() {
 
     return data;
   };
-  const fetchSeats = async () => {
-    const data = await axiosClient.get(`/flightStatistic/${currentID}`);
-    return data;
-  };
-  const handleSearchFlight = async () => {
-    let data = await searchFlight();
-    setFlights(data);
-    await console.log("kq tra ve", data);
-  };
-  const handleBuyTicket = async () => {
-    await buyTicket(currentID);
-    setShowBookingTicket(false);
-  };
-  const getFlights = async (id) => {
-    let data = await fetchFlights(id);
-    await setFlights(data);
-    // await console.log(44, flights);
-  };
-  const getAirports = async () => {
-    let data = await fetchAllAirport();
-    await setAirports(data);
-    // await console.log(airports);
+  const getSeats = async (id) => {
+    await axiosClient.get(`/flightStatistic/${id}`).then((res) => {
+      if (res.error) {
+        alert(res.error);
+      } else {
+        setSeats(res);
+      }
+    });
   };
 
   const deleteFlight = async (id) => {
-    const data = await axiosClient.delete(`/flight/${id}`);
+    const data = await axiosClient.delete(`/flight/${id}`).then((res) => {
+      if (res.error) {
+        alert(res.error);
+      } else {
+        setShowDelete(false);
+        GET.getFlights(page, setFlightMetaData, setFlights);
+      }
+    });
     return data;
   };
-  const getSeats = async () => {
-    let data = await fetchSeats();
-    await setSeats(data);
-    // await console.log(seats);
-  };
-  const toggleShow = () => setShowBookingTicket(!showBookingTicket);
+
   const convertToCurrentName = (id) => {
     let data = airports.filter((airport) => airport._id == id);
     return data.length > 0 ? data[0].name : "";
   };
   const handleCloseDialog = () => {
-    toggleShow();
+    setShowBookingTicket(false);
     setCustomerInfo({
       ticketClass: "",
     });
   };
   const handleChooseTicket = (id) => {
-    toggleShow();
+    setShowBookingTicket(true);
     setCurrentID(id);
   };
   const handleEditFlight = (id) => {
@@ -170,45 +153,25 @@ function Home() {
     setCurrentID(id);
     setShowDelete(true);
   };
-  const submitDelete = async () => {
-    await deleteFlight(currentID);
-    await getFlights(page);
-    setShowDelete(false);
-  };
+
   const submitEdit = async () => {
-    let data = await editFlight(currentID, editState);
-    if (data.error) {
-      alert(data.error);
-    } else {
-      alert("Thay đổi xong !");
-      setShowEdit(false);
-      getFlights(page);
-    }
+    await editFlight(currentID, editState).then((res) => {
+      if (res.error) {
+        alert(res.error);
+      } else {
+        GET.getFlights(page, setFlightMetaData, setFlights);
+        alert("Thay đổi xong !");
+        setShowEdit(false);
+        console.log(7788, flights);
+      }
+    });
   };
   const handleShowDetail = (curr) => {
-    // navigate("/detail-flight", { state: { flight: flight } });
-    // console.log("flight", flight);
     setCurrentID(curr.id);
     setCurrentDetail(curr);
     setShowDetail(true);
-    console.log(currentDetail);
   };
 
-  const handleChangeCustomerInfo = (e) => {
-    const { name, value } = e.target;
-    setCustomerInfo((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-  const handleChangeEditState = (e) => {
-    const { name, value } = e.target;
-    setEditState((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-    console.log(editState);
-  };
   const handleChangeFindingState = (e) => {
     const { name, value } = e.target;
     setFindingState((prevState) => ({
@@ -216,44 +179,38 @@ function Home() {
       [name]: value,
     }));
     console.log(findingState);
-    // console.log(findingState.date);
   };
-  const convertToAirportName = (id) => {
-    let data = airports.filter((airport) => airport._id == id);
-    return data.length > 0 ? data[0].name : "";
-  };
+
   React.useEffect(() => {
-    getFlights(1);
-    getAirports();
+    GET.getFlights(1, setFlightMetaData, setFlights);
+    GET.getAirports(setAirports);
   }, []);
   React.useEffect(() => {
     if (currentID) {
-      getSeats();
+      getSeats(currentID);
     }
   }, [currentID]);
-  useEffect(() => {
-    getFlights(page);
-    console.log("page", page);
+
+  React.useEffect(() => {
+    GET.getFlights(page, setFlightMetaData, setFlights);
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, [page]);
-  useEffect(() => {
+
+  React.useEffect(() => {
     setPageNum([]);
     for (let number = 1; number <= flightMetaData.totalPages; number++) {
       setPageNum((...prev) => [
         ...prev,
         <Pagination.Item
           key={number}
-          // active={number === page}
           onClick={() => {
             setPage(number);
-            // alert(number);
           }}
         >
           {number}
         </Pagination.Item>,
       ]);
     }
-    console.log(33, pageNum);
   }, [flightMetaData]);
   return (
     <div>
@@ -274,7 +231,7 @@ function Home() {
                 <select
                   className="form-select"
                   name="ticketClass"
-                  onChange={handleChangeCustomerInfo}
+                  onChange={(e) => UTIL.handleOnChange(e, setCustomerInfo)}
                   value={customerInfo.ticketClass}
                 >
                   <option defaultValue value=""></option>
@@ -335,7 +292,7 @@ function Home() {
               <button
                 type="button"
                 className="btn btn-outline-danger"
-                onClick={submitDelete}
+                onClick={() => deleteFlight(currentID)}
               >
                 Đồng ý
               </button>
@@ -356,7 +313,7 @@ function Home() {
                 <label htmlFor="from">Đi từ</label>
                 <Dropdown
                   value={editState.fromAirport}
-                  onChange={handleChangeEditState}
+                  onChange={(e) => UTIL.handleOnChange(e, setEditState)}
                   name="fromAirport"
                   options={airports}
                 />
@@ -364,7 +321,7 @@ function Home() {
                 <label htmlFor="to">Đi đến</label>
                 <Dropdown
                   value={editState.toAirport}
-                  onChange={handleChangeEditState}
+                  onChange={(e) => UTIL.handleOnChange(e, setEditState)}
                   name="toAirport"
                   options={airports}
                 />
@@ -375,7 +332,7 @@ function Home() {
                   className="form-control"
                   value={editState.dateTime}
                   name="dateTime"
-                  onChange={handleChangeEditState}
+                  onChange={(e) => UTIL.handleOnChange(e, setEditState)}
                 />
                 <label htmlFor="flightDuration">Trong khoảng</label>
                 <input
@@ -384,7 +341,7 @@ function Home() {
                   className="form-control"
                   value={editState.flightDuration}
                   name="flightDuration"
-                  onChange={handleChangeEditState}
+                  onChange={(e) => UTIL.handleOnChange(e, setEditState)}
                 />
               </form>
             </MDBModalBody>
@@ -444,9 +401,12 @@ function Home() {
                   {currentDetail.transition.length > 0 &&
                     currentDetail.transition.map((transition, index) => (
                       <li key={index} style={{ listStyleType: "circle" }}>
-                        {convertToAirportName(transition.airportId)}, Thời gian:{" "}
-                        {transition.transitionDuration} phút, Ghi chú:{" "}
-                        {transition.note}
+                        {UTIL.convertToAirportName(
+                          airports,
+                          transition.airportId
+                        )}
+                        , Thời gian: {transition.transitionDuration} phút, Ghi
+                        chú: {transition.note}
                       </li>
                     ))}
                 </h6>

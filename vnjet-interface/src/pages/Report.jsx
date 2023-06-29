@@ -1,28 +1,29 @@
-import React, { useEffect } from "react";
+import React from "react";
 import axiosClient from "../components/api/axios/axiosClient";
 import { useNavigate } from "react-router-dom";
+import Spinner from "../components/Spinner";
 
 function Report() {
   let navigate = useNavigate();
   const [reports, setReport] = React.useState([]);
   const [currentFlightId, setCurrentFlightId] = React.useState();
   const [currentFlight, setCurrentFlight] = React.useState("");
-  useEffect(() => {
-    setCurrentFlight("");
-    setCurrentFlight("");
-    getFlight(currentFlightId);
-    // navigateToDetail(currentFlightId);
-    // setCurrentFlightId("");
+  React.useEffect(() => {
+    if (currentFlightId) {
+      setCurrentFlight("");
+      setCurrentFlight("");
+      getFlight(currentFlightId);
+    }
   }, [currentFlightId]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (
       currentFlight != "" &&
       typeof currentFlight === "object" &&
       !currentFlight.error
-    )
+    ) {
       navigateToDetail(currentFlight);
-    console.log(7777, currentFlight);
+    }
   }, [currentFlight]);
 
   const navigateToDetail = (flight) => {
@@ -54,12 +55,7 @@ function Report() {
   return (
     <>
       <h3>Báo cáo của từng chuyến bay</h3>
-      {reports.length < 1 && (
-        <>
-          <div className="spinner-border text-primary " role="status"></div>
-          <span className="sr-only">Loading...</span>
-        </>
-      )}
+      {reports.length < 1 && <Spinner />}
       <table className="table">
         <thead>
           <tr>

@@ -11,6 +11,7 @@ import Pagination from "react-bootstrap/Pagination";
 import React from "react";
 import axiosClient from "../components/api/axios/axiosClient";
 import UserItem from "../components/UserItem";
+import Spinner from "../components/Spinner";
 
 function ManageUsers() {
   const [users, setUsers] = React.useState([]);
@@ -112,12 +113,7 @@ function ManageUsers() {
           </MDBModalContent>
         </MDBModalDialog>
       </MDBModal>
-      {users && users.length < 1 && (
-        <>
-          <div className="spinner-border text-primary " role="status"></div>
-          <span className="sr-only">Loading...</span>
-        </>
-      )}
+      {users && users.length < 1 && <Spinner />}
       <div className="d-flex flex-column flex-wrap align-items-center">
         {users &&
           users.length > 0 &&
