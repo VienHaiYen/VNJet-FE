@@ -1,5 +1,5 @@
-import axiosClient from "../components/api/axios/axiosClient";
-
+import { GET, POST, DELETE, PUT } from "../modules";
+import { UTIL } from "../utils";
 import {
   MDBModal,
   MDBModalDialog,
@@ -12,9 +12,9 @@ import {
 import React from "react";
 import Spinner from "../components/Spinner";
 function ManageAirport() {
-  const [basicModal, setBasicModal] = React.useState(false);
-  const [basicModal1, setBasicModal1] = React.useState(false);
-  const [basicModal2, setBasicModal2] = React.useState(false);
+  const [showEdit, setShowEdit] = React.useState(false);
+  const [showDelete, setShowDelete] = React.useState(false);
+  const [showAddAirport, setShowAddAirport] = React.useState(false);
   const [currentID, setCurrentID] = React.useState("");
   const [airports, setAirports] = React.useState([]);
   const [currentStation, setCurrentStation] = React.useState({
@@ -22,90 +22,54 @@ function ManageAirport() {
     location: "",
   });
   React.useEffect(() => {
-    getAirports();
+    GET.getAirports(setAirports);
   }, []);
-  const fetchAllAirport = async () => {
-    const data = await axiosClient.get("/airport/");
-    return data;
-  };
-  const postAirport = async () => {
-    const data = await axiosClient.post("/airport/", {
-      name: currentStation.name,
+
+  const submitAddAirport = async () => {
+    setShowAddAirport(false);
+    await POST.postAirport(currentStation.name);
+    await setCurrentStation({
+      name: "",
+      location: "",
     });
-    return data;
-  };
-  const deleteAirport = async () => {
-    const data = await axiosClient.delete(`/airport/${currentID}`);
-    return data;
+    await GET.getAirports(setAirports);
   };
 
-  const editAirport = async () => {
-    const data = await axiosClient.put(`/airport/${currentID}`, {
-      name: currentStation.name,
-    });
-    return data;
-  };
-
-  const convertToAirportName = (id) => {
-    let data = airports.filter((airport) => airport._id == id);
-    return data.length > 0 ? data[0].name : "";
-  };
-  const getAirports = async () => {
-    let data = await fetchAllAirport();
-    await setAirports(data);
-    await console.log(airports);
-  };
   const handleDelete = (id) => {
-    // alert("xóa airport " + id);
     setCurrentID(id);
-    setBasicModal1(!basicModal1);
+    setShowDelete(true);
   };
   const handleEdit = (id) => {
     setCurrentID(id);
     setCurrentStation({
-      name: convertToAirportName(id),
+      name: UTIL.convertToAirportName(airports, id),
       location: "",
     });
-    setBasicModal(!basicModal);
+    setShowEdit(true);
   };
   const handleAddAirport = () => {
-    setBasicModal2(true);
+    setShowAddAirport(true);
     setCurrentID("");
     setCurrentStation({
       name: "",
       location: "",
     });
   };
-  const submitAddAirport = async () => {
-    setBasicModal2(false);
-    await postAirport();
-    await setCurrentStation({
-      name: "",
-      location: "",
-    });
-    await getAirports();
-  };
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setCurrentStation((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
 
   const submitChange = async () => {
-    await editAirport();
-    await getAirports();
-    await setBasicModal(false);
+    await PUT.editAirport(currentID, currentStation.name);
+    await GET.getAirports(setAirports);
+    await setShowEdit(false);
   };
+
   const submitDelete = async () => {
-    await deleteAirport();
-    await getAirports();
-    setBasicModal1(false);
+    await DELETE.deleteAirport(currentID);
+    await GET.getAirports(setAirports);
+    setShowDelete(false);
   };
   return (
     <>
-      <MDBModal show={basicModal} setShow={setBasicModal} tabIndex="-1">
+      <MDBModal show={showEdit} setShow={setShowEdit} tabIndex="-1">
         <MDBModalDialog>
           <MDBModalContent>
             <MDBModalHeader>
@@ -119,7 +83,7 @@ function ManageAirport() {
                   id="name"
                   value={currentStation.name}
                   name="name"
-                  onChange={handleChange}
+                  onChange={(e) => UTIL.handleOnChange(e, setCurrentStation)}
                   onKeyDown={(e) => {
                     if (e.key == "Enter") {
                       submitChange();
@@ -127,22 +91,12 @@ function ManageAirport() {
                   }}
                 />
               </div>
-              {/* <div className="form-group mr-3">
-                <label htmlFor="location">Vị trí</label>
-                <input
-                  className=" form-control"
-                  id="location"
-                  value={currentStation.location}
-                  name="location"
-                  onChange={handleChange}
-                />
-              </div> */}
             </MDBModalBody>
             <MDBModalFooter>
               <button
                 type="button"
                 className="btn btn-outline-secondary"
-                onClick={() => setBasicModal(false)}
+                onClick={() => setShowEdit(false)}
               >
                 Đóng
               </button>
@@ -158,7 +112,7 @@ function ManageAirport() {
         </MDBModalDialog>
       </MDBModal>
 
-      <MDBModal show={basicModal1} setShow={setBasicModal1} tabIndex="-1">
+      <MDBModal show={showDelete} setShow={setShowDelete} tabIndex="-1">
         <MDBModalDialog>
           <MDBModalContent>
             <MDBModalHeader>
@@ -166,13 +120,13 @@ function ManageAirport() {
             </MDBModalHeader>
             <MDBModalBody>
               Bạn có chắc chắn muốn xóa sân bay
-              {" " + convertToAirportName(currentID)} không ?
+              {" " + UTIL.convertToAirportName(airports, currentID)} không ?
             </MDBModalBody>
             <MDBModalFooter>
               <button
                 type="button"
                 className="btn btn-outline-secondary"
-                onClick={() => setBasicModal1(false)}
+                onClick={() => setShowDelete(false)}
               >
                 Đóng
               </button>
@@ -188,7 +142,7 @@ function ManageAirport() {
         </MDBModalDialog>
       </MDBModal>
 
-      <MDBModal show={basicModal2} setShow={setBasicModal2} tabIndex="-1">
+      <MDBModal show={showAddAirport} setShow={setShowAddAirport} tabIndex="-1">
         <MDBModalDialog>
           <MDBModalContent>
             <MDBModalHeader>
@@ -202,7 +156,7 @@ function ManageAirport() {
                   id="name"
                   value={currentStation.name}
                   name="name"
-                  onChange={handleChange}
+                  onChange={(e) => UTIL.handleOnChange(e, setCurrentStation)}
                   onKeyDown={(e) => {
                     if (e.key == "Enter") {
                       submitAddAirport();
@@ -215,7 +169,7 @@ function ManageAirport() {
               <button
                 type="button"
                 className="btn btn-outline-secondary"
-                onClick={() => setBasicModal2(false)}
+                onClick={() => setShowAddAirport(false)}
               >
                 Đóng
               </button>

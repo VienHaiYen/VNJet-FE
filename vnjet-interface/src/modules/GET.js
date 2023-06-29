@@ -42,6 +42,7 @@ const getSeats = async (id, setSeats) => {
   });
   return data;
 };
+
 const GET = {
   getAirports,
   getFlights,
