@@ -21,7 +21,7 @@ function SignUpForm() {
     // { value: "admin", label: "Admin" },
     { value: "customer", label: "Customer" },
   ];
-  const [role, setRole] = React.useState(roleOptions[0]);
+  const role = roleOptions[0];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -79,12 +79,7 @@ function SignUpForm() {
               setValue: setIdentificationCode,
               type: "text",
             })}
-            {renderSelections({
-              value: role,
-              setValue: setRole,
-              options: roleOptions,
-              name: "role",
-            })}
+
             {isError &&
               renderError({
                 errorDetail,

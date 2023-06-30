@@ -1,3 +1,5 @@
+import { faYen } from "@fortawesome/free-solid-svg-icons";
+
 const convertToAirportName = (airports, id) => {
   let data = airports.filter((airport) => airport._id == id);
   return data.length > 0 ? data[0].name : "";
@@ -26,6 +28,7 @@ const handleOnChange = (e, setState) => {
   }));
   console.log(name, value, setState);
 };
+
 const UTIL = {
   convertToAirportName,
   getDateTimeFormat,

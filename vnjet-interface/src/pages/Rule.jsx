@@ -1,73 +1,53 @@
 import axiosClient from "../components/api/axios/axiosClient";
 import React from "react";
+import { GET, POST } from "../modules";
 import { useGlobal } from "../context/context";
 import Spinner from "../components/Spinner";
 
 function Rule() {
   const [ticketClasses, setTicketClasses] = React.useState([]);
   const [rules, setRules] = React.useState([]);
-  const [ruleName, setRuleName] = React.useState();
+  const [ruleName, setRuleName] = React.useState("quantityAirports");
   const [inputValue, setInputValue] = React.useState("");
   const [addedTicketClassName, setAddedTicketClassName] = React.useState("");
   const { authenticate } = useGlobal();
   const user = authenticate.selectUser();
-  const fetchRules = async () => {
-    const data = await axiosClient.get("/terms");
-    return data;
-  };
-  const fetchTicketClasses = async () => {
-    const data = await axiosClient.get("/ticket-class/");
-    return data;
-  };
-  const changeRule = async () => {
-    console.log("rule change", ruleName, Number(inputValue));
-    if (inputValue != "") {
-      const data = await axiosClient.post("/terms/change", {
-        name: ruleName,
-        value: Number(inputValue),
-      });
-      await console.log(data);
+
+  const changeRule = async (name, value) => {
+    // console.log("rule change", ruleName, Number(inputValue));
+    if (value != "") {
+      await axiosClient
+        .post("/terms/change", {
+          name: name,
+          value: Number(value),
+        })
+        .then((res) => {
+          if (res.error) alert(res.error);
+        });
     } else {
       alert("Vui lòng nhập đủ thông tin");
     }
   };
-  const addTicketClass = async () => {
-    const data = await axiosClient.post("/ticket-class", {
-      name: addedTicketClassName,
-    });
-    console.log(data);
-  };
+
   const deleteTicketClass = async (id) => {
     const data = await axiosClient.delete(`/ticket-class/${id}`);
     console.log(data);
   };
-  const getRules = async () => {
-    let data = await fetchRules();
-    await setRules(data);
-    await console.log(rules);
-  };
-  const getTicketClasses = async () => {
-    let data = await fetchTicketClasses();
-    setTicketClasses(data);
-    console.log(ticketClasses);
-  };
 
   const handleChangeProperty = async () => {
-    let data = await changeRule();
-    console.log(data);
-    await getRules();
+    await changeRule(ruleName, inputValue);
+    await GET.getRules(setRules);
   };
   const handleAddedTicketClass = async () => {
-    let data = await addTicketClass();
-    await console.log(data);
-    await getTicketClasses();
-    await getRules();
+    await POST.addTicketClass(addedTicketClassName);
+    await GET.getTicketClasses(setTicketClasses);
+    await GET.getRules(setRules);
   };
   const handleDeleteTicketClass = async (id) => {
     let data = await deleteTicketClass(id);
     await console.log(data);
-    await getTicketClasses();
-    await getRules();
+    await GET.getTicketClasses(setTicketClasses);
+    await GET.getRules(setRules);
   };
   React.useEffect(() => {
     setInputValue("");
@@ -75,8 +55,8 @@ function Rule() {
   }, [ruleName]);
   React.useEffect(() => {}, [addedTicketClassName]);
   React.useEffect(() => {
-    getRules();
-    getTicketClasses();
+    GET.getRules(setRules);
+    GET.getTicketClasses(setTicketClasses);
   }, []);
   return (
     <>
@@ -160,7 +140,7 @@ function Rule() {
               Thời gian trễ nhất đặt vé (giờ)
             </option>
             <option value="latestCancellationTime">
-              Thời gian trễ nhất hủy vé
+              Thời gian trễ nhất hủy vé (giờ)
             </option>
             <option value="quantityClasses">Hạng vé</option>
           </select>
@@ -207,12 +187,13 @@ function Rule() {
                       <li>
                         {ticketClass.name + "    "}
                         <button
+                          className="btn btn-warning m-1"
                           onClick={() =>
                             handleDeleteTicketClass(ticketClass._id)
                           }
                           style={{ marginLeft: "3rem" }}
                         >
-                          {"   "} χ
+                          {"   "} x
                         </button>
                       </li>
                     </div>

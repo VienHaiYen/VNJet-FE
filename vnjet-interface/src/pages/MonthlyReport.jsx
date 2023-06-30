@@ -1,23 +1,13 @@
 import React from "react";
-import axiosClient from "../components/api/axios/axiosClient";
+import { GET } from "../modules";
 
 function MonthLyReport() {
   const [yearReports, setYearReport] = React.useState();
   const [year, setYear] = React.useState();
-  const fetchYearReport = async (_year) => {
-    console.log("year", _year);
-    const data = axiosClient.get(`/report/${_year}`);
-    return data;
-  };
 
-  const getAllRoprtFlight = async (year) => {
-    const data = await fetchYearReport(year);
-    setYearReport(data);
-    console.log(data);
-  };
   const submitYear = async () => {
     console.log(year);
-    await getAllRoprtFlight(year);
+    await GET.getYearReport(year, setYearReport);
   };
 
   return (

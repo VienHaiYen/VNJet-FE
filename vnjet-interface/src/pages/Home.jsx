@@ -6,8 +6,7 @@ import React from "react";
 // import { useNavigate } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import FlightItem from "../components/FlightItem";
-import axiosClient from "../components/api/axios/axiosClient";
-import { GET } from "../modules";
+import { GET, POST, PUT, DELETE } from "../modules";
 import { UTIL } from "../utils";
 import {
   MDBModal,
@@ -24,8 +23,6 @@ import { useGlobal } from "../context/context";
 function Home() {
   const { authenticate } = useGlobal();
   const user = authenticate.selectUser();
-  // console.log(user);
-  // const navigate = useNavigate();
   const role = user.role == "admin" ? 0 : 1;
   const [currentID, setCurrentID] = React.useState("");
 
@@ -57,90 +54,28 @@ function Home() {
   });
   const [currentDetail, setCurrentDetail] = React.useState();
 
-  const handleBuyTicket = async () => {
-    await axiosClient
-      .post("/ticket/", {
-        flightId: currentID,
-        classOfTicket: customerInfo.ticketClass,
-      })
-      .then((res) => {
-        if (res.error) {
-          alert(res.error);
-        } else {
-          alert("Đặt vé thành công !");
-          setShowBookingTicket(false);
-        }
-      });
-  };
-
-  const handleSearchFlight = async () => {
-    let tmp = findingState.date == "" ? "" : new Date(findingState.date);
-    const data = await axiosClient
-      .get(
-        `/flight/${findingState.from != "" ? findingState.from : "undefined"}/${
-          findingState.to != "" ? findingState.to : "undefined"
-        }/${
-          tmp != ""
-            ? tmp.toISOString().replace("00:00:00.000Z", "00:00:00.000+07:00")
-            : "undefined"
-        }`
-      )
-      .then((res) => {
-        // return ;
-
-        if (res.error) {
-          alert(res.error);
-        } else {
-          setFlightMetaData(res.metadata);
-          setFlights(res.results);
-          console.log("kq tra ve", data);
-        }
-      });
-    return data;
-  };
-
-  const editFlight = async (flightId, editState) => {
-    const data = await axiosClient.put(`/flight/${flightId}`, {
-      dateTime: editState.dateTime,
-      flightDuration: Number(editState.flightDuration),
-      fromAirport: editState.fromAirport,
-      toAirport: editState.toAirport,
-    });
-
-    return data;
-  };
-  const getSeats = async (id) => {
-    await axiosClient.get(`/flightStatistic/${id}`).then((res) => {
+  const submitEdit = async () => {
+    await PUT.editFlight(currentID, editState).then((res) => {
       if (res.error) {
         alert(res.error);
       } else {
-        setSeats(res);
-      }
-    });
-  };
-
-  const deleteFlight = async (id) => {
-    const data = await axiosClient.delete(`/flight/${id}`).then((res) => {
-      if (res.error) {
-        alert(res.error);
-      } else {
-        setShowDelete(false);
+        alert("Thay đổi xong !");
         GET.getFlights(page, setFlightMetaData, setFlights);
+        setShowEdit(false);
       }
     });
-    return data;
   };
 
-  const convertToCurrentName = (id) => {
-    let data = airports.filter((airport) => airport._id == id);
-    return data.length > 0 ? data[0].name : "";
+  const submitDelete = async (id) => {
+    let data = await DELETE.deleteFlight(id);
+    if (data.error) {
+      alert(data.error);
+    } else {
+      setShowDelete(false);
+      GET.getFlights(page, setFlightMetaData, setFlights);
+    }
   };
-  const handleCloseDialog = () => {
-    setShowBookingTicket(false);
-    setCustomerInfo({
-      ticketClass: "",
-    });
-  };
+
   const handleChooseTicket = (id) => {
     setShowBookingTicket(true);
     setCurrentID(id);
@@ -154,40 +89,20 @@ function Home() {
     setShowDelete(true);
   };
 
-  const submitEdit = async () => {
-    await editFlight(currentID, editState).then((res) => {
-      if (res.error) {
-        alert(res.error);
-      } else {
-        GET.getFlights(page, setFlightMetaData, setFlights);
-        alert("Thay đổi xong !");
-        setShowEdit(false);
-        console.log(7788, flights);
-      }
-    });
-  };
   const handleShowDetail = (curr) => {
     setCurrentID(curr.id);
     setCurrentDetail(curr);
     setShowDetail(true);
   };
 
-  const handleChangeFindingState = (e) => {
-    const { name, value } = e.target;
-    setFindingState((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-    console.log(findingState);
-  };
-
   React.useEffect(() => {
     GET.getFlights(1, setFlightMetaData, setFlights);
     GET.getAirports(setAirports);
   }, []);
+
   React.useEffect(() => {
     if (currentID) {
-      getSeats(currentID);
+      GET.getSeats(currentID, setSeats);
     }
   }, [currentID]);
 
@@ -212,6 +127,7 @@ function Home() {
       ]);
     }
   }, [flightMetaData]);
+
   return (
     <div>
       {/* ĐẶT VÉ CHUYẾN BAY */}
@@ -254,14 +170,25 @@ function Home() {
               <button
                 type="button"
                 className="btn btn-outline-secondary"
-                onClick={handleCloseDialog}
+                onClick={() => {
+                  setShowBookingTicket(false);
+                  setCustomerInfo({
+                    ticketClass: "",
+                  });
+                }}
               >
                 Đóng
               </button>
               <button
                 type="button"
                 className="btn btn-outline-danger"
-                onClick={handleBuyTicket}
+                onClick={() =>
+                  POST.buyTicket(
+                    currentID,
+                    customerInfo.ticketClass,
+                    setShowBookingTicket
+                  )
+                }
               >
                 Đồng ý
               </button>
@@ -279,7 +206,7 @@ function Home() {
             </MDBModalHeader>
             <MDBModalBody>
               Bạn có chắc chắn muốn xóa chuyến bay
-              {" " + convertToCurrentName(currentID)} không ?
+              {" " + UTIL.convertToAirportName(airports, currentID)} không ?
             </MDBModalBody>
             <MDBModalFooter>
               <button
@@ -292,7 +219,7 @@ function Home() {
               <button
                 type="button"
                 className="btn btn-outline-danger"
-                onClick={() => deleteFlight(currentID)}
+                onClick={() => submitDelete(currentID)}
               >
                 Đồng ý
               </button>
@@ -445,19 +372,20 @@ function Home() {
           </MDBModalContent>
         </MDBModalDialog>
       </MDBModal>
+
       <h3>Tìm kiếm chuyến đi</h3>
       <div className="home d-flex align-item-center">
         <label>Đi từ</label>
         <Dropdown
           value={findingState.from}
-          onChange={handleChangeFindingState}
+          onChange={(e) => UTIL.handleOnChange(e, setFindingState)}
           name="from"
           options={airports}
         />
         <label>Đến</label>
         <Dropdown
           value={findingState.to}
-          onChange={handleChangeFindingState}
+          onChange={(e) => UTIL.handleOnChange(e, setFindingState)}
           name="to"
           options={airports}
         />
@@ -467,14 +395,16 @@ function Home() {
           id="date"
           type="date"
           className="form-control mr-5"
-          onChange={handleChangeFindingState}
+          onChange={(e) => UTIL.handleOnChange(e, setFindingState)}
           name="date"
           value={findingState.date}
         />
         <button
           type="button"
           className="btn btn-warning"
-          onClick={handleSearchFlight}
+          onClick={async () =>
+            await GET.searchFlight(findingState, setFlightMetaData, setFlights)
+          }
         >
           <FontAwesomeIcon icon={faSearch} />
         </button>
@@ -484,6 +414,7 @@ function Home() {
         flights.length > 0 &&
         flights.map((flight, index) => (
           <FlightItem
+            flights={flights}
             flightId={flight._id}
             bookTicket={handleChooseTicket}
             changeFlight={handleEditFlight}

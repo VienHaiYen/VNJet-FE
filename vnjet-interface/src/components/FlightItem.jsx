@@ -6,6 +6,7 @@ import { UTIL } from "../utils";
 import Spinner from "./Spinner";
 
 function FlightItem({
+  flights,
   flightId,
   bookTicket,
   changeFlight,
@@ -18,16 +19,12 @@ function FlightItem({
   const [flight, setFlight] = React.useState();
   const [seats, setSeats] = React.useState([]);
 
-  const convertToCurrentName = (id) => {
-    const data = airports.filter((airport) => airport._id == id);
-    return data.length > 0 ? data[0].name : "";
-  };
   React.useEffect(() => {
     GET.getFlight(flightId, setFlight);
     GET.getAirports(setAirports);
     GET.getTransitions(flightId, setTransitions);
     GET.getSeats(flightId, setSeats);
-  }, []);
+  }, [flights, flightId]);
 
   return (
     <>
@@ -36,8 +33,8 @@ function FlightItem({
         onClick={() =>
           showDetailFlight({
             id: flightId,
-            from: convertToCurrentName(flight.fromAirport),
-            to: convertToCurrentName(flight.toAirport),
+            from: UTIL.convertToAirportName(airports, flight.fromAirport),
+            to: UTIL.convertToAirportName(airports, flight.toAirport),
             date: UTIL.getDateTimeFormat(flight.dateTime),
             dateTime: UTIL.getTimeFormat(flight.dateTime),
             duration: flight.flightDuration,
@@ -59,8 +56,8 @@ function FlightItem({
               </h2>
               <h5>{UTIL.getDateTimeFormat(flight.dateTime)}</h5>
               <h5 style={{ color: "orange", cursor: "pointer" }}>
-                {convertToCurrentName(flight.fromAirport)} -{" "}
-                {convertToCurrentName(flight.toAirport)}
+                {UTIL.convertToAirportName(airports, flight.fromAirport)} -{" "}
+                {UTIL.convertToAirportName(airports, flight.toAirport)}
               </h5>
               <ul>
                 {transitions.length > 0 && <b>Trạm trung gian:</b>}

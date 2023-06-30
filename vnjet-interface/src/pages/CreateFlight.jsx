@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import Dropdown from "../components/Dropdown";
+import { GET } from "../modules";
 import axiosClient from "../components/api/axios/axiosClient";
 
 function CreateFlight() {
@@ -19,9 +20,24 @@ function CreateFlight() {
     }
     return results;
   }, []);
+  let transitionArray = React.useMemo(() => {
+    let results = [];
+    for (let index = 0; index < 10; index++) {
+      results.push({
+        id: "",
+        time: "",
+        note: "",
+      });
+    }
+    return results;
+  }, []);
+  console.log(789, transitionArray);
   useEffect(() => {
     console.log(levelArray);
   }, [levelArray]);
+  useEffect(() => {
+    console.log(transitionArray);
+  }, [transitionArray]);
   const [currentFlight, setCurrentFlight] = React.useState({
     from: "",
     to: "",
@@ -44,17 +60,11 @@ function CreateFlight() {
   });
 
   React.useEffect(() => {
-    getAirports();
-    getTicketClasses();
+    GET.getRules(setRules);
+    GET.getTicketClasses(setTicketClasses);
+    GET.getAirports(setAirports);
   }, []);
-  const fetchAllAirport = async () => {
-    const data = await axiosClient.get("/airport/");
-    return data;
-  };
-  const fetchTicketClasses = async () => {
-    const data = await axiosClient.get("/ticket-class/");
-    return data;
-  };
+
   const deleteFlight = async (id) => {
     const data = await axiosClient.delete(`/flight/${id}`);
     alert(data);
@@ -119,41 +129,62 @@ function CreateFlight() {
           alert(res.error);
         } else if (res._id) {
           alert("Đã thêm chuyến bay");
-          if (
-            currentFlight.transitionAirport1 != "" &&
-            currentFlight.transitionTime1 != ""
-          ) {
-            await addTransitionAirport(
-              res._id,
-              currentFlight.transitionAirport1,
-              currentFlight.transitionTime1,
-              currentFlight.note1
-            );
-            // console.log("tram dung", data);
-          }
-          if (
-            currentFlight.transitionAirport2 != "" &&
-            currentFlight.transitionTime2 != ""
-          ) {
-            await addTransitionAirport(
-              res._id,
-              currentFlight.transitionAirport2,
-              currentFlight.transitionTime2,
-              currentFlight.note2
-            );
-            // console.log("tram dung", data);
-          }
-          if (
-            currentFlight.transitionAirport3 != "" &&
-            currentFlight.transitionTime3 != ""
-          ) {
-            await addTransitionAirport(
-              res._id,
-              currentFlight.transitionAirport3,
-              currentFlight.transitionTime3,
-              currentFlight.note3
-            );
-            // console.log("tram dung", data);
+          // if (
+          //   currentFlight.transitionAirport1 != "" &&
+          //   currentFlight.transitionTime1 != ""
+          // ) {
+          //   await addTransitionAirport(
+          //     res._id,
+          //     currentFlight.transitionAirport1,
+          //     currentFlight.transitionTime1,
+          //     currentFlight.note1
+          //   );
+          //   // console.log("tram dung", data);
+          // }
+          // if (
+          //   currentFlight.transitionAirport2 != "" &&
+          //   currentFlight.transitionTime2 != ""
+          // ) {
+          //   await addTransitionAirport(
+          //     res._id,
+          //     currentFlight.transitionAirport2,
+          //     currentFlight.transitionTime2,
+          //     currentFlight.note2
+          //   );
+          //   // console.log("tram dung", data);
+          // }
+          // if (
+          //   currentFlight.transitionAirport3 != "" &&
+          //   currentFlight.transitionTime3 != ""
+          // ) {
+          //   await addTransitionAirport(
+          //     res._id,
+          //     currentFlight.transitionAirport3,
+          //     currentFlight.transitionTime3,
+          //     currentFlight.note3
+          //   );
+          //   // console.log("tram dung", data);
+          // }
+          for (let index = 0; index < rules.maxTransitions; index++) {
+            if (
+              transitionArray[index].id &&
+              transitionArray[index].time &&
+              transitionArray[index].note
+            ) {
+              let data = await addTransitionAirport(
+                res._id,
+                transitionArray[index].id,
+                transitionArray[index].time,
+                transitionArray[index].note
+              );
+              await console.log(
+                data,
+                res._id,
+                levelArray[index].id,
+                levelArray[index].number,
+                levelArray[index].price
+              );
+            }
           }
           for (let index = 0; index < ticketClasses.length; index++) {
             let data = await addTicketClass(
@@ -162,7 +193,7 @@ function CreateFlight() {
               levelArray[index].number,
               levelArray[index].price
             );
-            await console.log(
+            console.log(
               data,
               res._id,
               levelArray[index].id,
@@ -180,15 +211,7 @@ function CreateFlight() {
     await postFlight();
     // console.log(456, data);
   };
-  const getAirports = async () => {
-    let data = await fetchAllAirport();
-    await setAirports(data);
-  };
 
-  const getTicketClasses = async () => {
-    let data = await fetchTicketClasses();
-    await setTicketClasses(data);
-  };
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCurrentFlight((prevState) => ({
@@ -283,48 +306,56 @@ function CreateFlight() {
               </div>
             );
           })}
-
-        <div className="form--row">
-          <label className="mr-3 ">Trạm dừng 1</label>
-          <div className="form-row-item">
-            <Dropdown
-              value={currentFlight.transitionAirport1}
-              name="transitionAirport1"
-              onChange={handleChange}
-              options={airports.filter((item) => {
-                return (
-                  item._id !== currentFlight.from &&
-                  item._id !== currentFlight.to
-                );
-              })}
-            />
-          </div>
-          <div className="form-row-item">
-            <input
-              required
-              id="_2"
-              type="number"
-              className="form-control"
-              onChange={handleChange}
-              value={currentFlight.transitionTime1}
-              name="transitionTime1"
-              placeholder="Thời gian dừng (phút)"
-            />
-          </div>
-          <div className="form-row-item">
-            <input
-              required
-              id="_2"
-              type="text"
-              className="form-control"
-              onChange={handleChange}
-              value={currentFlight.note1}
-              name="note1"
-              placeholder="Ghi chú"
-            />
-          </div>
-        </div>
-        <div className="form--row">
+        {console.log(rules.maxTransitions, transitionArray.length)}
+        {rules.maxTransitions > 0 &&
+          transitionArray.length > 0 &&
+          Array.from({ length: rules.maxTransitions }).map((i, index) => (
+            <div key={index} className="form--row">
+              <label className="mr-3 ">Trạm dừng {index + 1}</label>
+              <div className="form-row-item">
+                <Dropdown
+                  // value={transitionArray[index].id}
+                  name="transitionAirport1"
+                  onChange={(e) => (transitionArray[index].id = e.target.value)}
+                  options={airports.filter((item) => {
+                    return (
+                      item._id !== currentFlight.from &&
+                      item._id !== currentFlight.to
+                    );
+                  })}
+                />
+              </div>
+              <div className="form-row-item">
+                <input
+                  required
+                  id="_2"
+                  type="number"
+                  className="form-control"
+                  // onChange={handleChange}
+                  onChange={(e) =>
+                    (transitionArray[index].time = e.target.value)
+                  }
+                  name="transitionTime1"
+                  placeholder="Thời gian dừng (phút)"
+                />
+              </div>
+              <div className="form-row-item">
+                <input
+                  required
+                  id="_2"
+                  type="text"
+                  className="form-control"
+                  // onChange={handleChange}
+                  onChange={(e) =>
+                    (transitionArray[index].note = e.target.value)
+                  }
+                  name="note1"
+                  placeholder="Ghi chú"
+                />
+              </div>
+            </div>
+          ))}
+        {/* <div className="form--row">
           <label className="mr-3">Trạm dừng 2</label>
           <div className="form-row-item">
             <Dropdown
@@ -403,7 +434,7 @@ function CreateFlight() {
               placeholder="Ghi chú"
             />
           </div>
-        </div>
+        </div> */}
         <button
           type="submit"
           className="btn btn-warning"
