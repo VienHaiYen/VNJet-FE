@@ -22,8 +22,6 @@ function LogInForm(props) {
     }
   }, [user]);
 
-  // let history = useHistory();
-  // console.log(history);
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("params ", email, password);

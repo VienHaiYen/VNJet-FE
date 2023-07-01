@@ -261,7 +261,7 @@ function Home() {
                   name="dateTime"
                   onChange={(e) => UTIL.handleOnChange(e, setEditState)}
                 />
-                <label htmlFor="flightDuration">Trong khoảng</label>
+                <label htmlFor="flightDuration">Trong khoảng (phút)</label>
                 <input
                   type="number"
                   id="flightDuration"

@@ -104,8 +104,11 @@ function CreateFlight() {
   };
 
   const postFlight = async () => {
+    let tmp = new Date(currentFlight.time);
     console.log({
-      dateTime: currentFlight.time,
+      dateTime: tmp
+        .toISOString()
+        .replace("00:00:00.000Z", "00:00:00.000+07:00"),
       flightDuration: Number(currentFlight.duration),
       numberOfEmptySeat:
         Number(currentFlight.number1) + Number(currentFlight.number2),
@@ -115,7 +118,9 @@ function CreateFlight() {
     });
     const data = await axiosClient
       .post("/flight", {
-        dateTime: currentFlight.time,
+        dateTime: tmp
+          .toISOString()
+          .replace("00:00:00.000Z", "00:00:00.000+07:00"),
         flightDuration: Number(currentFlight.duration),
         numberOfEmptySeat:
           Number(currentFlight.number1) + Number(currentFlight.number2),
@@ -129,42 +134,6 @@ function CreateFlight() {
           alert(res.error);
         } else if (res._id) {
           alert("Đã thêm chuyến bay");
-          // if (
-          //   currentFlight.transitionAirport1 != "" &&
-          //   currentFlight.transitionTime1 != ""
-          // ) {
-          //   await addTransitionAirport(
-          //     res._id,
-          //     currentFlight.transitionAirport1,
-          //     currentFlight.transitionTime1,
-          //     currentFlight.note1
-          //   );
-          //   // console.log("tram dung", data);
-          // }
-          // if (
-          //   currentFlight.transitionAirport2 != "" &&
-          //   currentFlight.transitionTime2 != ""
-          // ) {
-          //   await addTransitionAirport(
-          //     res._id,
-          //     currentFlight.transitionAirport2,
-          //     currentFlight.transitionTime2,
-          //     currentFlight.note2
-          //   );
-          //   // console.log("tram dung", data);
-          // }
-          // if (
-          //   currentFlight.transitionAirport3 != "" &&
-          //   currentFlight.transitionTime3 != ""
-          // ) {
-          //   await addTransitionAirport(
-          //     res._id,
-          //     currentFlight.transitionAirport3,
-          //     currentFlight.transitionTime3,
-          //     currentFlight.note3
-          //   );
-          //   // console.log("tram dung", data);
-          // }
           for (let index = 0; index < rules.maxTransitions; index++) {
             if (
               transitionArray[index].id &&
@@ -257,7 +226,7 @@ function CreateFlight() {
             />
           </div>
           <div className="form-row-item">
-            <label htmlFor="duration">Tổng thời gian</label>
+            <label htmlFor="duration">Tổng thời gian (phút)</label>
             <input
               required
               id="duration"

@@ -14,7 +14,6 @@ function Rule() {
   const user = authenticate.selectUser();
 
   const changeRule = async (name, value) => {
-    // console.log("rule change", ruleName, Number(inputValue));
     if (value != "") {
       await axiosClient
         .post("/terms/change", {

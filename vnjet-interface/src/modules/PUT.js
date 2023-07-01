@@ -9,8 +9,20 @@ const editAirport = async (id, name) => {
     });
 };
 const editFlight = async (flightId, editState) => {
+  let tmp = editState.date == "" ? "" : new Date(editState.date);
+  console.log(11, tmp);
+  console.log({
+    tt: editState.dateTime + ":00.000+07:00",
+    // tmp != ""
+    //   ? tmp.toISOString().replace("00:00:00.000Z", "00:00:00.000+07:00")
+    //   : "undefined",
+    flightDuration: Number(editState.flightDuration),
+    fromAirport: editState.fromAirport,
+    toAirport: editState.toAirport,
+    tmp,
+  });
   const data = await axiosClient.put(`/flight/${flightId}`, {
-    dateTime: editState.dateTime,
+    dateTime: editState.dateTime + ":00.000+07:00",
     flightDuration: Number(editState.flightDuration),
     fromAirport: editState.fromAirport,
     toAirport: editState.toAirport,

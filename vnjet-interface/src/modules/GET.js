@@ -14,7 +14,7 @@ const getFlights = async (id, setFlightMetaData, setFlights) => {
 const getFlight = async (id, setFlight) => {
   await axiosClient.get(`/flight/${id}`).then((res) => {
     setFlight(res);
-    // console.log(res);
+    console.log(res);
   });
 };
 const getAirports = async (setAirports) => {
@@ -87,7 +87,7 @@ const searchFlight = async (findingState, setFlightMetaData, setFlights) => {
         findingState.to != "" ? findingState.to : "undefined"
       }/${
         tmp != ""
-          ? tmp.toISOString().replace("00:00:00.000Z", "00:00:00.000+07:00")
+          ? tmp.toISOString().replace("00:00:00.000Z", "00:00:00.000+00:00")
           : "undefined"
       }`
     )

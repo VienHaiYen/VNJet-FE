@@ -12,7 +12,7 @@ function UserItem({ user, handleDelete }) {
         <button
           type="button"
           className="btn btn-danger mt-1"
-          onClick={() => handleDelete(user._id)}
+          onClick={() => handleDelete(user._id, user.fullname)}
         >
           Xóa tài khoản
         </button>

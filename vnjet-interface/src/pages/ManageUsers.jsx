@@ -17,13 +17,15 @@ function ManageUsers() {
   const [users, setUsers] = React.useState([]);
   const [showDelete, setShowDelete] = React.useState(false);
   const [currentID, setCurrentID] = React.useState(false);
+  const [currentName, setCurrentName] = React.useState(false);
   const [page, setPage] = React.useState(1);
   const [pageNum, setPageNum] = React.useState([]);
   const [flightMetaData, setFlightMetaData] = React.useState(1);
 
-  const handleDelete = (id) => {
+  const handleDelete = (id, name) => {
     setShowDelete(true);
     setCurrentID(id);
+    setCurrentName(name);
     console.log("crr", currentID);
   };
   const getUsers = async (id) => {
@@ -92,7 +94,7 @@ function ManageUsers() {
               <MDBModalTitle>Xóa chuyến bay</MDBModalTitle>
             </MDBModalHeader>
             <MDBModalBody>
-              Bạn có chắc chắn muốn xóa người {currentID} dùng không ?
+              Bạn có chắc chắn muốn xóa người dùng <b>{currentName}</b> không ?
             </MDBModalBody>
             <MDBModalFooter>
               <button

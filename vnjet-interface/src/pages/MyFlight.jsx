@@ -8,6 +8,7 @@ function MyFlight() {
   const [page, setPage] = React.useState(1);
   const [flightMetaData, setFlightMetaData] = React.useState();
   const [pageNum, setPageNum] = React.useState([]);
+
   React.useEffect(() => {
     GET.getMyTickets(page, setFlightMetaData, setTickets);
   }, [page]);
@@ -16,6 +17,7 @@ function MyFlight() {
     await DELETE.deleteTicket(id);
     await GET.getMyTickets(page, setFlightMetaData, setTickets);
   };
+
   React.useEffect(() => {
     if (flightMetaData) {
       setPageNum([]);
