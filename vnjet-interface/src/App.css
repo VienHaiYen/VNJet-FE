@@ -72,5 +72,5 @@ a.active {
   border-radius: 20px;
 }
 a:hover {
-  background-color: #ffc800e0;
+  text-decoration: underline;
 }

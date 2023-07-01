@@ -23,7 +23,7 @@ function Header({ nav }) {
           className="container-fluid  d-flex"
           style={{ fontSize: "1.2rem", fontWeight: "500" }}
         >
-          <a
+          <span
             className="navbar-brand"
             href="#"
             style={{
@@ -32,7 +32,7 @@ function Header({ nav }) {
             }}
           >
             VNJet
-          </a>
+          </span>
           <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
             {nav.map((item, index) => {
               var isActive = location.pathname === item.to;

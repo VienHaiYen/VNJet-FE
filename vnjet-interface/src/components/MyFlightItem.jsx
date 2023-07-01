@@ -2,6 +2,7 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { GET } from "../modules";
 import { UTIL } from "../utils";
+import Spinner from "./Spinner";
 import React from "react";
 
 function MyFlightItem({ ticket, deleteTicket }) {
@@ -17,6 +18,7 @@ function MyFlightItem({ ticket, deleteTicket }) {
 
   return (
     <div className="rounded-3 border border-secondary mt-3 p-4">
+      {!flight && <Spinner />}
       {flight && (
         <div className="d-flex justify-content-between">
           <div className="col-6">

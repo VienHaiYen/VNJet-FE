@@ -420,7 +420,7 @@ function Home() {
             changeFlight={handleEditFlight}
             deleteFlight={handleDeleteFlight}
             showDetailFlight={handleShowDetail}
-            key={index}
+            key={index + page * flightMetaData.perPage}
             role={role}
           />
         ))}
