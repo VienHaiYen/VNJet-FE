@@ -14,7 +14,7 @@ const getFlights = async (id, setFlightMetaData, setFlights) => {
 const getFlight = async (id, setFlight) => {
   await axiosClient.get(`/flight/${id}`).then((res) => {
     setFlight(res);
-    console.log(res);
+    // console.log(res);
   });
 };
 const getAirports = async (setAirports) => {

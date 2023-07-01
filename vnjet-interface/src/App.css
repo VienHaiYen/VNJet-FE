@@ -63,3 +63,14 @@ p {
 .hover:hover {
   background-color: #dedede61;
 }
+a.active {
+  /* color: red !important; */
+  background-color: #ffae00;
+  font-weight: 700;
+  /* text-decoration: underline; */
+  text-decoration-color: red;
+  border-radius: 20px;
+}
+a:hover {
+  background-color: #ffc800e0;
+}

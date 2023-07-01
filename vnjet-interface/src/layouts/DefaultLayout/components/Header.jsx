@@ -1,10 +1,12 @@
-// import React, { useEffect } from "react";
-import { BrowserRouter, Route, Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useGlobal } from "../../../context/context";
+import { useLocation } from "react-router-dom";
 function Header({ nav }) {
   const navigate = useNavigate();
   const { authenticate } = useGlobal();
   const user = authenticate.selectUser();
+  let location = useLocation();
+  // console.log(77777, location.pathname);
   return (
     <>
       <nav
@@ -17,7 +19,10 @@ function Header({ nav }) {
           color: "#0000",
         }}
       >
-        <div className="container-fluid  d-flex" style={{ fontSize: "1.2rem" }}>
+        <div
+          className="container-fluid  d-flex"
+          style={{ fontSize: "1.2rem", fontWeight: "500" }}
+        >
           <a
             className="navbar-brand"
             href="#"
@@ -29,13 +34,21 @@ function Header({ nav }) {
             VNJet
           </a>
           <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-            {nav.map((item, index) => (
-              <div className="navbar-nav" key={index}>
-                <Link to={item.to} className="nav-link text-dark font-italic">
-                  {item.label}
-                </Link>
-              </div>
-            ))}
+            {nav.map((item, index) => {
+              var isActive = location.pathname === item.to;
+              var className = isActive ? "active" : "";
+              console.log();
+              return (
+                <div className="navbar-nav" key={index}>
+                  <Link
+                    to={item.to}
+                    className={`nav-link text-dark font-italic ${className}`}
+                  >
+                    {item.label}
+                  </Link>
+                </div>
+              );
+            })}
           </div>
           {Object.keys(user).length !== 0 && (
             <div className="d-flex align-items-center">
